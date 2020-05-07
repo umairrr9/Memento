@@ -1,0 +1,26 @@
+{
+  "name": "memento",
+  "version": "1.0.0",
+  "description": "Memento is a simple note taking app.",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.12"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/umairrr9/Memento.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/umairrr9/Memento/issues"
+  },
+  "homepage": "https://github.com/umairrr9/Memento#readme"
+}
