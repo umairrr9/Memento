@@ -17,9 +17,9 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () => {
 app.use(bodyParser.json());
 
 // Import Routes
-// const usersRoute = require("./routes/users");
+const usersRoute = require("./routes/users");
 
-// app.use("/api/users/", usersRoute);
+app.use("/api/users/", usersRoute); 
 
 // allows the app to use any necessary folders
 // app.use("/front-end", express.static(__dirname + "/front-end"));
