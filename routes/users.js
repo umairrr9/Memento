@@ -3,138 +3,147 @@ const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
-// TASK: Make endpoints handle errors e.g JSON error more kindly
+///// TASK: Make endpoints handle errors e.g JSON error more kindly /////
+///// TASK: Encrypt the password /////
 
-// validate the id and return any errors
-function returnIDError(res, _id) {
+
+
+// Validate the id and return any errors
+function returnIDValidationError(res, _id) {
     const { error } = validateID({_id});
     if (error) return res.status(400).send(error.details[0].message);
 }
 
-// Create User
+function returnValidationError(res, obj) {
+    const { error } = validate(obj);
+    if (error) return res.status(400).send(error.details[0].message);
+}
+
+
+
+// CREATE USER
 router.post("/", async (req, res) => {
 
-    // validate the request body and if there's any errors, display them
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // Validate the request body and display any errors
+    returnValidationError(res, req.body);
 
-    // get the details from the request body
+    // Get details from the request body
     const { email, username, password } = req.body;
 
-    // if user email/username exists, return error
+    // If user email/username already exists, return error
     let user = await User.find().or([{ email }, { username }]);
     if (user.length > 0) return res.status(400).send("User already registered.");
     user = new User({email, username, password});
 
-    // TASK: encrypt the password
-
-    // try to save the user in the DB. Return an error message if necessary.
+    // Try to save the user in the DB and return error message if it fails
     try {
         await user.save();
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, something went wrong.");
+        res.status(400).send("Error, the user wasn't saved.");
     }
     
-    // get user id and return user object
+    // Get user ID and return user object
     const {_id} = user;
     res.status(200).send({_id, email, username});
 });
 
-// Get User by ID
+
+
+// GET USER BY ID
 router.get("/:userId", async (req, res) => {
 
+    // Get ID and return error message if user doesn't exist
     const _id = req.params.userId;
-    returnIDError(res, _id);
+    returnIDValidationError(res, _id);
 
     const user = await User.findOne({_id});
     if (!user) return res.status(400).send("User doesn't exist.");
 
-    // return user object without password
+    // Return the user object without the password
     const {email, username} = user;
     res.status(200).send({email, username, _id});
     
 });
 
-// Delete User by ID
+
+
+// DELETE USER BY ID
 router.delete('/:userId', async (req, res) => {
     
-    // validate id and find user in DB
+    // Validate ID and find user in DB
     const _id = req.params.userId;
-    returnIDError(res, _id);
+    returnIDValidationError(res, _id);
     
-    // try to delete the user in the DB. Return an error message if necessary.
+    // Try to delete the user from the DB and return error message if it fails
     try {
         await User.deleteOne({_id});
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, user wasn't deleted.");
+        res.status(400).send("Error, the user wasn't deleted.");
     }
     
+    // Confirm deletion with a message
     res.status(200).send(`User of ID ${_id} was successfully deleted.`);
     
 });
 
-// Update User by ID
-// For the fields you don't want to update, you must pass in the 
-// previous values of those fields with this request;
-// TASK: Make endpoint more efficient
+
+
+// UPDATE USER BY ID
 router.patch('/:userId', async (req, res) => {
     
     const _id = req.params.userId;
-    const user = await User.findOne({_id});
+    let user = await User.findOne({_id});
     if (!user) return res.status(400).send("User doesn't exist.");
 
     const {email, username, password} = req.body;
+    const newUserFields = {email, username, password};
     const {email: oldEmail, username: oldUsername, password: oldPassword} = user;
-    const newUser = {};
+    const oldUserFields = {email: oldEmail, username: oldUsername, password: oldPassword};
+    let newUser = {};
     let passwordChanged = false;
 
-    if (!email) {
-        newUser.email = oldEmail;
-    } else {
-        newUser.email = email;
+    // For each key/value pair in newUserFields
+    // If the value is null
+    // Set newUser[key] to the old value
+    // If the value is not null
+    // Set newUser[key] to the new value
+    for (let [key, value] of Object.entries(newUserFields)) {
+        if (!value) {
+            newUser[key] = oldUserFields[key];
+        } else {
+            newUser[key] = value;
+            if (key == "password") {
+                passwordChanged = true;
+            }
+        }
     }
 
-    if (!username) {
-        newUser.username = oldUsername;
-    } else {
-        newUser.username = username;
-    }
-
-    if (!password) {
-        newUser.password = oldPassword;
-    } else {
-        newUser.password = password;
-        passwordChanged = true;
-    }
-
-    const { error } = validate(newUser);
-    if (error) return res.status(400).send(error.details[0].message);
+    returnValidationError(res, newUser);
     
-    user.email = newUser.email;
-    user.username = newUser.username;
-    user.password = newUser.password;
+    // Update the user object with the values from newUser
+    user = Object.assign(user, newUser);
 
-    // try to save the user in the DB. Return an error message if necessary.
+    // Try to save the user in the DB and return error message if it fails
     try {
         await user.save();
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, something went wrong.");
+        res.status(400).send("Error, the user wasn't saved.");
     }
     
-    // create the userObj
+    // Create the user object
     const userObj = {_id, email, username, oldEmail, oldUsername};
-    // if the password's changed, add a message to userObj
+    // If the password's changed, add a message to user object
     if (passwordChanged) {
-        userObj.password = "The password has been successfully changed.";
+        userObj.password = "(The password has been successfully changed.)";
     }
 
+    // Return user object
     res.status(200).send(userObj);
 });
 
 
 
 module.exports = router;
-

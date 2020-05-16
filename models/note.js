@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 
+
+
 const noteSchema = mongoose.Schema({
     title: {
         type: String,
@@ -9,8 +11,7 @@ const noteSchema = mongoose.Schema({
         maxlength: 100
     },
     content: {
-        type: String,
-        required: true
+        type: String
     },
     userId: {
         type: String,
@@ -18,15 +19,21 @@ const noteSchema = mongoose.Schema({
     }
 });
 
-function validateUser(user) {
+
+
+const Note = mongoose.model("Note", noteSchema);
+
+function validateNote(note) {
     const schema = Joi.object({
-      email: Joi.string().min(5).max(255).required().email(),
-      password: Joi.string().pattern(new RegExp("[a-zA-Z0-9]{8,50}$")), // TASK for UMAIR: figure out regex pattern for passwords
-      username: Joi.string().min(1).max(40).pattern(new RegExp("[a-zA-Z0-9]"))
+      title: Joi.string().min(1).max(100).required(),
+      content: Joi.string(),
+      userId: Joi.string().length(24).required()
     });
   
-    return schema.validate(user);
+    return schema.validate(note);
 }
+
+
   
-exports.User = User;
-exports.validate = validateUser;
+exports.Note = Note;
+exports.validate = validateNote;

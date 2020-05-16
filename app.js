@@ -18,8 +18,10 @@ app.use(bodyParser.json());
 
 // Import Routes
 const usersRoute = require("./routes/users");
+const notesRoute = require("./routes/notes");
 
 app.use("/api/users/", usersRoute); 
+app.use("/api/notes/", notesRoute); 
 
 // allows the app to use any necessary folders
 // app.use("/front-end", express.static(__dirname + "/front-end"));
