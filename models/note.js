@@ -11,7 +11,8 @@ const noteSchema = mongoose.Schema({
         maxlength: 100
     },
     content: {
-        type: String
+        type: String,
+        required: false
     },
     userId: {
         type: String,

@@ -5,10 +5,11 @@ const router = express.Router();
 
 ///// TASK: Make endpoints handle errors e.g JSON error more kindly /////
 ///// TASK: Encrypt the password /////
-
-
+///// TASK: Turn repeated code into functions /////
 
 // Validate the id and return any errors
+// REMEMBER: This function will return the res.status... 
+// but not stop the function from carrying on
 function returnIDValidationError(res, _id) {
     const { error } = validateID({_id});
     if (error) return res.status(400).send(error.details[0].message);
@@ -19,13 +20,32 @@ function returnValidationError(res, obj) {
     if (error) return res.status(400).send(error.details[0].message);
 }
 
+async function doesNoteExist(_id) {
+    try {
+        const note = await Note.findOne({_id});
+        return note;
+    } catch (err) {
+        return null;
+    }
+}
 
+async function doesUserExist(_id) {
+    try {
+        const user = await User.findOne({_id});
+        return user;
+    } catch (err) {
+        return null;
+    }
+}
 
 // CREATE USER
 router.post("/", async (req, res) => {
 
     // Validate the request body and display any errors
-    returnValidationError(res, req.body);
+    // returnValidationError(res, req.body);
+
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
     // Get details from the request body
     const { email, username, password } = req.body;
@@ -55,15 +75,23 @@ router.get("/:userId", async (req, res) => {
 
     // Get ID and return error message if user doesn't exist
     const _id = req.params.userId;
-    returnIDValidationError(res, _id);
+    //returnIDValidationError(res, _id);
+    const { error } = validateID({_id});
+    if (error) return res.status(400).send(error.details[0].message);
 
-    const user = await User.findOne({_id});
+    // try {
+    //     const user = await User.findOne({_id});
+    //     // Return the user object without the password
+    //     const {email, username} = user;
+    //     res.status(200).send({email, username, _id});
+    // } catch (err) {
+    //     res.status(400).send("User doesn't exist.");
+    // }
+    const user = await doesUserExist(_id);
     if (!user) return res.status(400).send("User doesn't exist.");
 
-    // Return the user object without the password
     const {email, username} = user;
     res.status(200).send({email, username, _id});
-    
 });
 
 
@@ -73,7 +101,9 @@ router.delete('/:userId', async (req, res) => {
     
     // Validate ID and find user in DB
     const _id = req.params.userId;
-    returnIDValidationError(res, _id);
+    // returnIDValidationError(res, _id);
+    const { error } = validateID({_id});
+    if (error) return res.status(400).send(error.details[0].message);
     
     // Try to delete the user from the DB and return error message if it fails
     try {
@@ -94,7 +124,7 @@ router.delete('/:userId', async (req, res) => {
 router.patch('/:userId', async (req, res) => {
     
     const _id = req.params.userId;
-    let user = await User.findOne({_id});
+    let user = await doesUserExist(_id);
     if (!user) return res.status(400).send("User doesn't exist.");
 
     const {email, username, password} = req.body;
@@ -120,7 +150,9 @@ router.patch('/:userId', async (req, res) => {
         }
     }
 
-    returnValidationError(res, newUser);
+    //returnValidationError(res, newUser);
+    const { error } = validate(newUser);
+    if (error) return res.status(400).send(error.details[0].message);
     
     // Update the user object with the values from newUser
     user = Object.assign(user, newUser);
@@ -143,7 +175,5 @@ router.patch('/:userId', async (req, res) => {
     // Return user object
     res.status(200).send(userObj);
 });
-
-
 
 module.exports = router;
