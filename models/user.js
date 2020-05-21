@@ -32,7 +32,7 @@ const User = mongoose.model("User", userSchema);
 function validateUser(user) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().pattern(new RegExp('^[a-zA-Z 0-9\?\!\_\-\]*$')).pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$')).required(),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z 0-9\?\!\_\-]*$')).pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$')).required(),
     username: Joi.string().min(1).max(40).alphanum()
   });
 
