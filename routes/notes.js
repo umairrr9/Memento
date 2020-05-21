@@ -1,60 +1,21 @@
-const {Note, validate} = require('../models/note');
-const {User, validateID} = require('../models/user')
+const {Note, validate, doesNoteExist} = require('../models/note');
+const {User, validateID, doesUserExist} = require('../models/user')
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
 ////// TASK: Parse content for JS code
-////// TASK: Fix note patch req
-
-
-// Validate the id and return any errors
-function returnIDValidationError(res, _id) {
-    const { error } = validateID({_id});
-    if (error) return res.status(400).send(error.details[0].message);
-}
-
-function returnValidationError(res, obj) {
-    const { error } = validate(obj);
-    if (error) return res.status(400).send(error.details[0].message);
-}
-
-async function doesNoteExist(_id) {
-    try {
-        const note = await Note.findOne({_id});
-        return note;
-    } catch (err) {
-        return null;
-    }
-}
-
-async function doesUserExist(_id) {
-    try {
-        const user = await User.findOne({_id});
-        return user;
-    } catch (err) {
-        return null;
-    }
-}
 
 // CREATE NOTE
 router.post("/", async (req, res) => {
 
     // Validate the request body and display any errors
-    // returnValidationError(res, req.body);
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     
     // Get details from the request body
     const { title, content, userId } = req.body;
 
-    // Check user id exists
-    // try {
-    //     const user = await User.findOne({_id: userId });
-    // } catch (err) {
-    //     //console.error(err);
-    //     res.status(400).send("User doesn't exist.");
-    // }
     const user = await doesUserExist(userId);
     if (!user) return res.status(400).send("User doesn't exist.");
     
@@ -65,8 +26,7 @@ router.post("/", async (req, res) => {
     try {
         await note.save(); 
     } catch (error) {
-        console.error(error);
-        res.status(400).send("Error, something went wrong.");
+        res.status(400).send("Error, the note wasn't saved.");
     }
 
     // Get note ID and return note object
@@ -85,15 +45,6 @@ router.get("/:noteId", async (req, res) => {
     const { error } = validateID({_id});
     if (error) return res.status(400).send(error.details[0].message);
 
-    // const note = null;
-    // try {
-    //     const note = await Note.findOne({_id});
-    //     // Return the note object
-    //     const {title, content, userId} = note;
-    //     res.status(200).send({title, content, _id, userId});
-    // } catch (err) {
-    //     res.status(400).send("Note doesn't exist.");
-    // }
     const note = await doesNoteExist(_id);
     if (!note) return res.status(400).send("Note doesn't exist.");
 
@@ -107,21 +58,19 @@ router.get("/:noteId", async (req, res) => {
 router.get("/all/:userId", async (req, res) => {
 
     // Get ID and return error message if user doesn't exist
-    const userId = req.params.userId;
-    const { error } = validateID({_id: userId});
+    const _id = req.params.userId;
+    const { error } = validateID({_id});
     if (error) return res.status(400).send(error.details[0].message);
 
     try {
         // get all the users notes
-        const notes = await Note.find({userId});
+        const notes = await Note.find({userId: _id});
         res.status(200).send(notes);
     } catch (err) {
         res.status(400).send("Couldn't find any notes for this user.");
     }
 
 });
-
-
 
 // DELETE NOTE BY ID
 router.delete("/:noteId", async (req, res) => {
@@ -176,7 +125,6 @@ router.patch("/:noteId", async (req, res) => {
         }
     }
 
-    //returnValidationError(res, newNote);
     const { error } = validate(newNote);
     if (error) return res.status(400).send(error.details[0].message);
     
