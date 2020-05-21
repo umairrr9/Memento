@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
-////// TASK: Parse content for JS code
+
+///// TASK: Parse content for JS code /////
+
 
 // CREATE NOTE
 router.post("/", async (req, res) => {
@@ -36,7 +38,6 @@ router.post("/", async (req, res) => {
 });
 
 
-
 // GET NOTE BY ID
 router.get("/:noteId", async (req, res) => {
 
@@ -51,7 +52,6 @@ router.get("/:noteId", async (req, res) => {
     const {title, content, userId} = note;
     res.status(200).send({title, content, _id, userId});
 });
-
 
 
 // GET ALL NOTES BY USER ID
@@ -71,6 +71,7 @@ router.get("/all/:userId", async (req, res) => {
     }
 
 });
+
 
 // DELETE NOTE BY ID
 router.delete("/:noteId", async (req, res) => {
@@ -92,7 +93,6 @@ router.delete("/:noteId", async (req, res) => {
     res.status(200).send(`Note of ID ${_id} was successfully deleted.`);
 
 });
-
 
 
 // UPDATE NOTE BY ID
@@ -146,7 +146,6 @@ router.patch("/:noteId", async (req, res) => {
     res.status(200).send(noteObj);
 
 });
-
 
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const forge = require('node-forge');
 
+
 // Create the password hash
 function createHash(password, salt) {
     var md = forge.md.sha256.create();
@@ -7,11 +8,11 @@ function createHash(password, salt) {
     return md.digest().toHex();
 }
 
+
 // Return true if the password in the DB matches the inputted password
 function checkPassword(password, salt, databasePassword) {
     return createHash(password, salt) === databasePassword;
 }
 
-// exports.createHash = createHash;
-// exports.checkPassword = checkPassword;
+
 module.exports = {createHash, checkPassword};

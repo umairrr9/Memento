@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 
 
-
 const noteSchema = mongoose.Schema({
     title: {
         type: String,
@@ -21,8 +20,8 @@ const noteSchema = mongoose.Schema({
 });
 
 
-
 const Note = mongoose.model("Note", noteSchema);
+
 
 function validateNote(note) {
     const schema = Joi.object({
@@ -33,6 +32,7 @@ function validateNote(note) {
   
     return schema.validate(note);
 }
+
 
 async function doesNoteExist(_id) {
     try {
