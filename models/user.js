@@ -35,8 +35,9 @@ const User = mongoose.model("User", userSchema);
 function validateUser(user) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(8).max(50).pattern(new RegExp('(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$')),
-    username: Joi.string().min(1).max(40).alphanum()
+    // password: Joi.string().regex(new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[$@$!#.])[A-Za-zd$@$!%*?&.]{8,20}')).required(), // (?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$
+    password: Joi.string().pattern(new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$')).required(), // /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+    username: Joi.string().min(1).max(40).alphanum() 
   });
 
   return schema.validate(user);
@@ -52,8 +53,16 @@ function validateID(_id) {
   return schema.validate(_id);
 }
 
-
+async function doesUserExist(_id) {
+  try {
+      const user = await User.findOne({_id});
+      return user;
+  } catch (err) {
+      return null;
+  }
+}
 
 exports.User = User;
 exports.validate = validateUser;
 exports.validateID = validateID;
+exports.doesUserExist = doesUserExist;

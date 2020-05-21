@@ -34,7 +34,16 @@ function validateNote(note) {
     return schema.validate(note);
 }
 
+async function doesNoteExist(_id) {
+    try {
+        const note = await Note.findOne({_id});
+        return note;
+    } catch (err) {
+        return null;
+    }
+}
 
   
 exports.Note = Note;
 exports.validate = validateNote;
+exports.doesNoteExist = doesNoteExist;
