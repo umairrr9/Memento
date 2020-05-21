@@ -1,49 +1,17 @@
-const {User, validate, validateID} = require('../models/user');
+const {User, validate, validateID, doesUserExist} = require('../models/user');
 const mongoose = require('mongoose');
 const express = require('express');
+const {createHash, checkPassword} = require('../static/hash');
 const router = express.Router();
 
 ///// TASK: Make endpoints handle errors e.g JSON error more kindly /////
-///// TASK: Encrypt the password /////
 ///// TASK: Turn repeated code into functions /////
-
-// Validate the id and return any errors
-// REMEMBER: This function will return the res.status... 
-// but not stop the function from carrying on
-function returnIDValidationError(res, _id) {
-    const { error } = validateID({_id});
-    if (error) return res.status(400).send(error.details[0].message);
-}
-
-function returnValidationError(res, obj) {
-    const { error } = validate(obj);
-    if (error) return res.status(400).send(error.details[0].message);
-}
-
-async function doesNoteExist(_id) {
-    try {
-        const note = await Note.findOne({_id});
-        return note;
-    } catch (err) {
-        return null;
-    }
-}
-
-async function doesUserExist(_id) {
-    try {
-        const user = await User.findOne({_id});
-        return user;
-    } catch (err) {
-        return null;
-    }
-}
+///// TASK: Use JWT and sessions to validate users /////
 
 // CREATE USER
 router.post("/", async (req, res) => {
 
     // Validate the request body and display any errors
-    // returnValidationError(res, req.body);
-
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -54,6 +22,7 @@ router.post("/", async (req, res) => {
     let user = await User.find().or([{ email }, { username }]);
     if (user.length > 0) return res.status(400).send("User already registered.");
     user = new User({email, username, password});
+    user.password = createHash(password, user._id);
 
     // Try to save the user in the DB and return error message if it fails
     try {
@@ -62,6 +31,8 @@ router.post("/", async (req, res) => {
         console.error(error);
         res.status(400).send("Error, the user wasn't saved.");
     }
+
+    //// TASK: Store jwt cookie
     
     // Get user ID and return user object
     const {_id} = user;
@@ -75,18 +46,9 @@ router.get("/:userId", async (req, res) => {
 
     // Get ID and return error message if user doesn't exist
     const _id = req.params.userId;
-    //returnIDValidationError(res, _id);
     const { error } = validateID({_id});
     if (error) return res.status(400).send(error.details[0].message);
 
-    // try {
-    //     const user = await User.findOne({_id});
-    //     // Return the user object without the password
-    //     const {email, username} = user;
-    //     res.status(200).send({email, username, _id});
-    // } catch (err) {
-    //     res.status(400).send("User doesn't exist.");
-    // }
     const user = await doesUserExist(_id);
     if (!user) return res.status(400).send("User doesn't exist.");
 
