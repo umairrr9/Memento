@@ -1,6 +1,6 @@
 const {Note, validate, doesNoteExist} = require('../models/note');
 const {User, validateID, doesUserExist} = require('../models/user');
-const {replaceWithNew} = require("../../static/helper");
+const {replaceWithNew} = require("../static/helper");
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();

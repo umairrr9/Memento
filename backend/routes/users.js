@@ -147,7 +147,7 @@ router.patch('/:userId', async (req, res) => {
     if (!user) return res.status(400).send("User doesn't exist.");
 
     const {email, username, password} = req.body;
-    const newUserFields = {email, username, createHash(password, _id)};
+    const newUserFields = {email, username, password: createHash(password, _id)};
     const {email: oldEmail, username: oldUsername, password: oldPassword} = user;
     const oldUserFields = {email: oldEmail, username: oldUsername, password: oldPassword};
     let newUser = replaceWithNew(newUserFields, oldUserFields);
