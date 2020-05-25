@@ -33,7 +33,7 @@ function validateUser(user) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().pattern(new RegExp('^[a-zA-Z 0-9\?\!\_\-]*$')).pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$')).required(),
-    username: Joi.string().min(1).max(40).alphanum()
+    username: Joi.string().min(1).max(40).alphanum().required()
   });
 
   return schema.validate(user);
@@ -48,7 +48,6 @@ function validateID(_id) {
   return schema.validate(_id);
 }
 
-
 async function doesUserExist(_id) {
   try {
       const user = await User.findOne({_id});
@@ -58,8 +57,19 @@ async function doesUserExist(_id) {
   }
 }
 
+function validateUserLogin(user) {
+  const schema = Joi.object({
+    email: Joi.string().min(5).max(255).email(),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z 0-9\?\!\_\-]*$')).pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$')).required(),
+    username: Joi.string().min(1).max(40).alphanum()
+  });
+
+  return schema.validate(user);
+}
+
 
 exports.User = User;
 exports.validate = validateUser;
 exports.validateID = validateID;
 exports.doesUserExist = doesUserExist;
+exports.validateUserLogin = validateUserLogin;

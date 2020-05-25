@@ -1,5 +1,6 @@
 const {Note, validate, doesNoteExist} = require('../models/note');
-const {User, validateID, doesUserExist} = require('../models/user')
+const {User, validateID, doesUserExist} = require('../models/user');
+const {replaceWithNew} = require("../static/helper");
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
@@ -110,20 +111,7 @@ router.patch("/:noteId", async (req, res) => {
     const {title, content} = req.body;
     const newNoteFields = {title, content, userId};
     const oldNoteFields = {title: oldTitle, content: oldContent, userId: oldUserId}
-    let newNote = {};
-
-    // For each key/value pair in newNoteFields
-    // If the value is null
-    // Set newNote[key] to the old value
-    // If the value is not null
-    // Set newNote[key] to the new value
-    for (let [key, value] of Object.entries(newNoteFields)) {
-        if (!value) {
-            newNote[key] = oldNoteFields[key];
-        } else {
-            newNote[key] = value;
-        }
-    }
+    let newNote = replaceWithNew(newNoteFields, oldNoteFields);
 
     const { error } = validate(newNote);
     if (error) return res.status(400).send(error.details[0].message);
@@ -139,11 +127,8 @@ router.patch("/:noteId", async (req, res) => {
         res.status(400).send("Error, the note wasn't saved.");
     }
     
-    // Create the note object
-    const noteObj = {_id, title, content, oldTitle, oldContent};
-
     // Return note object
-    res.status(200).send(noteObj);
+    res.status(200).send({_id, title, content, oldTitle, oldContent});
 
 });
 
