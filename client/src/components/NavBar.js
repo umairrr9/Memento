@@ -4,7 +4,7 @@ const NavBar = () => {
   const [isOpen, setOpen] = useState(false);
   
   return (
-    <nav className="bg-white border-brandBlue-A border-4 border-solid bottom sm:flex sm:justify-between sm:items-center sm:px-8 sm:py-3">
+    <nav className="sm:flex sm:justify-between sm:items-center sm:px-8 sm:py-3">
       <div className="flex items-center justify-between px-4 py-3 sm:p-0">
         <div>
           {/* <img className="h-8" src="/img/logo-inverted.svg" alt="Workcation"/> */}
@@ -14,7 +14,7 @@ const NavBar = () => {
           <button
             onClick={() => setOpen(!isOpen)}
             type="button"
-            className="block text-brandBlue-A hover:text-brandBlue-B focus:text-brandBlue-B focus:outline-none"
+            className="block text-gray-900 hover:text-gray-600 focus:text-grey-600 focus:outline-none"
           >
             <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
               {/* TODO: FIX BELOW TURN INTO ONE STATEMENT */}
@@ -37,7 +37,7 @@ const NavBar = () => {
       </div>
       {
         <nav className={isOpen ? 'block px-2 pt-2 pb-4 sm:flex sm:p-0' : 'hidden px-2 pt-2 pb-4 sm:flex sm:p-0'}>
-          <a
+          {/* <a
             href="#"
             className="block px-2 py-1 text-brandBlue-A font-semibold rounded hover:text-brandBlue-B"
           >
@@ -54,7 +54,46 @@ const NavBar = () => {
             className="mt-1 block px-2 py-1 text-brandBlue-A font-semibold rounded hover:text-brandBlue-B sm:mt-0 sm:ml-2"
           >
             Messages
+          </a> */}
+
+          {/* <p className="text-gray"> | </p> */}
+
+          <a
+            href="/"
+            className="bg-white mt-1 block text-gray-500 font-bold py-1 px-3 sm:ml-2"
+          >
+            Features
           </a>
+
+          <a
+            href="/"
+            className="bg-white mt-1 block text-gray-500 font-bold py-1 px-3"
+          >
+            Something
+          </a>
+
+          <a
+            href="/"
+            className="bg-white mt-1 block text-gray-500 font-bold py-1 px-3 mr-16"
+          >
+            About Us
+          </a>
+
+          <a
+            href="/"
+            className="bg-white mt-1 block text-brandBlue-A hover:text-brandBlue-B font-bold py-1 px-3"
+          >
+            Log in
+          </a>
+
+          <a
+            href="/"
+            className="bg-white mt-1 hover:text-brandBlue-B hover:border-brandBlue-B inline-block border-brandBlue-A border-2 border-solid text-brandBlue-A font-bold py-1 px-3 rounded-full"
+          >
+            Sign Up
+          </a>
+
+          
         </nav>
       }
     </nav>
