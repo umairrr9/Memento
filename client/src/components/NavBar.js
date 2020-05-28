@@ -8,7 +8,7 @@ const NavBar = () => {
       <div className="flex items-center justify-between px-4 py-3 sm:p-0">
         <div>
           {/* <img className="h-8" src="/img/logo-inverted.svg" alt="Workcation"/> */}
-          <h1 className="text-brandBlue-A font-semibold hover:text-brandBlue-B">Memento</h1>
+          <h1 className="text-brandBlue-A font-bold hover:text-brandBlue-B">Memento</h1>
         </div>
         <div className="sm:hidden">
           <button
@@ -37,28 +37,42 @@ const NavBar = () => {
       </div>
       {
         <nav className={isOpen ? 'block px-2 pt-2 pb-4 sm:flex sm:p-0' : 'hidden px-2 pt-2 pb-4 sm:flex sm:p-0'}>
-          {/* <a
+          <a
             href="#"
-            className="block px-2 py-1 text-brandBlue-A font-semibold rounded hover:text-brandBlue-B"
+            className="block px-2 py-1 text-gray-500 font-bold rounded hover:text-brandBlue-B"
           >
-            List your property
+            Features
           </a>
           <a
             href="#"
-            className="mt-1 block px-2 py-1 text-brandBlue-A font-semibold rounded hover:text-brandBlue-B sm:mt-0 sm:ml-2"
+            className="mt-1 block px-2 py-1 text-gray-500 font-bold rounded hover:text-brandBlue-B sm:mt-0 sm:ml-2"
           >
-            Trips
+            Something
           </a>
           <a
             href="#"
-            className="mt-1 block px-2 py-1 text-brandBlue-A font-semibold rounded hover:text-brandBlue-B sm:mt-0 sm:ml-2"
+            className="mt-1 md:mr-16 block px-2 py-1 text-gray-500 font-bold rounded hover:text-brandBlue-B sm:mt-0 sm:ml-2"
           >
-            Messages
-          </a> */}
+            About Us
+          </a>
+
+          <a
+            href="/"
+            className="mt-1 block text-brandBlue-A hover:text-brandBlue-B font-bold px-2 py-1 sm:mt-0 sm:ml-2"
+          >
+            Log in
+          </a>
+
+          <a
+            href="/"
+            className="bg-white mt-1 hover:text-brandBlue-B hover:border-brandBlue-B inline-block border-brandBlue-A border-2 border-solid text-brandBlue-A font-bold px-2 py-1 rounded-full sm:mt-0 sm:ml-2"
+          >
+            Sign Up
+          </a>
 
           {/* <p className="text-gray"> | </p> */}
 
-          <a
+          {/* <a
             href="/"
             className="bg-white mt-1 block text-gray-500 font-bold py-1 px-3 sm:ml-2"
           >
@@ -91,7 +105,7 @@ const NavBar = () => {
             className="bg-white mt-1 hover:text-brandBlue-B hover:border-brandBlue-B inline-block border-brandBlue-A border-2 border-solid text-brandBlue-A font-bold py-1 px-3 rounded-full"
           >
             Sign Up
-          </a>
+          </a> */}
 
           
         </nav>
