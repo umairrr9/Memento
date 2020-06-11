@@ -11,6 +11,14 @@ const Form = () => {
   const passwordPattern1 = new RegExp('^[a-zA-Z 0-9?!_-]*$');
   const passwordPattern2 = new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$');
 
+  useEffect(() => {
+    let isLogin = new URLSearchParams(location.search).get("isLogin");
+    
+    if (isLogin === "1" || isLogin === "0") {
+      setValues(values => ({ ...values, isLogin: isLogin}));
+    }
+  });
+
   function login() {
     // validate the username, email and password
     // check whether they are signing up or logging in
@@ -53,30 +61,30 @@ const Form = () => {
             <input class="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3" id="title" type="text" placeholder="Software Engineer"/>
           </div>
         </div> */}
-          <div class="-mx-3 md:flex mb-6">
+          {!isLogin && <div class="-mx-3 md:flex mb-6">
             <div class="md:w-full px-3">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                 Username
-            </label>
-              <input name="username" className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Username" onChange={handleChange} value={username || ""} required />
-              <div>
+              </label>
+              <input name="username" className={usernameError ? "shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" : "shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"} type="text" placeholder="Username" onChange={handleChange} value={username || ""} required />
+              {usernameError && <div>
                 <span class="text-red-500 text-xs italic">
                   {usernameError}
-              </span>
-              </div>
+                </span>
+              </div>}
             </div>
-          </div>
+          </div>}
           <div class="-mx-3 md:flex mb-6">
             <div class="md:w-full px-3">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                 Email
-            </label>
-              <input name="email" className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"  type="email" placeholder="user@example.com" onChange={handleChange} value={email || ""} required />
-              <div>
+              </label>
+              <input name="email" className={emailError ? "shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" : "shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"}  type="email" placeholder="user@example.com" onChange={handleChange} value={email || ""} required />
+              {emailError && <div>
                 <span class="text-red-500 text-xs italic">
                   {emailError}
               </span>
-              </div>
+              </div>}
             </div>
           </div>
           <div class="-mx-3 md:flex mb-6">
@@ -84,27 +92,27 @@ const Form = () => {
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                 Password
             </label>
-              <input name="password" className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"  type="password" placeholder="*********************" onChange={handleChange} value={password || ""}/>
-              <div>
+              <input name="password" className={passwordError ? "shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" : "shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"}  type="password" placeholder="*********************" onChange={handleChange} value={password || ""}/>
+              {passwordError && <div>
                 <span class="text-red-500 text-xs italic">
                   {passwordError}
-              </span>
-              </div>
+                </span>
+              </div>}
             </div>
           </div>
-          <div class="-mx-3 md:flex mb-6">
+          {!isLogin &&<div class="-mx-3 md:flex mb-6">
             <div class="md:w-full px-3">
               <label className="block text-gray-700 text-sm font-bold mb-2"/*class="uppercase tracking-wide text-black text-xs font-bold mb-2"*/ htmlFor="confirmPassword">
                 Confirm Password
             </label>
-              <input name="confirmPassword" className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" /*class="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3"*/ type="password" placeholder="*********************" onChange={handleChange} value={confirmPassword || ""}/>
-              <div>
+              <input name="confirmPassword" className={confirmPasswordError ? "shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" : "shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"} /*class="w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3"*/ type="password" placeholder="*********************" onChange={handleChange} value={confirmPassword || ""}/>
+              {confirmPasswordError && <div>
                 <span class="text-red-500 text-xs italic">
                   {confirmPasswordError}
-              </span>
-              </div>
+                </span>
+              </div>}
             </div>
-          </div>
+          </div>}
 
           {/* <div class="-mx-3 md:flex mb-2">
           <div class="md:w-1/2 px-3 mb-6 md:mb-0">
@@ -150,10 +158,10 @@ const Form = () => {
               Button
             </button> */}
             <button className="bg-brandBlue-A hover:bg-brandBlue-B text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-              {isLogin ? "Sign Up" : "Login"}
+              {isLogin ? "Login" : "Sign Up"}
             </button>
             <a className="inline-block self-center font-semibold text-sm text-brandBlue-A hover:text-brandBlue-B" onClick={handleIsLogin} href="#">
-              {isLogin ? "Login instead?" : "Sign Up instead?"}
+              {isLogin ? "Sign Up instead?" : "Login instead?"}
             </a>
             {/* </div> */}
           </div>

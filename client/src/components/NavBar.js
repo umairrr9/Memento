@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "./Link"
-// import {Link as Route} from "react-router-dom";
+import {Link as Route} from "react-router-dom";
 
 
 const NavBar = () => {
@@ -47,23 +47,25 @@ const NavBar = () => {
           <Link otherClasses="" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Features"/>
           <Link otherClasses="mt-1 md:mt-0 md:ml-2" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="About Us"/>
           <Link otherClasses="mt-1 md:mt-0 md:ml-2 md:mr-16" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Something"/>
+          <Route to="/form?isLogin=1">
           <Link otherClasses="mt-1 md:mt-0 md:ml-2" href="#" color="brandBlue-A" hoverColor="brandBlue-B" focusColor="brandBlue-B" text="Login"/>
+          </Route>
           {/* <Link otherClasses="rounded-full mt-1 md:mt-0 md:ml-2 hover:text-brandBlue-B hover:border-brandBlue-B border-brandBlue-A border-2 border-solid" href="#" color="brandBlue-A" hoverColor="brandBlue-B" focusColor="brandBlue-B" text="Sign Up"/>
            */}
 
-          {/* <a
+          {/* <a ?isLogin=true
             href="/"
             className="mt-1 block text-brandBlue-A hover:text-brandBlue-B font-bold px-2 py-1 md:mt-0 md:ml-2"
           >
             Log in
           </a> */}
 
-          <a
-            href="/"
+          <Route
+            to="/form?isLogin=0"
             className="bg-white mt-1 hover:text-brandBlue-B hover:border-brandBlue-B inline-block border-brandBlue-A border-2 border-solid text-brandBlue-A font-bold px-2 py-1 rounded-full md:mt-0 md:ml-2"
           >
             Sign Up
-          </a>
+          </Route>
         </nav>
       }
     </nav>
