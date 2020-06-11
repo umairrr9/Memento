@@ -1,13 +1,11 @@
 import React from 'react';
 
-function Button() {
+function Button({text, backgroundColor, textColor, textSize, padding, otherClasses}) {
   return (
-    <div>
 
-      
-      
-
-    </div>
+        <button className={"bg-" + backgroundColor + " text-" + textColor + " text-" + textSize + " p-" + padding + " " + otherClasses}>
+          {text}
+        </button>
   )
     
 }
