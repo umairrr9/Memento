@@ -7,6 +7,7 @@ import inSync from '../assets/in_sync.svg';
 import ideasFlow from '../assets/ideas_flow.svg';
 import thoughtProcess from '../assets/thought_process.svg';
 import {Link} from "react-router-dom";
+import ImageCaption from "../components/ImageCaption";
 
 function Landing() {
   return (
@@ -40,27 +41,24 @@ function Landing() {
             </div>
 
             <div className="m-auto text-center sm:flex sm:align-center sm:justify-around mt-10">
-              <div>
-                <img className="w-auto h-48 object-cover inline" src={thoughtProcess} />
-                <h2 className="mt-1 text-white">Unleash your creativity</h2>
-              </div>
-              <div>
-                <img className="w-auto h-48 object-cover inline mt-8 sm:mt-0" src={researching} />
-                <h2 className="mt-1 text-white">Get productive</h2>
-              </div>
-              <div>
-                <img className="w-auto h-48 object-cover inline mt-8 sm:mt-0" src={inSync} />
-                <h2 className="mt-1 text-white">Access your notes anywhere</h2>
-              </div>
+
+              <ImageCaption image={thoughtProcess} imageClasses="w-auto h-48 object-cover inline"
+              caption="Unleash your creativity" captionClasses="mt-1 text-white" />
+
+              <ImageCaption image={researching} imageClasses="w-auto h-48 object-cover inline mt-8 sm:mt-0"
+              caption="Get productive" captionClasses="mt-1 text-white" />
+
+              <ImageCaption image={inSync} imageClasses="w-auto h-48 object-cover inline mt-8 sm:mt-0"
+              caption="Get productive" captionClasses="mt-1 text-white" />
+
             </div>
 
             </div>
             
-
+</div>
           </div>
 
         </div>
-      </div>
   )
     
 }

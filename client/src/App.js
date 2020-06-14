@@ -1,6 +1,7 @@
 import React from 'react';
 import Landing from './pages/Landing';
 import Form from './pages/Form';
+import Note from './pages/Note';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,6 +15,9 @@ function App() {
       <Switch>
           <Route path="/form">
             <Form />
+          </Route>
+          <Route path="/note">
+            <Note />
           </Route>
           <Route path="/">
             <Landing />

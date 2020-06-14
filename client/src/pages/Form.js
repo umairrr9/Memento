@@ -7,13 +7,13 @@ import logo from '../assets/transparent.png';
 // https://upmostly.com/tutorials/using-custom-react-hooks-simplify-forms
 
 const Form = () => {
-  const { values, handleChange, handleSubmit, handleIsLogin, setValues } = useForm(login);
+  const { values, handleChange, handleSubmit, handleIsLogin, setValues, setValue } = useForm(login);
   const { email, password, confirmPassword, username, emailError, passwordError, confirmPasswordError, usernameError, isLogin } = values;
-  const passwordPattern1 = new RegExp('^[a-zA-Z 0-9?!_-]*$');
-  const passwordPattern2 = new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$');
+  // const passwordPattern1 = new RegExp('^[a-zA-Z 0-9?!_-]*$');
+  const passwordPattern2 = new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$£%^&+=])(?=.*[a-z]).{8,}$');
 
   useEffect(() => {
-    let isLogin = new URLSearchParams(window.location.search).get("isLogin") ? true : false;
+    let isLogin = new URLSearchParams(window.location.search).get("isLogin") === "1" ? true : false;
     setValues(values => ({ ...values, isLogin: isLogin}));
   }, [setValues]);
 
@@ -22,14 +22,25 @@ const Form = () => {
     // check whether they are signing up or logging in
     // make post request to do login/signup
 
-    if (!email) setValues(values => ({ ...values, emailError: "Please enter a email." }));
-    if (!username) setValues(values => ({ ...values, usernameError: "Please enter a username." }));
-    if (!password) setValues(values => ({ ...values, passwordError: "Please enter a password." }));
+    // check they are not empty
+    if (!email) setValue("emailError", "Please enter a email.");
+    if (!username) setValue("usernameError", "Please enter a username.");
+    if (!password) setValue("passwordError", "Please enter a password.");
 
-    if (!(password.match(passwordPattern1) && password.match(passwordPattern2))) {
-      setValues(values => ({ ...values, passwordError: "Password is invalid." }));
+    //if (!(password.match(passwordPattern1) && password.match(passwordPattern2))) {
+    if (!password.match(passwordPattern2)) {
+      //setValues(values => ({ ...values, passwordError: "Password is invalid." }));
+      setValue("passwordError", "The password should be at least 8 characters long and contain at least one uppercase, lowercase, number, and one special character.");
     } else {
-      setValues(values => ({ ...values, passwordError: "" }));
+      //setValues(values => ({ ...values, passwordError: "" }));
+      setValue("passwordError", "");
+    }
+
+    // if the passwords are equal 
+    if (!isLogin && (password !== confirmPassword)) {
+      setValue("confirmPasswordError", "This password doesn't match, please try again.");
+    } else {
+      setValue("confirmPasswordError", "");
     }
 
     console.log(values);

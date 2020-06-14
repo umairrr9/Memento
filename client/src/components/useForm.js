@@ -19,12 +19,17 @@ const useForm = (callback) => {
     setValues(values => ({ ...values, isLogin: !values.isLogin}));
   }
 
+  const setValue = (key, value) => {
+    return setValues(values => ({ ...values, [key]: value}));
+  }
+
   return {
     handleChange,
     handleSubmit,
     values,
     handleIsLogin,
-    setValues
+    setValues,
+    setValue
   }
 };
 
