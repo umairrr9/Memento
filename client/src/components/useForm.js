@@ -13,15 +13,15 @@ const useForm = (callback) => {
     event.persist();
     setValues(values => ({ ...values, [event.target.name]: event.target.value }));
   };
-  
+
   const handleIsLogin = (event) => {
     if (event) event.preventDefault();
-    setValues(values => ({ ...values, isLogin: !values.isLogin}));
+    setValues(values => ({ ...values, isLogin: !values.isLogin }));
   }
 
   const setValue = (key, value) => {
-    return setValues(values => ({ ...values, [key]: value}));
-  }
+    setValues(values => ({ ...values, [key]: value }));
+  };
 
   return {
     handleChange,

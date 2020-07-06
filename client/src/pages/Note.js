@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import NavBar from '../components/NavBar';
+import SideNav from '../components/SideNav';
 
 function Note() {
     return (
         <div>
-            <NavBar />
+            <SideNav />
             
             <div className="">
-                yo
+                hello this is my note lol
             </div>
 
         </div>

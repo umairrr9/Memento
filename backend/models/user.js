@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 
-
 const userSchema = mongoose.Schema({
   email: {
     type: String,
@@ -25,20 +24,19 @@ const userSchema = mongoose.Schema({
   }
 });
 
-
 const User = mongoose.model("User", userSchema);
 
+// https://stackoverflow.com/questions/48720942/node-js-joi-how-to-display-a-custom-error-messages
 
 function validateUser(user) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().pattern(new RegExp('^[a-zA-Z 0-9\?\!\_\-]*$')).pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$')).required(),
+    password: Joi.string().pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$')).required(),    
     username: Joi.string().min(1).max(40).alphanum().required()
   });
 
-  return schema.validate(user);
+  return schema.validate(user, { abortEarly: false });
 }
-
 
 function validateID(_id) {
   const schema = Joi.object({
@@ -60,11 +58,11 @@ async function doesUserExist(_id) {
 function validateUserLogin(user) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).email(),
-    password: Joi.string().pattern(new RegExp('^[a-zA-Z 0-9\?\!\_\-]*$')).pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$')).required(),
+    password: Joi.string().pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$')).required(),
     username: Joi.string().min(1).max(40).alphanum()
   });
 
-  return schema.validate(user);
+  return schema.validate(user, { abortEarly: false });
 }
 
 

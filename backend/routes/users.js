@@ -18,13 +18,17 @@ router.post("/login", async (req, res) => {
 
     // Validate the request body and display any errors
     const { error } = validateUserLogin(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) {
+        if (error.details[0].type === 'string.pattern.base')
+            return res.status(400).send({error: "Your password doesn't match the pattern."});
+        return res.status(400).send({error: error.details[0].message});
+    }
 
     // Get details from the request body
     const { email, username, password } = req.body;
 
     let user = await User.findOne().or([{ email }, { username }]);
-    if (!user) return res.status(400).send("Login combination failed, please try again."); 
+    if (!user) return res.status(400).send({error: "Login combination failed, please try again."}); 
     const {_id} = user;
 
     const newUserFields = {email, username, password: createHash(password, _id)};
@@ -55,10 +59,9 @@ router.post("/login", async (req, res) => {
         // Send user object
         res.status(200).send({email: loginEmail, username: loginUsername, _id});
     } else {
-        res.status(400).send("Login combination failed, please try again.");
+        res.status(400).send({error: "Login combination failed, please try again."});
     }
     
-
 });
 
 
@@ -67,15 +70,19 @@ router.post("/signup", async (req, res) => {
 
     // Validate the request body and display any errors
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+    if (error) {
+        if (error.details[0].type === 'string.pattern.base')
+            return res.status(400).send({error: "Your password doesn't match the pattern."});
+        return res.status(400).send({error: error.details[0].message});
+    }
+    
     // Get details from the request body
     const { email, username, password } = req.body;
 
     // If user email/username already exists, return error
     let user = await User.find().or([{ email }, { username }]);
     if (user.length > 0) {
-        return res.status(400).send("User already registered.");
+        return res.status(400).send({error: "User already registered."});
     }
 
     user = new User({email, username, password});
@@ -106,15 +113,14 @@ router.get("/:userId", async (req, res) => {
     // Get ID and return error message if user doesn't exist
     const _id = req.params.userId;
     const { error } = validateID({_id});
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({error: error.details[0].message});
 
     const user = await doesUserExist(_id);
-    if (!user) return res.status(400).send("User doesn't exist.");
+    if (!user) return res.status(400).send({error: "User doesn't exist."});
 
     const {email, username} = user;
     res.status(200).send({email, username, _id});
 });
-
 
 // DELETE USER BY ID
 router.delete('/:userId', async (req, res) => {
@@ -122,14 +128,14 @@ router.delete('/:userId', async (req, res) => {
     // Validate ID
     const _id = req.params.userId;
     const { error } = validateID({_id});
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({error: error.details[0].message});
     
     // Try to delete the user from the DB and return error message if it fails
     try {
         await User.deleteOne({_id});
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, the user wasn't deleted.");
+        res.status(400).send({error: "Error, the user wasn't deleted."});
     }
     
     // Confirm deletion with a message
@@ -144,7 +150,7 @@ router.patch('/:userId', async (req, res) => {
     // Validate ID
     const _id = req.params.userId;
     let user = await doesUserExist(_id);
-    if (!user) return res.status(400).send("User doesn't exist.");
+    if (!user) return res.status(400).send({error: "User doesn't exist."});
 
     const {email, username, password} = req.body;
     const newUserFields = {email, username, password: createHash(password, _id)};
@@ -154,7 +160,11 @@ router.patch('/:userId', async (req, res) => {
 
     // Validate the updated user values
     const { error } = validate(newUser);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) {
+        if (error.details[0].type === 'string.pattern.base')
+            return res.status(400).send({error: "Your password doesn't match the pattern."});
+        return res.status(400).send({error: error.details[0].message});
+    }
     
     // Update the user object with the values from newUser
     user = Object.assign(user, newUser);
@@ -164,7 +174,7 @@ router.patch('/:userId', async (req, res) => {
         await user.save();
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, the user wasn't saved.");
+        res.status(400).send({error: "Error, the user wasn't saved."});
     }
     
     // Create the user object

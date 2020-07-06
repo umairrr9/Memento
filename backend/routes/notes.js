@@ -14,13 +14,13 @@ router.post("/", async (req, res) => {
 
     // Validate the request body and display any errors
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({error: error.details[0].message});
     
     // Get details from the request body
     const { title, content, userId } = req.body;
 
     const user = await doesUserExist(userId);
-    if (!user) return res.status(400).send("User doesn't exist.");
+    if (!user) return res.status(400).send({error: "User doesn't exist."});
     
     // Create note object
     let note = new Note({ title, content, userId });
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
     try {
         await note.save(); 
     } catch (error) {
-        res.status(400).send("Error, the note wasn't saved.");
+        res.status(400).send({error: "Error, the note wasn't saved."});
     }
 
     // Get note ID and return note object
@@ -45,10 +45,10 @@ router.get("/:noteId", async (req, res) => {
     // Get ID and return error message if note doesn't exist
     const _id = req.params.noteId;
     const { error } = validateID({_id});
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({error: error.details[0].message});
 
     const note = await doesNoteExist(_id);
-    if (!note) return res.status(400).send("Note doesn't exist.");
+    if (!note) return res.status(400).send({error: "Note doesn't exist."});
 
     const {title, content, userId} = note;
     res.status(200).send({title, content, _id, userId});
@@ -61,14 +61,14 @@ router.get("/all/:userId", async (req, res) => {
     // Get ID and return error message if user doesn't exist
     const _id = req.params.userId;
     const { error } = validateID({_id});
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({error: error.details[0].message});
 
     try {
         // get all the users notes
         const notes = await Note.find({userId: _id});
         res.status(200).send(notes);
     } catch (err) {
-        res.status(400).send("Couldn't find any notes for this user.");
+        res.status(400).send({error: "Couldn't find any notes for this user."});
     }
 
 });
@@ -80,18 +80,18 @@ router.delete("/:noteId", async (req, res) => {
     // Validate ID and find user in DB
     const _id = req.params.noteId;
     const { error } = validateID({_id});
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({error: error.details[0].message});
     
     // Try to delete the user from the DB and return error message if it fails
     try {
         await Note.deleteOne({_id});
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, the note wasn't deleted.");
+        res.status(400).send({error: "Error, the note wasn't deleted."});
     }
     
     // Confirm deletion with a message
-    res.status(200).send(`Note of ID ${_id} was successfully deleted.`);
+    res.status(200).send({message: `Note of ID ${_id} was successfully deleted.`});
 
 });
 
@@ -101,10 +101,10 @@ router.patch("/:noteId", async (req, res) => {
 
     const _id = req.params.noteId;
     const { error: errorId } = validateID({_id});
-    if (errorId) return res.status(400).send(errorId.details[0].message);
+    if (errorId) return res.status(400).send({error: errorId.details[0].message});
 
     let note = await doesNoteExist(_id);
-    if (!note) return res.status(400).send("Note doesn't exist.");
+    if (!note) return res.status(400).send({error: "Note doesn't exist."});
 
     const {title: oldTitle, content: oldContent, userId: oldUserId} = note;
     const userId = oldUserId; // userid can't be changed

@@ -8,9 +8,12 @@ var path = require("path");
 const {verifyJWT, generateJWT} = require('./static/auth');
 require("dotenv/config");
 
+var cors = require('cors');
 
-const app = express();
+var app = express();
 
+// Then use it before your routes are set up:
+app.use(cors());
 
 // Connect to DB
 mongoose.set("useUnifiedTopology", true);

@@ -31,7 +31,7 @@ function Landing() {
                 
                 <br />
                 
-                <Link to="/form">
+                <Link to="/signup">
                   <Button text="Sign Up For Free" backgroundColor="white" textColor="brandBlue-A"
                   textSize="2xl" padding="3" otherClasses="font-semibold my-4 rounded-full" />
                 </Link>
@@ -49,16 +49,28 @@ function Landing() {
               caption="Get productive" captionClasses="mt-1 text-white" />
 
               <ImageCaption image={inSync} imageClasses="w-auto h-48 object-cover inline mt-8 sm:mt-0"
-              caption="Get productive" captionClasses="mt-1 text-white" />
+              caption="Access your notes anywhere" captionClasses="mt-1 text-white" />
 
             </div>
-
+              
             </div>
             
-</div>
           </div>
 
-        </div>
+          <div id="features" className="bg-white">
+            <h1 className="text-5xl text-brandBlue-A"> Features </h1>
+            <p>
+              We have a wide range of features to help you have the best note taking experience possible!
+            </p>
+
+
+          </div>
+
+
+
+      </div>
+
+  </div>
   )
     
 }
