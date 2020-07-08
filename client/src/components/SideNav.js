@@ -1,77 +1,81 @@
-import React from 'react';
-
+import React, {useState} from 'react';
 import {Link} from "react-router-dom";
-
-const tree = [
-  {
-    title: 'Beverages',
-    children: [
-      { title: 'Coke', value: '500ml bottle ASDA' },
-      { title: 'Water', value: '2L bottle Tesco'},
-      { title: 'Fanta', children: [
-        {title: 'Fruit Twist', value: 'small can ASDA'},
-        {title: 'Orange', value: 'can tesco'}
-      ]}
-    ]
-  },
-  {title: 'Todo', value: 'go shoppin'}
-];
-
-function traverse(tree) {
-  tree.forEach(n => {
-    console.log(n.title);
-    if (n.children) {
-      traverse(n.children);
-    } else {
-      console.log(n.value);
-    }
-  });
-}
-
-// var traverse = function(tree, current) {
-//   //process current node here
-
-//   //visit children of current
-//   for (var cki in current.out) {
-//       var ck = current.out[cki];
-//       var child = tree[ck];
-//       traverse(tree, child);
-//   }
-// }
 
 
 
 function SideNav() {
 
-  
+  const tree = [
+    {
+      title: 'Beverages',
+      id: 1,
+      children: [
+        { title: 'Coke', id: 2, value: '500ml bottle ASDA' },
+        { title: 'Water', id: 3, value: '2L bottle Tesco'},
+        { title: 'Fanta', id: 4, children: [
+          {title: 'Fruit Twist', id: 5, value: 'small can ASDA'},
+          {title: 'Orange', id: 6, value: 'can tesco'}
+        ]}
+      ]
+    },
+    {
+      title: 'Todo',
+      id: 7,
+      children: [
+        { title: 'Go shopping', id: 8, value: 'Apples, milk and bread.'},
+        { title: 'Clean room', id: 9, value: 'Clean room.'}
+      ]},
+      {title: 'Books', id: 10, value: 'Maths'}
+  ];
+  //https://material-ui.com/components/tree-view/
 
     return (
 
-    // <TreeView className="fixed w-56 h-full bg-gray-100 py-8 px-2 text-5xl"
-    //   defaultCollapseIcon={<ExpandMoreIcon />}
-    //   defaultExpandIcon={<ChevronRightIcon />}
-    // >
-    // <TreeItem nodeId="1" label="Shopping List" />
-    //   <TreeItem nodeId="2" label="Maths Notes">
-    //     <TreeItem nodeId="3" label="Algebra" />
-    //     <TreeItem nodeId="4" label="Graphs">
-    //     <TreeItem nodeId="5" label="Basic" />
-    //     <TreeItem nodeId="6" label="Advanced" />
-    //     </TreeItem>
-    //     <TreeItem nodeId="7" label="Set Theory" />
-    //   </TreeItem>
-    //   <TreeItem nodeId="8" label="Travel List" />
-    //   <TreeItem nodeId="9" label="Home Ideas" />
-    // </TreeView>
-
       <div>
         
-        {traverse(tree)}
+         <Tree tree={tree} level={0}/>
+         
+         
+         &rsaquo;
+         <br />
+         &#9658;
+
+         &#9656;
+         &#9662;
+
 
       </div>
 
     )
     
+}
+
+// https://medium.com/@swatisucharita94/recursive-rendering-in-react-42666102eae2
+
+const Tree = ({tree, level}) => {
+  return (
+    <TreeView level={level}>
+    {
+      tree.map(n => (
+        <React.Fragment key={n.id}>
+        <h2>{n.title}</h2>
+        {n.children && <Tree tree={n.children} level={level+1}/>}
+        </React.Fragment>
+      ))
+    }
+    </TreeView>
+  );
+}
+
+const TreeView = ({level, children}) => {
+
+  // const [isOpen, setOpen] = useState(level == 0);
+  
+  return (
+    <div style={{'marginLeft': `${level / 2}rem`}} /*className={isOpen ? "" : "hidden"} onClick={() => setOpen(!isOpen)}*/>
+      {children}
+    </div>
+  )
 }
 
 export default SideNav;
