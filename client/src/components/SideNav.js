@@ -10,7 +10,7 @@ function SideNav() {
         { title: "Coke", id: 2, value: "500ml bottle" },
         { title: "Water", id: 3, value: "2L bottle" },
         {
-          title: "Fanta",
+          title: "Fanta Fruit Twist Fruit TwistFruit Twist",
           id: 4,
           children: [
             { title: "Fruit Twist", id: 5, value: "small can" },
@@ -31,8 +31,12 @@ function SideNav() {
   ];
 
   return (
-    <div>
-      <TreeView tree={tree} level={0} />
+    <div className="fixed w-56 h-full bg-gray-100 p-2" style={{minWidth: '12rem', maxWidth: ''}}>
+      {
+        tree.map((t, i) => (
+          <TreeView tree={[t]} key={i} level={0}/>
+        ))
+      }
     </div>
   );
 }
@@ -47,9 +51,13 @@ const TreeView = ({ tree, level }) => {
     <>
       {tree.map((t) => (
         <React.Fragment key={t.id}>
-          <h2 style={{ marginLeft: `${level / 2}rem` }} onClick={() => setOpen(!isOpen)}>
-            <span className={t.children ? "" : "hidden"}>{isOpen ? "⇒" : "⇓"} </span>{t.title}</h2>
-          {t.children && <div className={isOpen && "hidden"}>
+          <div className="flex items-center" style={{ marginLeft: `${level / 2}rem`, cursor: `${t.children ? 'pointer' : ''}` }} onClick={() => {if (t.children) setOpen(!isOpen)}}>
+            <span className={t.children ? "" : "hidden"}>
+              {!isOpen ? <span className="text-xl">&#9656; </span> : <span className="text-xl">&#9662; </span>}
+            </span>
+            <h2 className="py-1 border-b-2 truncate">{t.title}</h2>
+          </div>
+          {t.children && <div className={!isOpen ? "hidden" : ""}>
             <TreeView tree={t.children} level={level + 1}></TreeView>
           </div>}
         </React.Fragment>

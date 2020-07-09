@@ -57,7 +57,7 @@ function Landing() {
             
           </div>
 
-          <div id="features" className="bg-white">
+          <div id="features" className="">
             <h1 className="text-5xl text-brandBlue-A"> Features </h1>
             <p>
               We have a wide range of features to help you have the best note taking experience possible!

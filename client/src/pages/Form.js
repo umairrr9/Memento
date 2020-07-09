@@ -17,6 +17,10 @@ const Form = ({isLogin}) => {
   const passwordPattern = new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$');
 
   useEffect(() => {
+    document.body.classList.add('architect');
+  }, []);
+
+  useEffect(() => {
     if (error === false)
       login();
   }, [error]);
