@@ -42,6 +42,8 @@ function SideNav() {
 }
 
 // https://medium.com/@swatisucharita94/recursive-rendering-in-react-42666102eae2
+// https://draftjs.org/
+// https://codesandbox.io/embed/react-editor-js-23opz
 
 const TreeView = ({ tree, level }) => {
 

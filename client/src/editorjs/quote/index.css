@@ -1,0 +1,48 @@
+.cdx-quote-icon svg {
+    transform: rotate(180deg);
+  }
+  
+  .cdx-quote {
+    margin: 1em 0;
+    border-left: 5px solid black;
+  }
+
+  .cdx-quote__text {
+    font-size: 1.2em;
+  }
+  
+  .cdx-quote__text, .cdx-quote__caption {
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border-radius: 3px;
+    padding: 10px 12px;
+    outline: none;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .cdx-quote [contentEditable=true][data-placeholder]::before{
+    position: absolute;
+    content: attr(data-placeholder);
+    color: #707684;
+    font-weight: normal;
+    opacity: 0;
+  }
+  
+  .cdx-quote [contentEditable=true][data-placeholder]:empty::before {
+    opacity: 1;
+  }
+  
+  .cdx-quote [contentEditable=true][data-placeholder]:empty:focus::before {
+    opacity: 0;
+  }
+  
+  .cdx-quote-settings {
+    display: flex;
+  }
+  
+  .cdx-quote-settings .cdx-settings-button {
+    width: 50%;
+  }
