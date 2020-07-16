@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function SideNav() {
+function SideNav({isNavOpen, setNavOpen}) {
   const tree = [
     {
       title: "Beverages",
@@ -31,9 +31,9 @@ function SideNav() {
   ];
 
   return (
-    <div className="fixed w-56 h-full bg-gray-100 p-2" style={{minWidth: '12rem', maxWidth: ''}}>
+    <div className={"top-0 left-0 overflow-x-hidden duration-300 fixed h-full bg-gray-100 z-10 " + (isNavOpen ? "w-56 p-3" : "w-0")}>
       {
-        tree.map((t, i) => (
+        isNavOpen && tree.map((t, i) => (
           <TreeView tree={[t]} key={i} level={0}/>
         ))
       }

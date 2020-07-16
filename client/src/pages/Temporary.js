@@ -1,49 +1,34 @@
 // import logo from './logo.svg';
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 // import "./editorjs/custom/checklist/index.css";
 // import { Button, CustomReact } from "./editorjs/plugin";
 import EditorJS from "@editorjs/editorjs";
 import EditorJs from "@natterstefan/react-editor-js";
 import { TOOLS } from "../editorjs/config";
+import SideNav from "../components/SideNav";
+
+// TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
 
 function Temporary() {
   const editorInstance = useRef(null);
+  const [isNavOpen, setNavOpen] = useState(false);
   const [data, setData] = useState({
-    blocks: [
-      {
-        type: "header",
-        data: {
-          text: "Editor.js ksjflhfuzu",
-          level: 1,
-        },
-      },
-      {
-        type: "header",
-        data: {
-          text: "CustomReact Plugin",
-          level: 2,
-        },
-      },
-      {
-        type: 'image',
-        data: {
-          url: "https://images.unsplash.com/photo-1593642532781-03e79bf5bec2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80",
-          caption: ''
-        }
-      }
-      // {
-      //   type: "header",
-      //   data: {
-      //     text: "CustomJS Plugin",
-      //     level: 2,
-      //   },
-      // },
-      // {
-      //   type: "customJs",
-      //   data: {},
-      // },
-    ],
+    blocks: [],
   });
+
+  // useEffect(() => {
+  //   // document.getElementById('root').classList.append('duration-500');
+  //   // className="" style={{marginLeft: `${isNavOpen ? "14rem" : "0"}`}
+  //   if (isNavOpen) {
+  //     document.getElementById('root').style.marginLeft = '14rem';
+  //   } else {
+  //     document.getElementById('root').style.marginLeft = '0';
+  //   } 
+    
+  //   // return () => {
+  //   //   cleanup
+  //   // }
+  // }, [isNavOpen]);
 
   const onReady = () => {
     // https://editorjs.io/configuration#editor-modifications-callback
@@ -53,6 +38,7 @@ function Temporary() {
   const onChange = () => {
     // https://editorjs.io/configuration#editor-modifications-callback
     console.log("Now I know that Editor's content changed!");
+    onSave();
   };
 
   const onSave = async () => {
@@ -61,7 +47,6 @@ function Temporary() {
         const outputData = await editorInstance.current.save();
         console.log(outputData);
         setData(outputData);
-        //action('EditorJs onSave')(outputData)
       } catch (e) {
         //action('EditorJs onSave failed')(e)
       }
@@ -69,31 +54,25 @@ function Temporary() {
   };
 
   return (
-    <div>
-      <button
-        style={{
-          cursor: "pointer",
-          outline: "none",
-          background: "lightgray",
-          border: 0,
-          display: "flex",
-          margin: "0 auto",
-          padding: "5px 10px",
-          borderRadius: 5,
-        }}
-        onClick={onSave}
-      />
-      <EditorJs
-        // tools={{ ...TOOLS, customReact: {class: CustomReact, inlineToolbar: true, shortcut: 'SHIFT+T'}}}
-        tools={TOOLS}
-        data={data}
-        editorInstance={(instance) => {
-          editorInstance.current = instance;
-          // action("EditorJs editorInstance")(editorInstance);
-        }}
-        onChange={onChange}
-        onReady={onReady}
-      />
+    <div className="overflow-x-hidden">
+      <SideNav isNavOpen={isNavOpen} setNavOpen={setNavOpen}/>
+      <nav className="bg-gray-100">
+        <nav className="duration-500 flex items-center justify-start" style={{marginLeft: `${isNavOpen ? "14rem" : "0"}`, width: `100%`}}>
+          <button type="button" className="ml-2 text-xl block text-gray-900 hover:text-black focus:text-black focus:outline-none" onClick={() => setNavOpen(!isNavOpen)}>&#9776;</button>
+          <h2 className="ml-2 text-sm">Biology Notes</h2>
+        </nav>
+      </nav>
+      <div className="pt-2 px-4 sm:px-0">
+        <EditorJs
+          tools={TOOLS}
+          data={data}
+          editorInstance={(instance) => {
+            editorInstance.current = instance;
+          }}
+          onChange={onChange}
+          onReady={onReady}
+        />
+      </div>
     </div>
   );
 }

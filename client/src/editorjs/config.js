@@ -10,14 +10,11 @@ import Checklist from "./checklist/index";
 import Code from "@editorjs/code";
 import Delimiter from "@editorjs/delimiter";
 import Embed from "@editorjs/embed";
-//import Image from '@editorjs/image'
 import InlineCode from "@editorjs/inline-code";
 import List from "@editorjs/list";
-// import Quote from '@editorjs/quote'
 import Quote from "./quote/index";
 import SimpleImage from "@editorjs/simple-image";
 import Table from "@editorjs/table";
-// import Warning from "@editorjs/warning";
 const Marker = require("@editorjs/marker");
 const Underline = require("@editorjs/underline");
 
