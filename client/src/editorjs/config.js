@@ -25,7 +25,7 @@ export const TOOLS = {
   embed: Embed,
   list: { class: List, inlineToolbar: true },
   code: Code,
-  quote: {class: Quote, inlineToolbar: true},
+  quote: Quote,
   Marker: {
     class: Marker,
     shortcut: "CMD+M",
