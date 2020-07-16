@@ -54,26 +54,28 @@ function Temporary() {
   };
 
   return (
-    <div className="overflow-x-hidden">
+    <>
       <SideNav isNavOpen={isNavOpen} setNavOpen={setNavOpen}/>
-      <nav className="bg-gray-100">
-        <nav className="duration-500 flex items-center justify-start" style={{marginLeft: `${isNavOpen ? "14rem" : "0"}`, width: `100%`}}>
-          <button type="button" className="ml-2 text-xl block text-gray-900 hover:text-black focus:text-black focus:outline-none" onClick={() => setNavOpen(!isNavOpen)}>&#9776;</button>
-          <h2 className="ml-2 text-sm">Biology Notes</h2>
+      <main className={"duration-500 " + (isNavOpen ? "ml-36 sm:ml-0" : "")} /*style={{marginLeft: `${isNavOpen ? "14rem" : "0"}`}}*/>
+        <nav className="bg-gray-100">
+          <nav className={"flex items-center justify-start "}>
+            <button type="button" className="ml-2 text-xl block text-gray-900 hover:text-black focus:text-black focus:outline-none" onClick={() => setNavOpen(!isNavOpen)}>&#9776;</button>
+            <h2 className="ml-2 text-sm">Biology Notes</h2>
+          </nav>
         </nav>
-      </nav>
-      <div className="pt-2 px-4 sm:px-0">
-        <EditorJs
-          tools={TOOLS}
-          data={data}
-          editorInstance={(instance) => {
-            editorInstance.current = instance;
-          }}
-          onChange={onChange}
-          onReady={onReady}
-        />
-      </div>
-    </div>
+        <div className="pt-2 px-4 sm:px-0"> 
+          <EditorJs
+            tools={TOOLS}
+            data={data}
+            editorInstance={(instance) => {
+              editorInstance.current = instance;
+            }}
+            onChange={onChange}
+            onReady={onReady}
+          />
+        </div>
+      </main>
+    </>
   );
 }
 
