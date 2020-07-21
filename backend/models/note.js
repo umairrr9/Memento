@@ -3,15 +3,9 @@ const Joi = require("@hapi/joi");
 
 
 const noteSchema = mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-        minlength: 1,
-        maxlength: 100
-    },
-    content: {
-        type: String,
-        required: false
+    note: {
+        type: Object,
+        default: {} 
     },
     userId: {
         type: String,

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import useForm from '../components/useForm';
-import NavBar from '../components/NavBar';
 import '../assets/test.css';
 import logo from '../assets/transparent.png';
 // import ErrorIcon from '@material-ui/icons/Error';
@@ -91,7 +90,7 @@ const Form = ({isLogin}) => {
     //if (noErrors) {
     let url = isLogin ? `http://localhost:80/api/users/login` : `http://localhost:80/api/users/signup`;
     let body = isLogin ? JSON.stringify({ email, password }) : JSON.stringify({ email, username, password });
-    const response = fetch(url, {
+    fetch(url, {
       method: "POST",
       body,
       headers: {
@@ -119,7 +118,7 @@ const Form = ({isLogin}) => {
   return (
     <div className="md:mt-8 mx-auto max-w-2xl bg-white py-16 sm:px-12 lg:px-24 shadow-xl mb-24">
       <div className="flex justify-center mb-8">
-        <img src={logo} className="w-16 h-auto" />
+        <img alt="Memento Logo" src={logo} className="w-16 h-auto" />
         <h1 className="ml-6 self-center text-brandBlue-A font-bold text-xl">Memento</h1>
       </div>
       <form onSubmit={handleSubmit}>

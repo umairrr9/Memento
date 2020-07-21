@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import TreeView from './TreeView';
-import { Link } from "react-router-dom";
 
 function SideNav({ isNavOpen, tree }) {
   return (
@@ -11,9 +10,12 @@ function SideNav({ isNavOpen, tree }) {
       }
     >
       {isNavOpen &&
-        tree.map((t, i) => <TreeView tree={[t]} key={i} level={0} />)
+        <TreeView
+          node={tree[0]}
+          level={-1}
+          tree={tree}
+        />
       }
-      {/* {isNavOpen && <TreeView tree={tree} level={0} />} */}
     </div>
   );
 }

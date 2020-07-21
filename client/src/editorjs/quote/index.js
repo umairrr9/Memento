@@ -172,7 +172,7 @@ class Quote {
     this.data = {
       text: data.text || '',
       // caption: data.caption || '',
-      alignment: Object.values(ALIGNMENTS).includes(data.alignment) && data.alignment ||
+      alignment: (Object.values(ALIGNMENTS).includes(data.alignment) && data.alignment) ||
       config.defaultAlignment ||
       DEFAULT_ALIGNMENT
     };

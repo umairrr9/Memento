@@ -3,49 +3,97 @@ import React, { useRef, useState } from "react";
 import EditorJs from "@natterstefan/react-editor-js";
 import { TOOLS } from "../editorjs/config";
 import SideNav from "../components/SideNav";
+import AddNoteModal from "../components/AddNoteModal";
+import AddFolderModal from "../components/AddFolderModal";
+import addPage from "../assets/add_page.svg";
+import addFolder from "../assets/add_folder.svg";
+import ImageCaption from "../components/ImageCaption";
 
 // TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
 
 function Note() {
   const editorInstance = useRef(null);
-  const tree = [
-    {
-      title: "Beverages",
-      id: 1,
-      children: [
-        { title: "Coke", id: 2, value: "500ml bottle" },
-        { title: "Water", id: 3, value: "2L bottle" },
-        {
-          title: "Fanta Fruit Twist Fruit TwistFruit Twist",
-          id: 4,
-          children: [
-            { title: "Fruit Twist", id: 5, value: "small can" },
-            { title: "Orange", id: 6, value: "test" },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Todo",
-      id: 7,
-      children: [
-        { title: "Go shopping", id: 8, value: "Apples, milk and bread." },
-        { title: "Clean room", id: 9, value: "Clean desk, monitor." },
-      ],
-    },
-    { title: "Books", id: 10, value: "Maths" },
-  ];
+  const [tree, setTree] = useState([
+    { title: null, parentId: null, id: 0 },
+    { title: "Biology", parentId: 0, id: 1 },
+    { title: "Chapter 1", parentId: 1, id: 2 },
+    { title: "Chapter 2", parentId: 1, id: 3 },
+    { title: "Chapter 3", parentId: 1, id: 4 },
+    { title: "Geography", parentId: 0, id: 5 },
+    { title: "Cells", parentId: 2, id: 6, noteId: "test" },
+    { title: "Biotat", parentId: 2, id: 7, noteId: "biotat" },
+  ]);
+  const [showModal, setShowModal] = useState(false);
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState(tree[0]);
+  const [title, setTitle] = useState("");
+
+  // function traverse(node, level, tree) {
+  //   if (node.title) console.log(node.title, level);
+  //   let children = tree.filter((n) => n.parentId === node.id);
+  //   if (children.length === 0) return;
+  //   for (let i in children) {
+  //     traverse(children[i], level + 1, tree);
+  //   }
+  // }
+
+  function addFolder(parentFolderId, title, tree) {
+    if (!(title.length >= 1)) return;
+    let id = tree.length + 1;
+    let folder = { parentId: parentFolderId, title, id };
+    let newTree = tree;
+    newTree.push(folder);
+    setTree(newTree);
+  }
+
+  function addNote(parentFolderId, title, tree) {
+    if (!(title.length >= 1)) return;
+    let id = tree.length + 1;
+    let noteId = id.toString();
+    let folder = { parentId: parentFolderId, title, id, noteId };
+    let newTree = tree;
+    newTree.push(folder);
+    setTree(newTree); 
+  }
+  // const tree = [
+  //   {
+  //     title: "Beverages",
+  //     id: 1873294898,
+  //     children: [
+  //       {
+  //         title: "Water", id: 394529892, value: {
+  //           blocks: [
+  //             {
+  //               type: "quote",
+  //               data: {
+  //                 text: "The unexamined life is not worth living.",
+  //               },
+  //             },
+  //           ],
+  //         }
+  //       },
+  //       {
+  //         title: "Fanta Fruit Twist Fruit TwistFruit Twist",
+  //         id: 44855,
+  //         children: [
+  //           { title: "Fruit Twist", id: 577777777, value: "small can" },
+  //           { title: "Orange", id: 67777, value: "test" },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Todo",
+  //     id: 7,
+  //     children: [
+  //       { title: "Go shopping", id: 8, value: "Apples, milk and bread." },
+  //       { title: "Clean room", id: 9, value: "Clean desk, monitor." },
+  //     ],
+  //   },
+  //   { title: "Books", id: 10, value: "Maths" },
+  // ];
   const [isNavOpen, setNavOpen] = useState(false);
-  const [data, setData] = useState({
-    blocks: [
-      {
-        type: "quote",
-        data: {
-          text: "The unexamined life is not worth living.",
-        },
-      },
-    ],
-  });
+  const [data, setData] = useState({});
   const [numKeyPresses, setKeyPresses] = useState(0);
 
   const onReady = () => {
@@ -108,10 +156,35 @@ function Note() {
                 </svg>
               </span>
             ) : (
-              <span>&#9776;</span>
-            )}
-          </button>
+                <span>&#9776;</span>
+              )}
+           </button>
           <h2 className="ml-2 text-sm">Biology Notes</h2>
+          <button
+          className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+          type="button"
+          style={{ transition: "all .15s ease" }}
+          onClick={() => {
+            setShowModal(true);
+            setSelectedFolder(tree[0]);
+          }}
+        >
+          Open regular modal
+        </button>
+        <button
+          className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+          type="button"
+          style={{ transition: "all .15s ease" }}
+          onClick={() => {
+            setShowNoteModal(true);
+            setSelectedFolder(tree[0]);
+          }}
+        >
+          Open note modal
+        </button>
+          {/* <img src={addPage} />
+          <img src={addFolder} /> */}
+          
         </nav>
         <div className="pt-2 px-4 md:px-12 lg:px-0" onKeyPress={handleKeyPress}>
           <EditorJs
@@ -125,6 +198,25 @@ function Note() {
           />
         </div>
       </main>
+      <AddFolderModal title={"Add a new folder"} closeOnClick={() => {
+        setSelectedFolder(tree[0]);
+        setShowModal(false);
+      }} saveOnClick={() => {
+        addFolder(selectedFolder.id, title, tree);
+        setSelectedFolder(tree[0]);
+        setShowModal(false);
+      }} onTitleChange={e => setTitle(e.target.value)}
+      showModal={showModal} setShowModal={setShowModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder}/>
+      
+      <AddNoteModal title={"Add a new title"} closeOnClick={() => {
+        setSelectedFolder(tree[0]);
+        setShowNoteModal(false);
+      }} saveOnClick={() => {
+        addNote(selectedFolder.id, title, tree);
+        setSelectedFolder(tree[0]);
+        setShowNoteModal(false);
+      }} onTitleChange={e => setTitle(e.target.value)}
+      showModal={showNoteModal} setShowModal={setShowNoteModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder}/>
     </>
   );
 }

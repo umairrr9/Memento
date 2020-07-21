@@ -21,6 +21,10 @@ const userSchema = mongoose.Schema({
     minlength: 1,
     maxlength: 40,
     unique: true
+  },
+  notesTree: {
+    type: Array,
+    default: []
   }
 });
 
