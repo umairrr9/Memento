@@ -19,7 +19,7 @@ const Marker = require("@editorjs/marker");
 const Underline = require("@editorjs/underline");
 
 
-export const TOOLS = {
+const TOOLS = {
   image: SimpleImage,
   table: Table,
   embed: Embed,
@@ -41,3 +41,5 @@ export const TOOLS = {
     shortcut: "CMD+U"
   }
 };
+
+export default TOOLS;

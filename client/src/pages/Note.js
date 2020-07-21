@@ -1,13 +1,12 @@
 import React, { useRef, useState } from "react";
 // import EditorJS from "@editorjs/editorjs";
 import EditorJs from "@natterstefan/react-editor-js";
-import { TOOLS } from "../editorjs/config";
+import TOOLS from "../editorjs/config";
 import SideNav from "../components/SideNav";
 import AddNoteModal from "../components/AddNoteModal";
 import AddFolderModal from "../components/AddFolderModal";
-import addPage from "../assets/add_page.svg";
-import addFolder from "../assets/add_folder.svg";
-import ImageCaption from "../components/ImageCaption";
+import folderAdd from "../assets/folder-outline-add.svg";
+import noteAdd from "../assets/document-add.svg";
 
 // TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
 
@@ -53,7 +52,7 @@ function Note() {
     let folder = { parentId: parentFolderId, title, id, noteId };
     let newTree = tree;
     newTree.push(folder);
-    setTree(newTree); 
+    setTree(newTree);
   }
   // const tree = [
   //   {
@@ -158,33 +157,51 @@ function Note() {
             ) : (
                 <span>&#9776;</span>
               )}
-           </button>
+          </button>
           <h2 className="ml-2 text-sm">Biology Notes</h2>
+          {/* <button
+            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+            type="button"
+            style={{ transition: "all .15s ease" }}
+            onClick={() => {
+              setShowModal(true);
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Open regular modal
+        </button>
           <button
-          className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-          type="button"
-          style={{ transition: "all .15s ease" }}
-          onClick={() => {
+            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+            type="button"
+            style={{ transition: "all .15s ease" }}
+            onClick={() => {
+              setShowNoteModal(true);
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Open note modal
+        </button> */}
+        <div className="flex items-center ml-auto">
+          <button className="focus:outline-none px-2"><img className="w-6 h-auto" onClick={() => {
             setShowModal(true);
             setSelectedFolder(tree[0]);
-          }}
-        >
-          Open regular modal
-        </button>
-        <button
-          className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-          type="button"
-          style={{ transition: "all .15s ease" }}
-          onClick={() => {
+          }} src={folderAdd} alt="Add Folder sign" /></button>
+          <button className="focus:outline-none pr-2"><img className="w-6 h-auto" onClick={() => {
             setShowNoteModal(true);
             setSelectedFolder(tree[0]);
-          }}
-        >
-          Open note modal
-        </button>
-          {/* <img src={addPage} />
-          <img src={addFolder} /> */}
-          
+          }} src={noteAdd} alt="Add Note sign" /></button>
+          </div>
+          {/* <svg viewBox="0 0 20 20" className="text-brandBlue-A w-6 h-auto fill-current">
+      <path
+        // fill="currentColor"
+        d="M9 10V8h2v2h2v2h-2v2H9v-2H7v-2h2zm-5 8h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"
+      />
+    </svg>
+
+    <svg viewBox="0 0 20 20">
+      <path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 012 2v10a2 2 0 01-2 2H2a2 2 0 01-2-2V4zm2 2v10h16V6H2zm7 4V8h2v2h2v2h-2v2H9v-2H7v-2h2z" />
+    </svg> */}
+
         </nav>
         <div className="pt-2 px-4 md:px-12 lg:px-0" onKeyPress={handleKeyPress}>
           <EditorJs
@@ -206,9 +223,9 @@ function Note() {
         setSelectedFolder(tree[0]);
         setShowModal(false);
       }} onTitleChange={e => setTitle(e.target.value)}
-      showModal={showModal} setShowModal={setShowModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder}/>
-      
-      <AddNoteModal title={"Add a new title"} closeOnClick={() => {
+        showModal={showModal} setShowModal={setShowModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder} />
+
+      <AddNoteModal title={"Add a new note"} closeOnClick={() => {
         setSelectedFolder(tree[0]);
         setShowNoteModal(false);
       }} saveOnClick={() => {
@@ -216,7 +233,7 @@ function Note() {
         setSelectedFolder(tree[0]);
         setShowNoteModal(false);
       }} onTitleChange={e => setTitle(e.target.value)}
-      showModal={showNoteModal} setShowModal={setShowNoteModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder}/>
+        showModal={showNoteModal} setShowModal={setShowNoteModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder} />
     </>
   );
 }
