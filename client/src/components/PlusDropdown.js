@@ -1,6 +1,8 @@
 import React from "react";
 import Dropdown from "./Dropdown";
 
+// const [showFolderModal, setShowFolderModal] = useState(false);
+
 export default function PlusDropdown(
   {
     //   buttonStyles,
@@ -19,9 +21,10 @@ export default function PlusDropdown(
           height="24"
           viewBox="0 0 24 24"
           width="24"
+          className="text-brandBlue-A"
         >
           <path d="M0 0h24v24H0z" fill="none" />
-          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+          <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
         </svg>
       }
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
@@ -34,7 +37,7 @@ export default function PlusDropdown(
         }
         onClick={(e) => e.preventDefault()}
       >
-        Action
+        Add New Page
       </a>
       <a
         href="#pablo"
@@ -44,9 +47,9 @@ export default function PlusDropdown(
         }
         onClick={(e) => e.preventDefault()}
       >
-        Another action
+        Add New Folder
       </a>
-      <a
+      {/* <a
         href="#pablo"
         className={
           "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
@@ -66,7 +69,7 @@ export default function PlusDropdown(
         onClick={(e) => e.preventDefault()}
       >
         Seprated link
-      </a>
+      </a> */}
     </Dropdown>
   );
 }

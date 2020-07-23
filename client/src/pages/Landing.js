@@ -13,7 +13,7 @@ function Landing() {
       <NavBar />
       
       <div className="">
-        <div className="px-8 py-3" id="pattern">
+        <div className="px-8" id="pattern">
             <div className="font-semibold text-5xl text-black leading-tight text-center py-3 sm:p-12"> 
               <h1 className="px-2 pt-12"> Productivity and simplicity with Memento. </h1>
             </div>
@@ -22,7 +22,7 @@ function Landing() {
                 
                 <br />
 
-                <div id="text" className="text-center sm:w-1/2 m-auto text-2xl text-gray-500 py-3">
+                <div id="text" className="text-center sm:w-1/2 m-auto text-2xl text-gray-500 ">
                   <p>
                     Use Memento to take and store notes in the simplest way
                     possible; whether you need to study, write meeting notes, make lists or
@@ -30,7 +30,7 @@ function Landing() {
                   </p>
                 </div>
 
-                <div id="buttons" className="text-center py-3 pb-48">
+                <div id="buttons" className="text-center py-12 pb-48">
                   
                  <Link to="/signup">
                     <Button text="Sign Up Free" backgroundColor="gray-100" textColor="brandBlue-A"

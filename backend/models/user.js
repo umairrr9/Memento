@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
   },
   notesTree: {
     type: Array,
-    default: []
+    default: [{title: null, parentId: null, id: 0}]
   }
 });
 

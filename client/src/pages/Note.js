@@ -17,15 +17,22 @@ import PlusDropdown from "../components/PlusDropdown";
 export default function Note() {
   const editorInstance = useRef(null);
   const [tree, setTree] = useState([
-    { title: null, parentId: null, id: 0 },
-    { title: "Biology", parentId: 0, id: 1 },
-    { title: "Chapter 1", parentId: 1, id: 2 },
-    { title: "Chapter 2", parentId: 1, id: 3 },
-    { title: "Chapter 3", parentId: 1, id: 4 },
-    { title: "Geography", parentId: 0, id: 5 },
-    { title: "Cells", parentId: 2, id: 6, noteId: "test" },
-    { title: "Biotat", parentId: 2, id: 7, noteId: "biotat" },
+    // { "title": null, "parentId": null, "id": 0 },
+    // { "title": "Biology", "parentId": 0, "id": 1 },
+    // { "title": "Chapter 1", "parentId": 1, "id": 2 },
+    // { "title": "Chapter 2", "parentId": 1, "id": 3 },
+    // { "title": "Chapter 3", "parentId": 1, "id": 4 },
+    // { "title": "Geography", "parentId": 0, "id": 5 },
+    // { "title": "Cells", "parentId": 2, "id": 6, "noteId": "test" },
+    // { "title": "Biotat", "parentId": 2, "id": 7, "noteId": "biotat" }
   ]);
+
+  useEffect(() => {
+    getNoteTree();
+  }, [])
+
+  // useEffect(() => {    
+  // }, [tree])
 
   const [notes, setNotes] = useState({
     test: {
@@ -67,12 +74,51 @@ export default function Note() {
   //   }
   // }
 
+  function getNoteTree(){
+    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
+
+    fetch(url, {
+      method: "GET",
+      // headers: {
+      //   'Content-Type': 'application/json'
+      // }
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log(json);
+      if (!json.error) {
+        setTree(json.notesTree);
+      }
+    })
+  }
+
+  function setNoteTree(tree){
+    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
+    let body = JSON.stringify({notesTree: tree});
+
+    fetch(url, {
+      method: "POST",
+      body,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log(json);
+      // if(!json.error) {
+        
+      // }
+    })
+  }
+
   function addFolder(parentFolderId, title, tree) {
     if (!(title.length >= 1)) return;
     let id = tree.length + 1;
     let folder = { parentId: parentFolderId, title, id };
     let newTree = tree;
     newTree.push(folder);
+    setNoteTree(newTree);
     setTree(newTree);
   }
 
@@ -83,6 +129,7 @@ export default function Note() {
     let folder = { parentId: parentFolderId, title, id, noteId };
     let newTree = tree;
     newTree.push(folder);
+    setNoteTree(newTree);
     setTree(newTree);
   }
   const [isNavOpen, setNavOpen] = useState(false);
@@ -220,6 +267,7 @@ export default function Note() {
         saveOnClick={() => {
           addFolder(selectedFolder.id, title, tree);
           setSelectedFolder(tree[0]);
+          // setNoteTree();
           setShowFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
@@ -238,6 +286,7 @@ export default function Note() {
         saveOnClick={() => {
           addNote(selectedFolder.id, title, tree);
           setSelectedFolder(tree[0]);
+          // setNoteTree();
           setShowNoteModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}

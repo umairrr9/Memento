@@ -7,7 +7,7 @@ const NavBar = () => {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <nav className="md:flex bg-white md:justify-between md:items-center md:px-8 md:py-1 shadow-xl relative">
+    <nav className="md:flex bg-transparent md:justify-between md:items-center md:px-8 md:py-1 relative">
       <div className="flex items-center justify-between px-4 py-3 md:p-0">
         <div className="flex items-center">
           <img className="inline w-16 h-16" src={require('../assets/transparent.png')} alt="Memento Logo"/>
