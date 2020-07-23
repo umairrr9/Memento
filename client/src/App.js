@@ -2,7 +2,7 @@ import React from 'react';
 import Landing from './pages/Landing';
 import Form from './pages/Form';
 import Note from './pages/Note';
-import Temporary from './pages/Temporary';
+// import Temporary from './pages/Temporary';
 import {
   BrowserRouter as Router,
   Switch,
@@ -17,9 +17,9 @@ function App() {
           {/* <Route path="/form">
             <Form />
           </Route> */}
-          <Route path="/temporary">
+          {/* <Route path="/temporary">
             <Temporary />
-          </Route>
+          </Route> */}
           <Route path="/note">
             <Note />
           </Route>

@@ -1,7 +1,7 @@
 import React from "react";
 import TreeView from './TreeView';
 
-function SideNav({ isNavOpen, tree }) {
+function SideNav({ isNavOpen, tree, setSelectedNote }) {
   return (
     <div
       className={
@@ -14,6 +14,7 @@ function SideNav({ isNavOpen, tree }) {
           node={tree[0]}
           level={-1}
           tree={tree}
+          setSelectedNote={setSelectedNote}
         />
       }
     </div>

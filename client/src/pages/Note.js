@@ -1,16 +1,20 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 // import EditorJS from "@editorjs/editorjs";
 import EditorJs from "@natterstefan/react-editor-js";
 import TOOLS from "../editorjs/config";
 import SideNav from "../components/SideNav";
 import AddNoteModal from "../components/AddNoteModal";
 import AddFolderModal from "../components/AddFolderModal";
+// import AddItemModal from "../components/AddItemModal";
 import folderAdd from "../assets/folder-outline-add.svg";
 import noteAdd from "../assets/document-add.svg";
+import SettingsDropdown from "../components/SettingsDropdown";
+import PlusDropdown from "../components/PlusDropdown";
+// import Dropdown from '../components/Dropdown';
 
 // TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
 
-function Note() {
+export default function Note() {
   const editorInstance = useRef(null);
   const [tree, setTree] = useState([
     { title: null, parentId: null, id: 0 },
@@ -22,9 +26,36 @@ function Note() {
     { title: "Cells", parentId: 2, id: 6, noteId: "test" },
     { title: "Biotat", parentId: 2, id: 7, noteId: "biotat" },
   ]);
-  const [showModal, setShowModal] = useState(false);
+
+  const [notes, setNotes] = useState({
+    test: {
+      blocks: [
+        {
+          type: "header",
+          data: {
+            text: "Editor.js",
+            level: 2,
+          },
+        },
+      ],
+    },
+    biotat: {
+      blocks: [
+        {
+          type: "header",
+          data: {
+            text: "Biotat",
+            level: 2,
+          },
+        },
+      ],
+    },
+  });
+
+  const [showFolderModal, setShowFolderModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(tree[0]);
+  const [selectedNote, setSelectedNote] = useState(null);
   const [title, setTitle] = useState("");
 
   // function traverse(node, level, tree) {
@@ -48,49 +79,12 @@ function Note() {
   function addNote(parentFolderId, title, tree) {
     if (!(title.length >= 1)) return;
     let id = tree.length + 1;
-    let noteId = id.toString();
+    let noteId = id.toString(); // later get note id from api
     let folder = { parentId: parentFolderId, title, id, noteId };
     let newTree = tree;
     newTree.push(folder);
     setTree(newTree);
   }
-  // const tree = [
-  //   {
-  //     title: "Beverages",
-  //     id: 1873294898,
-  //     children: [
-  //       {
-  //         title: "Water", id: 394529892, value: {
-  //           blocks: [
-  //             {
-  //               type: "quote",
-  //               data: {
-  //                 text: "The unexamined life is not worth living.",
-  //               },
-  //             },
-  //           ],
-  //         }
-  //       },
-  //       {
-  //         title: "Fanta Fruit Twist Fruit TwistFruit Twist",
-  //         id: 44855,
-  //         children: [
-  //           { title: "Fruit Twist", id: 577777777, value: "small can" },
-  //           { title: "Orange", id: 67777, value: "test" },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: "Todo",
-  //     id: 7,
-  //     children: [
-  //       { title: "Go shopping", id: 8, value: "Apples, milk and bread." },
-  //       { title: "Clean room", id: 9, value: "Clean desk, monitor." },
-  //     ],
-  //   },
-  //   { title: "Books", id: 10, value: "Maths" },
-  // ];
   const [isNavOpen, setNavOpen] = useState(false);
   const [data, setData] = useState({});
   const [numKeyPresses, setKeyPresses] = useState(0);
@@ -130,8 +124,17 @@ function Note() {
 
   return (
     <>
-      <SideNav isNavOpen={isNavOpen} tree={tree} />
-      <main className={"overflow-x-hidden sm:overflow-x-visible duration-500 " + (isNavOpen ? "ml-32 sm:ml-56" : "")}>
+      <SideNav
+        isNavOpen={isNavOpen}
+        tree={tree}
+        setSelectedNote={setSelectedNote}
+      />
+      <main
+        className={
+          "overflow-x-hidden sm:overflow-x-visible duration-500 " +
+          (isNavOpen ? "ml-32 sm:ml-56" : "")
+        }
+      >
         <nav className={"bg-gray-100 flex items-center justify-start h-8 "}>
           <button
             type="button"
@@ -155,41 +158,35 @@ function Note() {
                 </svg>
               </span>
             ) : (
-                <span>&#9776;</span>
-              )}
+              <span>&#9776;</span>
+            )}
           </button>
-          <h2 className="ml-2 text-sm">Biology Notes</h2>
-          {/* <button
-            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-            type="button"
-            style={{ transition: "all .15s ease" }}
-            onClick={() => {
-              setShowModal(true);
-              setSelectedFolder(tree[0]);
-            }}
-          >
-            Open regular modal
-        </button>
-          <button
-            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-            type="button"
-            style={{ transition: "all .15s ease" }}
-            onClick={() => {
-              setShowNoteModal(true);
-              setSelectedFolder(tree[0]);
-            }}
-          >
-            Open note modal
-        </button> */}
-        <div className="flex items-center ml-auto">
-          <button className="focus:outline-none px-2"><img className="w-6 h-auto" onClick={() => {
-            setShowModal(true);
-            setSelectedFolder(tree[0]);
-          }} src={folderAdd} alt="Add Folder sign" /></button>
-          <button className="focus:outline-none pr-2"><img className="w-6 h-auto" onClick={() => {
-            setShowNoteModal(true);
-            setSelectedFolder(tree[0]);
-          }} src={noteAdd} alt="Add Note sign" /></button>
+          <h2 className="ml-2 text-sm">{selectedNote && selectedNote.title}</h2>
+          <div className="flex items-center ml-auto">
+            <button className="focus:outline-none px-2">
+              <img
+                className="w-6 h-auto"
+                onClick={() => {
+                  setShowFolderModal(true);
+                  setSelectedFolder(tree[0]);
+                }}
+                src={folderAdd}
+                alt="Add Folder sign"
+              />
+            </button>
+            <button className="focus:outline-none px-2">
+              <img
+                className="w-6 h-auto"
+                onClick={() => {
+                  setShowNoteModal(true);
+                  setSelectedFolder(tree[0]);
+                }}
+                src={noteAdd}
+                alt="Add Note sign"
+              />
+            </button>
+            <SettingsDropdown/>
+            <PlusDropdown/>
           </div>
           {/* <svg viewBox="0 0 20 20" className="text-brandBlue-A w-6 h-auto fill-current">
       <path
@@ -201,7 +198,6 @@ function Note() {
     <svg viewBox="0 0 20 20">
       <path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 012 2v10a2 2 0 01-2 2H2a2 2 0 01-2-2V4zm2 2v10h16V6H2zm7 4V8h2v2h2v2h-2v2H9v-2H7v-2h2z" />
     </svg> */}
-
         </nav>
         <div className="pt-2 px-4 md:px-12 lg:px-0" onKeyPress={handleKeyPress}>
           <EditorJs
@@ -215,27 +211,41 @@ function Note() {
           />
         </div>
       </main>
-      <AddFolderModal title={"Add a new folder"} closeOnClick={() => {
-        setSelectedFolder(tree[0]);
-        setShowModal(false);
-      }} saveOnClick={() => {
-        addFolder(selectedFolder.id, title, tree);
-        setSelectedFolder(tree[0]);
-        setShowModal(false);
-      }} onTitleChange={e => setTitle(e.target.value)}
-        showModal={showModal} setShowModal={setShowModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder} />
 
-      <AddNoteModal title={"Add a new note"} closeOnClick={() => {
-        setSelectedFolder(tree[0]);
-        setShowNoteModal(false);
-      }} saveOnClick={() => {
-        addNote(selectedFolder.id, title, tree);
-        setSelectedFolder(tree[0]);
-        setShowNoteModal(false);
-      }} onTitleChange={e => setTitle(e.target.value)}
-        showModal={showNoteModal} setShowModal={setShowNoteModal} tree={tree} setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder} />
+      <AddFolderModal
+        closeOnClick={() => {
+          setSelectedFolder(tree[0]);
+          setShowFolderModal(false);
+        }}
+        saveOnClick={() => {
+          addFolder(selectedFolder.id, title, tree);
+          setSelectedFolder(tree[0]);
+          setShowFolderModal(false);
+        }}
+        onTitleChange={(e) => setTitle(e.target.value)}
+        showModal={showFolderModal}
+        setShowModal={setShowFolderModal}
+        tree={tree}
+        setSelectedFolder={setSelectedFolder}
+        selectedFolder={selectedFolder}
+      />
+
+      <AddNoteModal
+        closeOnClick={() => {
+          setSelectedFolder(tree[0]);
+          setShowNoteModal(false);
+        }}
+        saveOnClick={() => {
+          addNote(selectedFolder.id, title, tree);
+          setSelectedFolder(tree[0]);
+          setShowNoteModal(false);
+        }}
+        onTitleChange={(e) => setTitle(e.target.value)}
+        showModal={showNoteModal}
+        tree={tree}
+        setSelectedFolder={setSelectedFolder}
+        selectedFolder={selectedFolder}
+      />
     </>
   );
 }
-
-export default Note;

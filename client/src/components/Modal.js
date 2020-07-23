@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Modal({children, closeOnClick, saveOnClick, showModal, title}) {
+export default function Modal({children, closeOnClick, saveOnClick, showModal, modalTitle}) {
   return (
     <>
       {showModal ? (
@@ -14,7 +14,7 @@ export default function Modal({children, closeOnClick, saveOnClick, showModal, t
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
                   <h3 className="text-3xl font-semibold">
-                    {title}
+                    {modalTitle}
                   </h3>
                   {/* <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -40,7 +40,7 @@ export default function Modal({children, closeOnClick, saveOnClick, showModal, t
                     Close
                   </button>
                   <button
-                    className="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                    className="bg-brandBlue-A text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                     type="button"
                     style={{ transition: "all .15s ease" }}
                     onClick={saveOnClick}
