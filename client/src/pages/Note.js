@@ -113,7 +113,9 @@ export default function Note() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(tree[0]);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [selectedDropdown, setSelectedDropdown] = useState(-1);
   const [title, setTitle] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   // function traverse(node, level, tree) {
   //   if (node.title) console.log(node.title, level);
@@ -123,6 +125,23 @@ export default function Note() {
   //     traverse(children[i], level + 1, tree);
   //   }
   // }
+
+  function setNote(noteId, note) {
+    let url = `http://localhost:80/api/notes/${noteId}`;
+    let body = JSON.stringify({ note });
+
+    return fetch(url, {
+      method: "POST",
+      body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+      });
+  }
 
   function getNote(noteId) {
     let url = `http://localhost:80/api/notes/${noteId}`; // 5f1c1dde949f0c004c51b99e
@@ -258,6 +277,18 @@ export default function Note() {
         // console.log(editorInstance.current);
         const outputData = await editorInstance.current.save();
         console.log(outputData);
+        setNote(selectedNote.noteId, outputData).then(json => {
+          setIsSaving(true);
+          if (json.error) {
+            throw new Error();
+          }
+          console.log(json.newNote);
+        })
+        .catch(() => alert("The note couldn't be saved in the database"))
+        .finally(() => setTimeout(() => {
+          setIsSaving(false);
+        }, 1000));
+        
         // data = outputData;
         setData(outputData);
         // TODO: update note in db via api call
@@ -314,12 +345,13 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-              <span>&#9776;</span>
-            )}
+                <span>&#9776;</span>
+              )}
           </button>
           <h2 className="ml-2 text-sm">{selectedNote && selectedNote.title}</h2>
+          {isSaving && <h3 className="ml-3 text-gray-700 font-hairline text-sm">Saving...</h3>}
           <div className="flex items-center ml-auto">
-            <button className="focus:outline-none px-2">
+            {/* <button className="focus:outline-none px-2">
               <img
                 className="w-6 h-auto"
                 onClick={() => {
@@ -340,10 +372,15 @@ export default function Note() {
                 src={noteAdd}
                 alt="Add Note sign"
               />
+            </button> */}
+            <SettingsDropdown id={1} isShowing={selectedDropdown} setIsShowing={setSelectedDropdown} />
+            <PlusDropdown id={2} isShowing={selectedDropdown} setIsShowing={setSelectedDropdown} setSelectedFolder={setSelectedFolder} tree={tree} setShowNoteModal={setShowNoteModal} setShowFolderModal={setShowFolderModal} />
+            <button onClick={onSave} className="focus:outline-none px-2">
+              <svg height={24} viewBox="0 0 24 24" width={24} className="text-brandBlue-A">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="currentColor" d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />
+              </svg>
             </button>
-            <SettingsDropdown />
-            <PlusDropdown />
-            <button onClick={onSave}>save</button>
           </div>
           {/* <svg viewBox="0 0 20 20" className="text-brandBlue-A w-6 h-auto fill-current">
       <path
@@ -368,11 +405,11 @@ export default function Note() {
               onReady={onReady}
             />
           ) : // <div className="h-screen">
-          //   <h1 className="text-2xl font-semibold text-center mt-12">
-          //     Select a note to start writing!
-          //   </h1>
-          // </div>
-          null}
+            //   <h1 className="text-2xl font-semibold text-center mt-12">
+            //     Select a note to start writing!
+            //   </h1>
+            // </div>
+            null}
         </div>
       </main>
 

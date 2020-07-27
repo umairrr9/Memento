@@ -1,6 +1,7 @@
 import React from "react";
 import Dropdown from "./Dropdown";
-
+import AddNoteModal from "../components/AddNoteModal";
+import AddFolderModal from "../components/AddFolderModal";
 // const [showFolderModal, setShowFolderModal] = useState(false);
 
 export default function PlusDropdown(
@@ -10,10 +11,21 @@ export default function PlusDropdown(
     //   innerButton,
     //   children,
     //   dropdownStyles,
+
+    setShowNoteModal,
+    setShowFolderModal,
+    tree,
+    setSelectedFolder,
+    id,
+    isShowing,
+    setIsShowing
   }
 ) {
   return (
     <Dropdown
+      id={id}
+      isShowing={isShowing}
+      setIsShowing={setIsShowing}
       buttonStyles="rounded hover:shadow-md outline-none focus:outline-none bg-gray-100"
       innerButton={
         <svg
@@ -30,22 +42,29 @@ export default function PlusDropdown(
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
       <a
-        href="#pablo"
         className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
           //   + (color === "white" ? " text-gray-800" : "text-white")
         }
-        onClick={(e) => e.preventDefault()}
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+
+          setShowNoteModal(true);
+          setSelectedFolder(tree[0]);
+        }}
       >
-        Add New Page
+        Add New Note
       </a>
       <a
-        href="#pablo"
         className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
-        onClick={(e) => e.preventDefault()}
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+          setShowFolderModal(true);
+          setSelectedFolder(tree[0]);
+        }}
       >
         Add New Folder
       </a>

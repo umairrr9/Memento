@@ -7,19 +7,24 @@ export default function Dropdown({
   innerButton,
   children,
   dropdownStyles,
+  isShowing,
+  setIsShowing,
+  id
 }) {
   // dropdown props
-  const [dropdownPopoverShow, setDropdownPopoverShow] = useState(false);
+  // const [dropdownPopoverShow, setDropdownPopoverShow] = useState(false);
   const btnDropdownRef = createRef();
   const popoverDropdownRef = createRef();
   const openDropdownPopover = () => {
     new Popper(btnDropdownRef.current, popoverDropdownRef.current, {
       placement: "bottom-start",
     });
-    setDropdownPopoverShow(true);
+    // setDropdownPopoverShow(true);
+    setIsShowing(id);
   };
   const closeDropdownPopover = () => {
-    setDropdownPopoverShow(false);
+    // setDropdownPopoverShow(false);
+    setIsShowing(-1);
   };
   // bg colors
   //   let bgColor;
@@ -42,7 +47,8 @@ export default function Dropdown({
               ref={btnDropdownRef}
               onClick={() => {
                 if (buttonOnClick) buttonOnClick();
-                dropdownPopoverShow
+                // dropdownPopoverShow
+                isShowing === id
                   ? closeDropdownPopover()
                   : openDropdownPopover();
               }}
@@ -53,7 +59,7 @@ export default function Dropdown({
             <div
               ref={popoverDropdownRef}
               className={
-                (dropdownPopoverShow ? "block " : "hidden ") + dropdownStyles
+                (isShowing === id ? "block " : "hidden ") + dropdownStyles
                 // + (color === "white" ? "bg-white " : bgColor + " ") +
                 // "text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1"
               }

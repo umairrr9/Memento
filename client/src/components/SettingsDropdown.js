@@ -8,10 +8,16 @@ export default function SettingsDropdown(
     //   innerButton,
     //   children,
     //   dropdownStyles,
+    id,
+    isShowing,
+    setIsShowing
   }
 ) {
   return (
     <Dropdown
+      id={id}
+      isShowing={isShowing}
+      setIsShowing={setIsShowing}
       buttonStyles="rounded hover:shadow-md outline-none focus:outline-none bg-gray-100"
       innerButton={
         <svg height={24} viewBox="0 0 24 24" width={24} className="text-brandBlue-A">
@@ -22,45 +28,31 @@ export default function SettingsDropdown(
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
       <a
-        href="#pablo"
         className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
           //   + (color === "white" ? " text-gray-800" : "text-white")
         }
         onClick={(e) => e.preventDefault()}
       >
-        Action
+        Delete
       </a>
       <a
-        href="#pablo"
         className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
         onClick={(e) => e.preventDefault()}
       >
-        Another action
+        Rename
       </a>
       <a
-        href="#pablo"
         className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
         onClick={(e) => e.preventDefault()}
       >
-        Something else here
-      </a>
-      <div className="h-0 my-2 border border-solid border-t-0 border-gray-900 opacity-25" />
-      <a
-        href="#pablo"
-        className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
-          // + (color === "white" ? " text-gray-800" : "text-white")
-        }
-        onClick={(e) => e.preventDefault()}
-      >
-        Seprated link
+        Export
       </a>
     </Dropdown>
   );
