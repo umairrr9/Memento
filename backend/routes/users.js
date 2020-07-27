@@ -94,7 +94,7 @@ router.post("/signup", async (req, res) => {
         await user.save();
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, the user wasn't saved.");
+        res.status(400).send({error: "Error, the user wasn't saved."});
     }
 
     // Store jwt cookie
@@ -202,8 +202,6 @@ router.get('/:userId/notesTree', async (req, res) => {
 
 router.post('/:userId/notesTree', async (req, res) => {
 
-    console.log(req.body);
-
     const _id = req.params.userId;
     const { error } = validateID({ _id });
     if (error) return res.status(400).send({ error: error.details[0].message });
@@ -220,7 +218,7 @@ router.post('/:userId/notesTree', async (req, res) => {
         await user.save();
     } catch (error) {
         console.error(error);
-        res.status(400).send("Error, the notes tree wasn't saved.");
+        res.status(400).send({error: "Error, the notes tree wasn't saved."});
     }
 
     res.status(200).json({_id, oldNotesTree, newNotesTree});

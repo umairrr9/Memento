@@ -6,6 +6,7 @@ const TreeView = ({
   level,
   setSelectedFolder,
   setSelectedNote,
+  isRedirecting
 }) => {
   const [isOpen, setOpen] = useState(node.parentId === null ? true : false);
   let children = tree.filter((n) => n.parentId === node.id);
@@ -22,10 +23,11 @@ const TreeView = ({
           }}
           onClick={() => {
             setOpen(!isOpen);
-            if (node.noteId && setSelectedNote) {
-              setSelectedNote(node);
-              console.log(node);
-            }
+            // if (node.noteId && setSelectedNote) {
+            //   setSelectedNote(node);
+            //   console.log(node);
+            // }
+            if (node.noteId && isRedirecting) window.location.href=`/note?note=${node.noteId}`;
             if (!node.noteId && setSelectedFolder) setSelectedFolder(node);
           }}
         >
@@ -47,6 +49,7 @@ const TreeView = ({
                   level={level + 1}
                   setSelectedFolder={setSelectedFolder}
                   setSelectedNote={setSelectedNote}
+                  isRedirecting={isRedirecting}
                 ></TreeView>
               </React.Fragment>
             ))

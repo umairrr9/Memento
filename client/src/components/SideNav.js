@@ -15,6 +15,7 @@ function SideNav({ isNavOpen, tree, setSelectedNote }) {
           level={-1}
           tree={tree}
           setSelectedNote={setSelectedNote}
+          isRedirecting={true}
         />
       }
     </div>

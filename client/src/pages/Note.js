@@ -16,49 +16,99 @@ import PlusDropdown from "../components/PlusDropdown";
 
 export default function Note() {
   const editorInstance = useRef(null);
+  // const [shouldReinitialize, setShouldReinitialize] = useState(false);
+  const [editorLoading, setEditorLoading] = useState(true);
   const [tree, setTree] = useState([
-    // { "title": null, "parentId": null, "id": 0 },
-    // { "title": "Biology", "parentId": 0, "id": 1 },
-    // { "title": "Chapter 1", "parentId": 1, "id": 2 },
-    // { "title": "Chapter 2", "parentId": 1, "id": 3 },
-    // { "title": "Chapter 3", "parentId": 1, "id": 4 },
-    // { "title": "Geography", "parentId": 0, "id": 5 },
-    // { "title": "Cells", "parentId": 2, "id": 6, "noteId": "test" },
-    // { "title": "Biotat", "parentId": 2, "id": 7, "noteId": "biotat" }
+    {
+      title: null,
+      parentId: null,
+      id: 0,
+    },
   ]);
 
   useEffect(() => {
-    getNoteTree();
-  }, [])
+    try {
+      getNoteTree().then((json) => {
+        if (json.error) throw new Error();
+        let t = null;
+        if (!json.error) {
+          t = json.notesTree;
+        }
+        setTree(t);
+        const noteId =
+          new URLSearchParams(window.location.search).get("note") || "";
+        if (noteId !== "") {
+          getNote(noteId).then((json) => {
+            if (json.error) throw new Error();
+            // set the editor js data
+            setData(json.note);
+            // set the selected note
+            let noteInTree = t.find((obj) => obj.noteId === noteId);
+            setSelectedNote(noteInTree);
+            // set editor loading to false
+            setEditorLoading(false);
+          });
+        }
+      });
+    } catch (err) {
+      alert("Sorry, something went wrong, please reload the page.");
+    }
+  }, []);
 
-  // useEffect(() => {    
-  // }, [tree])
+  // useEffect(() => {
+  //   const noteId =
+  //     new URLSearchParams(window.location.search).get("note") || "";
+  //   if (noteId !== "") {
+  //     getNote(noteId).then((json) => {
+  //       // set the editor js data
+  //       setData(json.note);
+  //       // set the selected note
+  //       console.log(tree);
+  //       let noteInTree = tree.find((obj) => obj.noteId === noteId);
+  //       console.log(noteInTree);
+  //       setSelectedNote(noteInTree);
+  //       // set editor loading to false
+  //       setEditorLoading(false);
+  //     });
+  //   }
+  // }, []);
 
-  const [notes, setNotes] = useState({
-    test: {
-      blocks: [
-        {
-          type: "header",
-          data: {
-            text: "Editor.js",
-            level: 2,
-          },
-        },
-      ],
-    },
-    biotat: {
-      blocks: [
-        {
-          type: "header",
-          data: {
-            text: "Biotat",
-            level: 2,
-          },
-        },
-      ],
-    },
-  });
+  // useEffect(() => {
+  //   // TODO: replace with api call
+  //   const noteData = new URLSearchParams(window.location.search).get("note") || "";
+  //   console.log(notes[noteData]);
+  //   if (noteData !== "") {
+  //     setData(notes[noteData]);
+  //     setEditorLoading(false);
+  //   }
+  // }, []);
 
+  // const [notes, setNotes] = useState({
+  //   test: {
+  //     blocks: [
+  //       {
+  //         type: "header",
+  //         data: {
+  //           text: "Editor.js",
+  //           level: 2,
+  //         },
+  //       },
+  //     ],
+  //   },
+  //   biotat: {
+  //     blocks: [
+  //       {
+  //         type: "header",
+  //         data: {
+  //           text: "Biotat",
+  //           level: 2,
+  //         },
+  //       },
+  //     ],
+  //   },
+  // });
+
+  const [data, setData] = useState({});
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(tree[0]);
@@ -74,42 +124,71 @@ export default function Note() {
   //   }
   // }
 
-  function getNoteTree(){
-    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
-
-    fetch(url, {
+  function getNote(noteId) {
+    let url = `http://localhost:80/api/notes/${noteId}`; // 5f1c1dde949f0c004c51b99e
+    return fetch(url, {
       method: "GET",
       // headers: {
       //   'Content-Type': 'application/json'
       // }
     })
-    .then(res => res.json())
-    .then(json => {
-      console.log(json);
-      if (!json.error) {
-        setTree(json.notesTree);
-      }
-    })
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+      });
   }
 
-  function setNoteTree(tree){
-    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
-    let body = JSON.stringify({notesTree: tree});
+  function createNewNote() {
+    let url = `http://localhost:80/api/notes`;
+    let body = JSON.stringify({ userId: "5f19c98a0c9e490b498f1f0d" });
 
-    fetch(url, {
+    return fetch(url, {
       method: "POST",
       body,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     })
-    .then(res => res.json())
-    .then(json => {
-      console.log(json);
-      // if(!json.error) {
-        
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+      });
+  }
+
+  function getNoteTree() {
+    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
+
+    return fetch(url, {
+      method: "GET",
+      // headers: {
+      //   'Content-Type': 'application/json'
       // }
     })
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+        // console.log(json);
+        // if (!json.error) {
+        //   setTree(json.notesTree);
+        // }
+      });
+  }
+
+  function setNoteTree(tree) {
+    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
+    let body = JSON.stringify({ notesTree: tree });
+
+    return fetch(url, {
+      method: "POST",
+      body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+      });
   }
 
   function addFolder(parentFolderId, title, tree) {
@@ -118,22 +197,48 @@ export default function Note() {
     let folder = { parentId: parentFolderId, title, id };
     let newTree = tree;
     newTree.push(folder);
-    setNoteTree(newTree);
-    setTree(newTree);
+    setNoteTree(newTree)
+      .then((json) => {
+        if (json.error) {
+          // alert("Sorry, the folder couldn't be added, try again later.");
+          // return;
+          throw new Error();
+        }
+        setTree(newTree);
+      })
+      .catch(() =>
+        alert("Sorry, the folder couldn't be added, try again later.")
+      );
   }
 
   function addNote(parentFolderId, title, tree) {
     if (!(title.length >= 1)) return;
-    let id = tree.length + 1;
-    let noteId = id.toString(); // later get note id from api
-    let folder = { parentId: parentFolderId, title, id, noteId };
-    let newTree = tree;
-    newTree.push(folder);
-    setNoteTree(newTree);
-    setTree(newTree);
+    //let noteId = id.toString(); // later get note id from api
+    createNewNote()
+      .then((json) => {
+        if (json.error) {
+          // alert("Sorry, the note couldn't be added. Please try again later.");
+          // return;
+          throw new Error();
+        }
+        let id = tree.length + 1;
+        let folder = {
+          parentId: parentFolderId,
+          title,
+          id,
+          noteId: json.noteId,
+        };
+        let newTree = tree;
+        newTree.push(folder);
+        console.log(newTree);
+        setNoteTree(newTree);
+        setTree(newTree);
+      })
+      .catch(() =>
+        alert("Sorry, the note couldn't be added. Please try again later.")
+      );
   }
   const [isNavOpen, setNavOpen] = useState(false);
-  const [data, setData] = useState({});
   const [numKeyPresses, setKeyPresses] = useState(0);
 
   const onReady = () => {
@@ -141,18 +246,21 @@ export default function Note() {
     console.log("Editor.js is ready to work!");
   };
 
-  const onChange = () => {
+  const onChange = (api) => {
     // https://editorjs.io/configuration#editor-modifications-callback
     console.log("Now I know that Editor's content changed!");
-    // onSave();
   };
 
   const onSave = async () => {
+    // setShouldReinitialize(false);
     if (editorInstance.current) {
       try {
+        // console.log(editorInstance.current);
         const outputData = await editorInstance.current.save();
         console.log(outputData);
+        // data = outputData;
         setData(outputData);
+        // TODO: update note in db via api call
       } catch (e) {
         console.error(e);
       }
@@ -161,6 +269,7 @@ export default function Note() {
 
   // if the keyboard has been pressed a few times, save the note
   const handleKeyPress = async () => {
+    if (editorLoading) return;
     if (numKeyPresses >= 6) {
       onSave();
       setKeyPresses(0);
@@ -232,8 +341,9 @@ export default function Note() {
                 alt="Add Note sign"
               />
             </button>
-            <SettingsDropdown/>
-            <PlusDropdown/>
+            <SettingsDropdown />
+            <PlusDropdown />
+            <button onClick={onSave}>save</button>
           </div>
           {/* <svg viewBox="0 0 20 20" className="text-brandBlue-A w-6 h-auto fill-current">
       <path
@@ -247,15 +357,22 @@ export default function Note() {
     </svg> */}
         </nav>
         <div className="pt-2 px-4 md:px-12 lg:px-0" onKeyPress={handleKeyPress}>
-          <EditorJs
-            tools={TOOLS}
-            data={data}
-            editorInstance={(instance) => {
-              editorInstance.current = instance;
-            }}
-            onChange={onChange}
-            onReady={onReady}
-          />
+          {!editorLoading ? (
+            <EditorJs
+              tools={TOOLS}
+              data={data}
+              editorInstance={(instance) => {
+                editorInstance.current = instance;
+              }}
+              onChange={onChange}
+              onReady={onReady}
+            />
+          ) : // <div className="h-screen">
+          //   <h1 className="text-2xl font-semibold text-center mt-12">
+          //     Select a note to start writing!
+          //   </h1>
+          // </div>
+          null}
         </div>
       </main>
 
