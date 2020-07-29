@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "./Modal";
 import TreeView from "./TreeView";
 
-export default function AddItemModal({
+export default function RenameItemModal({
   closeOnClick,
   saveOnClick,
   showModal,
@@ -12,6 +12,7 @@ export default function AddItemModal({
   selectedFolder,
   modalTitle,
   labelTitle,
+  isRenameNote
 }) {
   return (
     <Modal
@@ -27,6 +28,7 @@ export default function AddItemModal({
           level={-1}
           tree={tree}
           setSelectedFolder={setSelectedFolder}
+          isRenameNote={isRenameNote}
         />
       </div>
       <div>

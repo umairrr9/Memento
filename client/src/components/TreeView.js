@@ -6,7 +6,8 @@ const TreeView = ({
   level,
   setSelectedFolder,
   setSelectedNote,
-  isRedirecting
+  isRedirecting,
+  isRenameNote
 }) => {
   const [isOpen, setOpen] = useState(node.parentId === null ? true : false);
   let children = tree.filter((n) => n.parentId === node.id);
@@ -27,8 +28,13 @@ const TreeView = ({
             //   setSelectedNote(node);
             //   console.log(node);
             // }
-            if (node.noteId && isRedirecting) window.location.href=`/note?note=${node.noteId}`;
-            if (!node.noteId && setSelectedFolder) setSelectedFolder(node);
+            // console.log(node);
+            if (isRenameNote) {
+              if (node.noteId) setSelectedFolder(node);
+            } else {
+              if (node.noteId && isRedirecting) window.location.href = `/note?note=${node.noteId}`;
+              if (!node.noteId && setSelectedFolder) setSelectedFolder(node);
+            }
           }}
         >
           {!node.noteId && (
@@ -42,27 +48,28 @@ const TreeView = ({
       <div className={"" + (!isOpen ? "hidden" : "")}>
         {children.length >= 1
           ? children.map((t) => (
-              <React.Fragment key={t.id}>
-                <TreeView
-                  node={t}
-                  tree={tree}
-                  level={level + 1}
-                  setSelectedFolder={setSelectedFolder}
-                  setSelectedNote={setSelectedNote}
-                  isRedirecting={isRedirecting}
-                ></TreeView>
-              </React.Fragment>
-            ))
+            <React.Fragment key={t.id}>
+              <TreeView
+                node={t}
+                tree={tree}
+                level={level + 1}
+                setSelectedFolder={setSelectedFolder}
+                setSelectedNote={setSelectedNote}
+                isRedirecting={isRedirecting}
+                isRenameNote={isRenameNote}
+              ></TreeView>
+            </React.Fragment>
+          ))
           : !node.noteId && (
-              <h3
-                className="text-gray-700 text-sm my-1"
-                style={{
-                  marginLeft: `${level + 1}rem`,
-                }}
-              >
-                No pages inside
-              </h3>
-            )}
+            <h3
+              className="text-gray-700 text-sm my-1"
+              style={{
+                marginLeft: `${level + 1}rem`,
+              }}
+            >
+              No pages inside
+            </h3>
+          )}
       </div>
     </>
   );

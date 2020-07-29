@@ -1,7 +1,5 @@
 import React from "react";
 import Dropdown from "./Dropdown";
-import AddNoteModal from "../components/AddNoteModal";
-import AddFolderModal from "../components/AddFolderModal";
 // const [showFolderModal, setShowFolderModal] = useState(false);
 
 export default function PlusDropdown(
@@ -48,7 +46,6 @@ export default function PlusDropdown(
         }
         // onClick={(e) => e.preventDefault()}
         onClick={() => {
-
           setShowNoteModal(true);
           setSelectedFolder(tree[0]);
         }}
@@ -68,27 +65,6 @@ export default function PlusDropdown(
       >
         Add New Folder
       </a>
-      {/* <a
-        href="#pablo"
-        className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
-          // + (color === "white" ? " text-gray-800" : "text-white")
-        }
-        onClick={(e) => e.preventDefault()}
-      >
-        Something else here
-      </a>
-      <div className="h-0 my-2 border border-solid border-t-0 border-gray-900 opacity-25" />
-      <a
-        href="#pablo"
-        className={
-          "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent "
-          // + (color === "white" ? " text-gray-800" : "text-white")
-        }
-        onClick={(e) => e.preventDefault()}
-      >
-        Seprated link
-      </a> */}
     </Dropdown>
   );
 }

@@ -10,7 +10,13 @@ export default function SettingsDropdown(
     //   dropdownStyles,
     id,
     isShowing,
-    setIsShowing
+    setIsShowing,
+    setShowDeleteNoteModal,
+    setShowDeleteFolderModal,
+    setShowRenameNoteModal,
+    setShowRenameFolderModal,
+    setSelectedFolder,
+    tree
   }
 ) {
   return (
@@ -27,24 +33,69 @@ export default function SettingsDropdown(
       }
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
+
       <a
         className={
           "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
           //   + (color === "white" ? " text-gray-800" : "text-white")
         }
-        onClick={(e) => e.preventDefault()}
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+          setShowDeleteFolderModal(true);
+
+          setSelectedFolder(tree[0]);
+        }}
       >
-        Delete
+        Delete Folder
       </a>
+
+      <a
+        className={
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
+          //   + (color === "white" ? " text-gray-800" : "text-white")
+        }
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+          setShowDeleteNoteModal(true);
+
+          setSelectedFolder(tree[0]);
+        }}
+      >
+        Delete Note
+      </a>
+      
       <a
         className={
           "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
-        onClick={(e) => e.preventDefault()}
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+          
+          setShowRenameFolderModal(true);
+
+          setSelectedFolder(tree[0]);
+        }}
       >
-        Rename
+        Rename Folder
       </a>
+
+      <a
+        className={
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
+          // + (color === "white" ? " text-gray-800" : "text-white")
+        }
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+          
+          setShowRenameNoteModal(true);
+
+          setSelectedFolder(tree[0]);
+        }}
+      >
+        Rename Note
+      </a>
+      
       <a
         className={
           "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
