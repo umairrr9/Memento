@@ -308,4 +308,4 @@ class Quote {
   }
 }
 
-module.exports = Quote;
+export default Quote;

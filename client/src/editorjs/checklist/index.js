@@ -344,4 +344,4 @@ class Checklist {
   }
 }
 
-module.exports = Checklist;
+export default Checklist;
