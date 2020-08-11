@@ -1,10 +1,8 @@
 const { User, validate, validateID, doesUserExist, validateUserLogin } = require('../models/user');
 const { createHash, checkPassword } = require('../static/hash');
 const { verifyJWT, generateJWT } = require('../static/auth');
-const { replaceWithNew } = require("../static/helper");
-const mongoose = require('mongoose');
+const { replaceWithNew, isLoggedIn } = require("../static/helper");
 const express = require('express');
-const session = require("express-session");
 const router = express.Router();
 
 ///// TASK: Make endpoints handle errors e.g JSON error more kindly /////
@@ -12,6 +10,14 @@ const router = express.Router();
 ///// TASK: Use JWT and sessions to validate users /////
 ///// TASK: Allow username/password login combo /////
 ///// TASK: Create function for line 41 loop
+
+// function isLoggedIn(req, res, next) {
+//     if (!req.session.user._id) {
+//         return res.status(400).send({error: "You are not logged in."});
+//     } else {
+//         next();
+//     }
+// }
 
 // LOGIN USER
 router.post("/login", async (req, res) => {
@@ -53,8 +59,9 @@ router.post("/login", async (req, res) => {
         // Store jwt cookie
         const { email: loginEmail, username: loginUsername } = loginUser;
         const jwt = generateJWT(_id, loginEmail, loginUsername);
-        res.cookie('user_jwt', jwt, { expires: new Date(Date.now() + 900000), httpOnly: true }); // 15 min expiry
+        // res.cookie('user_jwt', jwt, { expires: new Date(Date.now() + 900000), httpOnly: true }); // 15 min expiry
         req.session.user = { email: loginEmail, username: loginUsername, _id };
+        // console.log(req.session);
 
         // Send user object
         res.status(200).send({ email: loginEmail, username: loginUsername, _id });
@@ -99,13 +106,53 @@ router.post("/signup", async (req, res) => {
 
     // Store jwt cookie
     const jwt = generateJWT(_id, email, username);
-    res.cookie('user_jwt', jwt, { expires: new Date(Date.now() + 900000), httpOnly: true }); // 15 min expiry
+    // res.cookie('user_jwt', jwt, { expires: new Date(Date.now() + 900000), httpOnly: true }); // 15 min expiry
     req.session.user = { _id, email, username };
 
     // Send user object
     res.status(200).send({ _id, email, username });
 
 });
+
+router.get('/notesTree', isLoggedIn, async (req, res) => {
+    // Get ID and return error message if user doesn't exist
+    // const _id = req.params.userId;
+    const { _id } = req.session.user;
+    const { error } = validateID({ _id });
+    if (error) return res.status(400).send({ error: error.details[0].message });
+
+    const user = await doesUserExist(_id);
+    if (!user) return res.status(400).send({ error: "User doesn't exist." });
+
+    const {notesTree} = user;
+    res.status(200).json({notesTree, _id});
+})
+
+router.post('/notesTree', isLoggedIn, async (req, res) => {
+
+    const { _id } = req.session.user;
+    const { error } = validateID({ _id });
+    if (error) return res.status(400).send({ error: error.details[0].message });
+
+    const user = await doesUserExist(_id);
+    if (!user) return res.status(400).send({ error: "User doesn't exist." });
+
+    const {notesTree: oldNotesTree} = user;
+    const {notesTree: newNotesTree} = req.body;
+
+    user.notesTree = newNotesTree;
+
+    try {
+        await user.save();
+    } catch (error) {
+        console.error(error);
+        res.status(400).send({error: "Error, the notes tree wasn't saved."});
+    }
+
+    res.status(200).json({_id, oldNotesTree, newNotesTree});
+
+});
+
 
 // GET USER BY ID
 router.get("/:userId", async (req, res) => {
@@ -187,43 +234,17 @@ router.patch('/:userId', async (req, res) => {
     res.status(200).send(userObj);
 });
 
-router.get('/:userId/notesTree', async (req, res) => {
-    // Get ID and return error message if user doesn't exist
-    const _id = req.params.userId;
-    const { error } = validateID({ _id });
-    if (error) return res.status(400).send({ error: error.details[0].message });
+// router.get('/:userId/notesTree', async (req, res) => {
+//     // Get ID and return error message if user doesn't exist
+//     const _id = req.params.userId;
+//     const { error } = validateID({ _id });
+//     if (error) return res.status(400).send({ error: error.details[0].message });
 
-    const user = await doesUserExist(_id);
-    if (!user) return res.status(400).send({ error: "User doesn't exist." });
+//     const user = await doesUserExist(_id);
+//     if (!user) return res.status(400).send({ error: "User doesn't exist." });
 
-    const {notesTree} = user;
-    res.status(200).json({notesTree, _id});
-})
-
-router.post('/:userId/notesTree', async (req, res) => {
-
-    const _id = req.params.userId;
-    const { error } = validateID({ _id });
-    if (error) return res.status(400).send({ error: error.details[0].message });
-
-    const user = await doesUserExist(_id);
-    if (!user) return res.status(400).send({ error: "User doesn't exist." });
-
-    const {notesTree: oldNotesTree} = user;
-    const {notesTree: newNotesTree} = req.body;
-
-    user.notesTree = newNotesTree;
-
-    try {
-        await user.save();
-    } catch (error) {
-        console.error(error);
-        res.status(400).send({error: "Error, the notes tree wasn't saved."});
-    }
-
-    res.status(200).json({_id, oldNotesTree, newNotesTree});
-
-})
-
+//     const {notesTree} = user;
+//     res.status(200).json({notesTree, _id});
+// })
 
 module.exports = router;

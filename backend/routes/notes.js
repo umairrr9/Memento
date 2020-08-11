@@ -1,6 +1,6 @@
 const {Note, validate, doesNoteExist} = require('../models/note');
 const {User, validateID, doesUserExist} = require('../models/user');
-const {replaceWithNew} = require("../static/helper");
+const {replaceWithNew, isLoggedIn} = require("../static/helper");
 // const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
@@ -10,7 +10,7 @@ const router = express.Router();
 
 
 // CREATE NOTE
-router.post("/", async (req, res) => {
+router.post("/create", isLoggedIn, async (req, res) => {
 
     // // Validate the request body and display any errors
     // const { error } = validate(req.body);
@@ -37,11 +37,11 @@ router.post("/", async (req, res) => {
     // res.status(200).send({_id, userId, title, content});
 
     // Validate the request body and display any errors
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send({error: error.details[0].message});
+    // const { error } = validate(req.body);
+    // if (error) return res.status(400).send({error: error.details[0].message});
     
     // Get details from the request body
-    const { userId } = req.body;
+    const userId = req.session.user._id;
 
     const user = await doesUserExist(userId);
     if (!user) return res.status(400).send({error: "User doesn't exist."});
