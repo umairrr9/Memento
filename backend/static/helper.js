@@ -14,4 +14,12 @@ function replaceWithNew(newFields, oldFields) {
     return obj;
 }
 
-module.exports = {replaceWithNew};
+function isLoggedIn(req, res, next) {
+    if (!req.session.user._id) {
+        return res.status(400).send({error: "You are not logged in."});
+    } else {
+        next();
+    }
+}
+
+module.exports = {replaceWithNew, isLoggedIn};
