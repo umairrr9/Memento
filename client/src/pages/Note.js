@@ -35,7 +35,10 @@ export default function Note() {
 
   useEffect(() => {
     getNoteTree().then((json) => {
-      if (json.error) throw new Error();
+      if (json.error) {
+        console.error(json);
+        throw new Error();
+      }
       let t = null;
       if (!json.error) {
         t = json.notesTree;
@@ -247,12 +250,11 @@ export default function Note() {
   }
 
   function createNewNote() {
-    let url = `http://localhost:80/api/notes`;
-    let body = JSON.stringify({ userId: "5f19c98a0c9e490b498f1f0d" });
+    let url = `http://localhost:80/api/notes/create`;
+    // let body = JSON.stringify({ userId: "5f317b43fa8f2a1f085ab725" });
 
     return fetch(url, {
       method: "POST",
-      body,
       headers: {
         "Content-Type": "application/json",
       },
@@ -264,7 +266,7 @@ export default function Note() {
   }
 
   function getNoteTree() {
-    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
+    let url = `http://localhost:80/api/users/notesTree`;
 
     return fetch(url, {
       method: "GET",
@@ -283,7 +285,7 @@ export default function Note() {
   }
 
   function setNoteTree(tree) {
-    let url = `http://localhost:80/api/users/5f19c98a0c9e490b498f1f0d/notesTree`;
+    let url = `http://localhost:80/api/users/notesTree`;
     let body = JSON.stringify({ notesTree: tree });
 
     return fetch(url, {
@@ -338,9 +340,9 @@ export default function Note() {
         };
         let newTree = tree;
         newTree.push(folder);
-        console.log(newTree);
+        // console.log(newTree);
         setNoteTree(newTree);
-        setTree(newTree);
+        window.location.href= `/note?note=${json.noteId}`;
       })
       .catch(() =>
         alert("Sorry, the note couldn't be added. Please try again later.")
