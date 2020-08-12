@@ -106,6 +106,14 @@ router.post("/signup", async (req, res) => {
 
 });
 
+router.post("/guest", async (req, res) => { 
+    const _id = '5f34255dead5a41af0aa85f8';
+    const email = 'guest@example.com';
+    const username= 'Guest';
+    req.session.user = {_id, email, username, isGuest: true};
+    res.status(200).send({_id, email, username});
+});
+
 router.get('/notesTree', isLoggedIn, async (req, res) => {
     // Get ID and return error message if user doesn't exist
     // const _id = req.params.userId;
