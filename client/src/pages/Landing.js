@@ -6,8 +6,26 @@ import inSync from '../assets/in_sync.svg';
 import thoughtProcess from '../assets/thought_process.svg';
 import {Link} from "react-router-dom";
 import ImageCaption from "../components/ImageCaption";
+const API_URL =
+process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
 function Landing() {
+
+  function loginAsGuest() {
+    let url = API_URL + `/users/guest`;
+
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+      });
+  }
+
   return (
     <div>
       <NavBar />
@@ -39,6 +57,19 @@ function Landing() {
 
                   <Link to="/">
                     <Button text="Learn More" backgroundColor="brandBlue-A" textColor="white"
+                    textSize="3xl" padding="3" otherClasses="border-brandBlue-A border-2 border-solid font-semibold m-4 rounded-full" />
+                  </Link>
+                  
+                  <Link to="/" onClick={() => {
+                    loginAsGuest()
+                    .then(json => {
+                      console.log(json);
+                      window.location.href = '/note'; 
+                    })
+                    .catch(() => alert("There seems to be a problem, try again!"))
+
+                  }}>
+                    <Button text="Try as Guest" backgroundColor="brandBlue-A" textColor="white"
                     textSize="3xl" padding="3" otherClasses="border-brandBlue-A border-2 border-solid font-semibold m-4 rounded-full" />
                   </Link>
                 </div>

@@ -47,13 +47,13 @@
 /*.cdx-checklist__item.cdx-checklist__item--checked .cdx-checklist-checkbox*/ 
 .cdx-checklist__item-checkbox--checked {
 
-    background: #388ae5;
-	border-color: #388ae5;
+    background: #00bcff;
+	border-color: #00bcff;
 }
 
 /*.cdx-checklist__item--checked .cdx-checklist-checkbox:hover*/
 .cdx-checklist__item-checkbox--checked:hover {
-	background: #307cd1;
+	background: #00bcff;
 }
 
 /*.cdx-checklist__item--checked .cdx-checklist-checkbox::after*/ 
