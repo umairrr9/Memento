@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "./Link"
 import {Link as Route} from "react-router-dom";
 
 
 const NavBar = () => {
   const [isOpen, setOpen] = useState(false);
+  const [notScrolled, setScrolled] = useState(true);
+
+  function isScrolling() {
+    setScrolled(window.pageYOffset === 0);
+  }
+
+  // This will check if the user has scrolled any amount.
+  // If so, set notScrolled to false.
+  useEffect(() => {
+    function watchScroll() {
+      window.addEventListener("scroll", isScrolling);
+    }
+    watchScroll();
+    return () => {
+      window.removeEventListener("scroll", isScrolling);
+    };
+  }, []);
 
   return (
-    <nav className="md:flex bg-transparent md:justify-between md:items-center md:px-8 md:py-1 relative">
+    <nav className={"md:flex md:justify-between md:items-center md:px-8 md:py-1 fixed w-full z-10 " +
+    (notScrolled ? "bg-transparent" : "bg-white shadow-md")}>
       <div className="flex items-center justify-between px-4 py-3 md:p-0">
         <div className="flex items-center">
           <img className="inline w-16 h-16" src={require('../assets/transparent.png')} alt="Memento Logo"/>

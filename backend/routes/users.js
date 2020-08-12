@@ -11,14 +11,6 @@ const router = express.Router();
 ///// TASK: Allow username/password login combo /////
 ///// TASK: Create function for line 41 loop
 
-// function isLoggedIn(req, res, next) {
-//     if (!req.session.user._id) {
-//         return res.status(400).send({error: "You are not logged in."});
-//     } else {
-//         next();
-//     }
-// }
-
 // LOGIN USER
 router.post("/login", async (req, res) => {
 
@@ -119,7 +111,7 @@ router.get('/notesTree', isLoggedIn, async (req, res) => {
     // const _id = req.params.userId;
     const { _id } = req.session.user;
     const { error } = validateID({ _id });
-    if (error) return res.status(400).send({ error: error.details[0].message });
+    if (error) return res.status(400).send({ error: "This user couldn't be found, please try again." });
 
     const user = await doesUserExist(_id);
     if (!user) return res.status(400).send({ error: "User doesn't exist." });

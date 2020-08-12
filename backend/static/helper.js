@@ -16,7 +16,7 @@ function replaceWithNew(newFields, oldFields) {
 
 function isLoggedIn(req, res, next) {
     if (!req.session.user._id) {
-        return res.status(400).send({error: "You are not logged in."});
+        return res.status(400).send({error: "Please login then try again."});
     } else {
         next();
     }

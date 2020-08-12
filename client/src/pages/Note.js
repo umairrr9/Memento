@@ -1,5 +1,5 @@
-import React, { useRef, forwardRef, useState, useEffect } from "react";
-// import EditorJS from "@editorjs/editorjs";
+import React, { useRef, useState, useEffect } from "react";
+
 import EditorJs from "@natterstefan/react-editor-js";
 import TOOLS from "../editorjs/config";
 import SideNav from "../components/SideNav";
@@ -12,18 +12,13 @@ import RenameNoteModal from "../components/RenameNoteModal";
 import Tippy from "@tippy.js/react";
 import 'tippy.js/dist/tippy.css';
 
-// import AddItemModal from "../components/AddItemModal";
-import folderAdd from "../assets/folder-outline-add.svg";
-import noteAdd from "../assets/document-add.svg";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
-// import Dropdown from '../components/Dropdown';
 
 // TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
 
 export default function Note() {
   const editorInstance = useRef(null);
-  // const [shouldReinitialize, setShouldReinitialize] = useState(false);
   const [editorLoading, setEditorLoading] = useState(true);
   const [tree, setTree] = useState([
     {
@@ -36,7 +31,6 @@ export default function Note() {
   useEffect(() => {
     getNoteTree().then((json) => {
       if (json.error) {
-        console.error(json);
         throw new Error();
       }
       let t = null;
@@ -58,66 +52,16 @@ export default function Note() {
           setEditorLoading(false);
         })
           .catch(() => {
-            alert("Sorry, this note couldn't be found");
+            alert("Sorry, this note couldn't be found.");
             window.location.href = '/note';
           });
       }
     })
-      .catch(() => alert("Sorry, something went wrong, please reload the page."));
+      .catch(() => {
+        alert("It seems like there's an error, try again!");
+        window.location.href = '/';
+      });
   }, []);
-
-  // useEffect(() => {
-  //   const noteId =
-  //     new URLSearchParams(window.location.search).get("note") || "";
-  //   if (noteId !== "") {
-  //     getNote(noteId).then((json) => {
-  //       // set the editor js data
-  //       setData(json.note);
-  //       // set the selected note
-  //       console.log(tree);
-  //       let noteInTree = tree.find((obj) => obj.noteId === noteId);
-  //       console.log(noteInTree);
-  //       setSelectedNote(noteInTree);
-  //       // set editor loading to false
-  //       setEditorLoading(false);
-  //     });
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   // TODO: replace with api call
-  //   const noteData = new URLSearchParams(window.location.search).get("note") || "";
-  //   console.log(notes[noteData]);
-  //   if (noteData !== "") {
-  //     setData(notes[noteData]);
-  //     setEditorLoading(false);
-  //   }
-  // }, []);
-
-  // const [notes, setNotes] = useState({
-  //   test: {
-  //     blocks: [
-  //       {
-  //         type: "header",
-  //         data: {
-  //           text: "Editor.js",
-  //           level: 2,
-  //         },
-  //       },
-  //     ],
-  //   },
-  //   biotat: {
-  //     blocks: [
-  //       {
-  //         type: "header",
-  //         data: {
-  //           text: "Biotat",
-  //           level: 2,
-  //         },
-  //       },
-  //     ],
-  //   },
-  // });
 
   const [data, setData] = useState({});
   const [showFolderModal, setShowFolderModal] = useState(false);
@@ -204,7 +148,7 @@ export default function Note() {
   // }
 
   function deleteNote(noteId) {
-    let url = `http://localhost:80/api/notes/${noteId}`;
+    let url = `/api/notes/${noteId}`;
 
     return fetch(url, {
       method: 'DELETE',
@@ -219,7 +163,7 @@ export default function Note() {
   }
 
   function setNote(noteId, note) {
-    let url = `http://localhost:80/api/notes/${noteId}`;
+    let url = `/api/notes/${noteId}`;
     let body = JSON.stringify({ note });
 
     return fetch(url, {
@@ -236,7 +180,7 @@ export default function Note() {
   }
 
   function getNote(noteId) {
-    let url = `http://localhost:80/api/notes/${noteId}`; // 5f1c1dde949f0c004c51b99e
+    let url = `/api/notes/${noteId}`; // 5f1c1dde949f0c004c51b99e
     return fetch(url, {
       method: "GET",
       // headers: {
@@ -250,7 +194,7 @@ export default function Note() {
   }
 
   function createNewNote() {
-    let url = `http://localhost:80/api/notes/create`;
+    let url = `/api/notes/create`;
     // let body = JSON.stringify({ userId: "5f317b43fa8f2a1f085ab725" });
 
     return fetch(url, {
@@ -266,7 +210,7 @@ export default function Note() {
   }
 
   function getNoteTree() {
-    let url = `http://localhost:80/api/users/notesTree`;
+    let url = `/api/users/notesTree`;
 
     return fetch(url, {
       method: "GET",
@@ -285,7 +229,7 @@ export default function Note() {
   }
 
   function setNoteTree(tree) {
-    let url = `http://localhost:80/api/users/notesTree`;
+    let url = `/api/users/notesTree`;
     let body = JSON.stringify({ notesTree: tree });
 
     return fetch(url, {
@@ -342,7 +286,7 @@ export default function Note() {
         newTree.push(folder);
         // console.log(newTree);
         setNoteTree(newTree);
-        window.location.href= `/note?note=${json.noteId}`;
+        window.location.href = `/note?note=${json.noteId}`;
       })
       .catch(() =>
         alert("Sorry, the note couldn't be added. Please try again later.")
@@ -384,27 +328,22 @@ export default function Note() {
   };
 
   const onSave = async () => {
-    // setShouldReinitialize(false);
     if (editorInstance.current) {
       try {
-        // console.log(editorInstance.current);
         const outputData = await editorInstance.current.save();
-        console.log(outputData);
+        // console.log(outputData);
         setNote(selectedNote.noteId, outputData).then(json => {
           setIsSaving(true);
           if (json.error) {
             throw new Error();
           }
-          console.log(json.newNote);
+          // console.log(json.newNote);
         })
           .catch(() => alert("The note couldn't be saved in the database"))
           .finally(() => setTimeout(() => {
             setIsSaving(false);
           }, 1000));
-
-        // data = outputData;
         setData(outputData);
-        // TODO: update note in db via api call
       } catch (e) {
         console.error(e);
       }
@@ -464,28 +403,6 @@ export default function Note() {
           <h2 className="ml-2 text-sm">{selectedNote && selectedNote.title}</h2>
           {isSaving && <h3 className="ml-3 text-gray-700 font-hairline text-sm">Saving...</h3>}
           <div className="flex items-center ml-auto">
-            {/* <button className="focus:outline-none px-2">
-              <img
-                className="w-6 h-auto"
-                onClick={() => {
-                  setShowFolderModal(true);
-                  setSelectedFolder(tree[0]);
-                }}
-                src={folderAdd}
-                alt="Add Folder sign"
-              />
-            </button>
-            <button className="focus:outline-none px-2">
-              <img
-                className="w-6 h-auto"
-                onClick={() => {
-                  setShowNoteModal(true);
-                  setSelectedFolder(tree[0]);
-                }}
-                src={noteAdd}
-                alt="Add Note sign"
-              />
-            </button> */}
             <Tippy content="Save">
               <button onClick={onSave} className="focus:outline-none px-2">
                 <svg height={24} viewBox="0 0 24 24" width={24} className="text-brandBlue-A">
@@ -497,16 +414,6 @@ export default function Note() {
             <SettingsDropdown id={1} tree={tree} setSelectedFolder={setSelectedFolder} isShowing={selectedDropdown} setIsShowing={setSelectedDropdown} setShowDeleteNoteModal={setShowDeleteNoteModal} setShowDeleteFolderModal={setShowDeleteFolderModal} setShowRenameNoteModal={setShowRenameNoteModal} setShowRenameFolderModal={setShowRenameFolderModal} />
             <PlusDropdown id={2} isShowing={selectedDropdown} setIsShowing={setSelectedDropdown} setSelectedFolder={setSelectedFolder} tree={tree} setShowNoteModal={setShowNoteModal} setShowFolderModal={setShowFolderModal} />
           </div>
-          {/* <svg viewBox="0 0 20 20" className="text-brandBlue-A w-6 h-auto fill-current">
-      <path
-        // fill="currentColor"
-        d="M9 10V8h2v2h2v2h-2v2H9v-2H7v-2h2zm-5 8h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"
-      />
-    </svg>
-
-    <svg viewBox="0 0 20 20">
-      <path d="M0 4c0-1.1.9-2 2-2h7l2 2h7a2 2 0 012 2v10a2 2 0 01-2 2H2a2 2 0 01-2-2V4zm2 2v10h16V6H2zm7 4V8h2v2h2v2h-2v2H9v-2H7v-2h2z" />
-    </svg> */}
         </nav>
         <div className="pt-2 px-4 md:px-12 lg:px-0" onKeyPress={handleKeyPress}>
           {!editorLoading ? (
@@ -519,12 +426,11 @@ export default function Note() {
               onChange={onChange}
               onReady={onReady}
             />
-          ) : // <div className="h-screen">
-            //   <h1 className="text-2xl font-semibold text-center mt-12">
-            //     Select a note to start writing!
-            //   </h1>
-            // </div>
-            null}
+          ) : <div className="h-screen">
+              <h1 className="text-2xl font-semibold text-center mt-12">
+                Select a note to start writing!
+              </h1>
+            </div>}
         </div>
       </main>
 
@@ -536,7 +442,6 @@ export default function Note() {
         saveOnClick={() => {
           addFolder(selectedFolder.id, newTitle, tree);
           setSelectedFolder(tree[0]);
-          // setNoteTree();
           setShowFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
@@ -555,7 +460,6 @@ export default function Note() {
         saveOnClick={() => {
           addNote(selectedFolder.id, newTitle, tree);
           setSelectedFolder(tree[0]);
-          // setNoteTree();
           setShowNoteModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
@@ -571,9 +475,7 @@ export default function Note() {
           setShowDeleteFolderModal(false);
         }}
         saveOnClick={() => {
-          // deleteFolder(selectedFolder.id, title, tree);
           setSelectedFolder(tree[0]);
-          // setNoteTree();
           setShowFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
@@ -590,9 +492,7 @@ export default function Note() {
           setShowDeleteNoteModal(false);
         }}
         saveOnClick={() => {
-          // deleteFolder(selectedFolder.id, title, tree);
           setSelectedFolder(tree[0]);
-          // setNoteTree();
           setShowFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
@@ -608,10 +508,8 @@ export default function Note() {
           setShowRenameFolderModal(false);
         }}
         saveOnClick={() => {
-          // deleteFolder(selectedFolder.id, title, tree);
           renameItem(selectedFolder.id, newTitle, tree);
           setSelectedFolder(tree[0]);
-          // setNoteTree();
           setShowRenameFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
@@ -628,10 +526,8 @@ export default function Note() {
           setShowRenameNoteModal(false);
         }}
         saveOnClick={() => {
-          // deleteFolder(selectedFolder.id, title, tree);
           renameItem(selectedFolder.id, newTitle, tree);
           setSelectedFolder(tree[0]);
-          // setNoteTree();
           setShowRenameNoteModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
@@ -641,9 +537,6 @@ export default function Note() {
         selectedFolder={selectedFolder}
         isRenameNote={true}
       />
-
-
-
     </>
   );
 }

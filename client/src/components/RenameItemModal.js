@@ -32,7 +32,7 @@ export default function RenameItemModal({
         />
       </div>
       <div>
-        <h2 className="text-gray-500 font-bold my-2">Selected folder: {selectedFolder && selectedFolder.title}</h2>
+        <h2 className="text-gray-500 font-bold my-2">Selected: {selectedFolder && selectedFolder.title}</h2>
 
         <label
           className="block text-gray-500 font-bold my-2"
