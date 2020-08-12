@@ -409,9 +409,12 @@ export default function Note() {
           </button>
           <h2 className="ml-2 text-sm">{selectedNote && selectedNote.title}</h2>
           {isSaving && (
-            <h3 className="ml-3 text-gray-700 font-hairline text-sm">
-              Saving...
-            </h3>
+            <>
+              <div className="ml-3 lds-dual-ring"></div>
+              <h3 className="ml-2 text-gray-700 font-hairline text-sm">
+                Saving...
+              </h3>
+            </>
           )}
           <div
             className={
@@ -457,7 +460,10 @@ export default function Note() {
             />
           </div>
         </nav>
-        <div className="pt-2 px-4 md:px-12 lg:px-0" onKeyPress={handleKeyPress}>
+        <div
+          className="pt-10 px-4 md:px-12 lg:px-0"
+          onKeyPress={handleKeyPress}
+        >
           {!editorLoading ? (
             <EditorJs
               tools={TOOLS}
