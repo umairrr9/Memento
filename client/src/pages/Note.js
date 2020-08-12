@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-
 import EditorJs from "@natterstefan/react-editor-js";
 import TOOLS from "../editorjs/config";
 import SideNav from "../components/SideNav";
@@ -10,8 +9,7 @@ import DeleteNoteModal from "../components/DeleteNoteModal";
 import RenameFolderModal from "../components/RenameFolderModal";
 import RenameNoteModal from "../components/RenameNoteModal";
 import Tippy from "@tippy.js/react";
-import 'tippy.js/dist/tippy.css';
-
+import "tippy.js/dist/tippy.css";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
 
@@ -27,42 +25,6 @@ export default function Note() {
       id: 0,
     },
   ]);
-
-  useEffect(() => {
-    getNoteTree().then((json) => {
-      if (json.error) {
-        throw new Error();
-      }
-      let t = null;
-      if (!json.error) {
-        t = json.notesTree;
-      }
-      setTree(t);
-      const noteId =
-        new URLSearchParams(window.location.search).get("note") || "";
-      if (noteId !== "") {
-        getNote(noteId).then((json) => {
-          if (json.error) throw new Error();
-          // set the editor js data
-          setData(json.note);
-          // set the selected note
-          let noteInTree = t.find((obj) => obj.noteId === noteId);
-          setSelectedNote(noteInTree);
-          // set editor loading to false
-          setEditorLoading(false);
-        })
-          .catch(() => {
-            alert("Sorry, this note couldn't be found.");
-            window.location.href = '/note';
-          });
-      }
-    })
-      .catch(() => {
-        alert("It seems like there's an error, try again!");
-        window.location.href = '/';
-      });
-  }, []);
-
   const [data, setData] = useState({});
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
@@ -75,6 +37,48 @@ export default function Note() {
   const [selectedDropdown, setSelectedDropdown] = useState(-1);
   const [newTitle, setTitle] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isNavOpen, setNavOpen] = useState(false);
+  const [numKeyPresses, setKeyPresses] = useState(0);
+  const API_URL =
+    process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
+
+  useEffect(() => {
+    getNoteTree()
+      .then((json) => {
+        if (json.error) {
+          throw new Error(json.error);
+        }
+        let t = null;
+        if (!json.error) {
+          t = json.notesTree;
+        }
+        setTree(t);
+        const noteId =
+          new URLSearchParams(window.location.search).get("note") || "";
+        if (noteId !== "") {
+          getNote(noteId)
+            .then((json) => {
+              if (json.error) throw new Error();
+              // set the editor js data
+              setData(json.note);
+              // set the selected note
+              let noteInTree = t.find((obj) => obj.noteId === noteId);
+              setSelectedNote(noteInTree);
+              // set editor loading to false
+              setEditorLoading(false);
+            })
+            .catch(() => {
+              alert("Sorry, this note couldn't be found.");
+              window.location.href = "/note";
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("It seems like there's an error, try again!");
+        if (process.env.NODE_ENV === "production") window.location.href = "/";
+      });
+  }, []);
 
   // function traverse(node, level, tree) {
   //   if (node.title) {console.log(node.title, level);}
@@ -148,22 +152,22 @@ export default function Note() {
   // }
 
   function deleteNote(noteId) {
-    let url = `/api/notes/${noteId}`;
+    let url = API_URL + `/notes/${noteId}`;
 
     return fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-      }
+      },
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then((json) => {
         return json;
-      })
+      });
   }
 
   function setNote(noteId, note) {
-    let url = `/api/notes/${noteId}`;
+    let url = API_URL + `/notes/${noteId}`;
     let body = JSON.stringify({ note });
 
     return fetch(url, {
@@ -180,7 +184,7 @@ export default function Note() {
   }
 
   function getNote(noteId) {
-    let url = `/api/notes/${noteId}`; // 5f1c1dde949f0c004c51b99e
+    let url = API_URL + `/notes/${noteId}`;
     return fetch(url, {
       method: "GET",
       // headers: {
@@ -194,8 +198,7 @@ export default function Note() {
   }
 
   function createNewNote() {
-    let url = `/api/notes/create`;
-    // let body = JSON.stringify({ userId: "5f317b43fa8f2a1f085ab725" });
+    let url = API_URL + `/notes/create`;
 
     return fetch(url, {
       method: "POST",
@@ -210,7 +213,7 @@ export default function Note() {
   }
 
   function getNoteTree() {
-    let url = `/api/users/notesTree`;
+    let url = API_URL + `/users/notesTree`;
 
     return fetch(url, {
       method: "GET",
@@ -229,7 +232,7 @@ export default function Note() {
   }
 
   function setNoteTree(tree) {
-    let url = `/api/users/notesTree`;
+    let url = API_URL + `/users/notesTree`;
     let body = JSON.stringify({ notesTree: tree });
 
     return fetch(url, {
@@ -297,7 +300,7 @@ export default function Note() {
     if (!(newTitle.length >= 1)) return;
     // let id = tree.length + 1;
     //let folder = { parentId: parentFolderId, title: newTitle, id };
-    let itemIndex = tree.findIndex(n => n.id === id);
+    let itemIndex = tree.findIndex((n) => n.id === id);
     let newTree = tree;
     newTree[itemIndex].title = newTitle;
     setNoteTree(newTree)
@@ -314,9 +317,6 @@ export default function Note() {
       );
   }
 
-  const [isNavOpen, setNavOpen] = useState(false);
-  const [numKeyPresses, setKeyPresses] = useState(0);
-
   const onReady = () => {
     // https://editorjs.io/configuration#editor-modifications-callback
     console.log("Editor.js is ready to work!");
@@ -332,17 +332,20 @@ export default function Note() {
       try {
         const outputData = await editorInstance.current.save();
         // console.log(outputData);
-        setNote(selectedNote.noteId, outputData).then(json => {
-          setIsSaving(true);
-          if (json.error) {
-            throw new Error();
-          }
-          // console.log(json.newNote);
-        })
+        setNote(selectedNote.noteId, outputData)
+          .then((json) => {
+            setIsSaving(true);
+            if (json.error) {
+              throw new Error();
+            }
+            // console.log(json.newNote);
+          })
           .catch(() => alert("The note couldn't be saved in the database"))
-          .finally(() => setTimeout(() => {
-            setIsSaving(false);
-          }, 1000));
+          .finally(() =>
+            setTimeout(() => {
+              setIsSaving(false);
+            }, 1000)
+          );
         setData(outputData);
       } catch (e) {
         console.error(e);
@@ -374,7 +377,11 @@ export default function Note() {
           (isNavOpen ? "ml-32 sm:ml-56" : "")
         }
       >
-        <nav className={"bg-gray-100 flex items-center justify-start h-8 "}>
+        <nav
+          className={
+            "bg-gray-100 flex items-center justify-start h-8 w-full fixed z-10"
+          }
+        >
           <button
             type="button"
             className="ml-2 text-xl block text-gray-900 hover:text-black focus:text-black focus:outline-none"
@@ -397,22 +404,57 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-                <span>&#9776;</span>
-              )}
+              <span>&#9776;</span>
+            )}
           </button>
           <h2 className="ml-2 text-sm">{selectedNote && selectedNote.title}</h2>
-          {isSaving && <h3 className="ml-3 text-gray-700 font-hairline text-sm">Saving...</h3>}
-          <div className="flex items-center ml-auto">
+          {isSaving && (
+            <h3 className="ml-3 text-gray-700 font-hairline text-sm">
+              Saving...
+            </h3>
+          )}
+          <div
+            className={
+              "flex items-center ml-auto duration-500 " +
+              (isNavOpen ? "mr-32 sm:mr-56" : "")
+            }
+          >
             <Tippy content="Save">
               <button onClick={onSave} className="focus:outline-none px-2">
-                <svg height={24} viewBox="0 0 24 24" width={24} className="text-brandBlue-A">
+                <svg
+                  height={24}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  className="text-brandBlue-A"
+                >
                   <path d="M0 0h24v24H0z" fill="none" />
-                  <path fill="currentColor" d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />
+                  <path
+                    fill="currentColor"
+                    d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
+                  />
                 </svg>
               </button>
             </Tippy>
-            <SettingsDropdown id={1} tree={tree} setSelectedFolder={setSelectedFolder} isShowing={selectedDropdown} setIsShowing={setSelectedDropdown} setShowDeleteNoteModal={setShowDeleteNoteModal} setShowDeleteFolderModal={setShowDeleteFolderModal} setShowRenameNoteModal={setShowRenameNoteModal} setShowRenameFolderModal={setShowRenameFolderModal} />
-            <PlusDropdown id={2} isShowing={selectedDropdown} setIsShowing={setSelectedDropdown} setSelectedFolder={setSelectedFolder} tree={tree} setShowNoteModal={setShowNoteModal} setShowFolderModal={setShowFolderModal} />
+            <SettingsDropdown
+              id={1}
+              tree={tree}
+              setSelectedFolder={setSelectedFolder}
+              isShowing={selectedDropdown}
+              setIsShowing={setSelectedDropdown}
+              setShowDeleteNoteModal={setShowDeleteNoteModal}
+              setShowDeleteFolderModal={setShowDeleteFolderModal}
+              setShowRenameNoteModal={setShowRenameNoteModal}
+              setShowRenameFolderModal={setShowRenameFolderModal}
+            />
+            <PlusDropdown
+              id={2}
+              isShowing={selectedDropdown}
+              setIsShowing={setSelectedDropdown}
+              setSelectedFolder={setSelectedFolder}
+              tree={tree}
+              setShowNoteModal={setShowNoteModal}
+              setShowFolderModal={setShowFolderModal}
+            />
           </div>
         </nav>
         <div className="pt-2 px-4 md:px-12 lg:px-0" onKeyPress={handleKeyPress}>
@@ -426,11 +468,13 @@ export default function Note() {
               onChange={onChange}
               onReady={onReady}
             />
-          ) : <div className="h-screen">
+          ) : (
+            <div className="">
               <h1 className="text-2xl font-semibold text-center mt-12">
                 Select a note to start writing!
               </h1>
-            </div>}
+            </div>
+          )}
         </div>
       </main>
 
