@@ -469,7 +469,7 @@ export default function Note() {
               setShowNoteModal={setShowNoteModal}
               setShowFolderModal={setShowFolderModal}
             />
-            <button onClick={() => print(4)}>print</button>
+            <button onClick={() => window.print()}>print</button>
           </div>
         </nav>
         <div

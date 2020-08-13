@@ -29,7 +29,6 @@ const Form = ({isLogin}) => {
     if (!email) {
       setValue("emailError", "Please enter a email.");
       setError(true);
-      // setValues(values => ({ ...values, emailError: "Please enter a email."}));
       return;
     } else {
       setValue("emailError", "");
@@ -71,24 +70,11 @@ const Form = ({isLogin}) => {
       setValue("confirmPasswordError", "");
     }
 
-    // console.log("hi");
     setError(false);
   }
 
   function login() {
-    // validate the username, email and password
-    // check whether they are signing up or logging in
-    // make post request to do login/signup
-
-
-
-    console.log(values);
-    console.log({ email, password, confirmPassword, username, emailError, passwordError, confirmPasswordError, usernameError, isLogin });
-
-    //let noErrors = isLogin ? (!emailError && !passwordError) : (!emailError && !usernameError && !passwordError && !confirmPasswordError);
-
-    //if (noErrors) {
-    let url = isLogin ? `http://localhost:80/api/users/login` : `http://localhost:80/api/users/signup`;
+    let url = `/api/users` + (isLogin ? `/login` : `/signup`);
     let body = isLogin ? JSON.stringify({ email, password }) : JSON.stringify({ email, username, password });
     fetch(url, {
       method: "POST",
@@ -117,10 +103,10 @@ const Form = ({isLogin}) => {
 
   return (
     <div className="md:mt-8 mx-auto max-w-2xl bg-white py-16 sm:px-12 lg:px-24 shadow-xl mb-24">
-      <div className="flex justify-center mb-8">
+      <Link className="flex justify-center mb-8" to="/">
         <img alt="Memento Logo" src={logo} className="w-16 h-auto" />
         <h1 className="ml-6 self-center text-brandBlue-A font-bold text-xl">Memento</h1>
-      </div>
+      </Link>
       <form onSubmit={handleSubmit}>
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
           {!isLogin && <div className="-mx-3 md:flex mb-6">

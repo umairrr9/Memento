@@ -8,6 +8,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import PrintNote from './pages/PrintNote';
 
 // "email": "guest@example.com",
 // "password": "8lfmm!DC0eY0igLCF*"
@@ -25,6 +26,9 @@ function App() {
           </Route> */}
           <Route path="/note">
             <Note />
+          </Route>
+          <Route path="/print">
+            <PrintNote/>
           </Route>
           <Route path="/signup">
             <Form isLogin={false}/>
