@@ -108,21 +108,26 @@ router.post("/signup", async (req, res) => {
   res.status(200).send({ _id, email, username });
 });
 
-router.get("/notesTree", isLoggedIn, async (req, res) => {
-  // Get ID and return error message if user doesn't exist
-  // const _id = req.params.userId;
-  const { _id } = req.session.user;
-  const { error } = validateID({ _id });
-  if (error)
-    return res
-      .status(400)
-      .send({ error: "This user couldn't be found, please try again." });
+router.post("/guest", async (req, res) => { 
+    const _id = '5f34255dead5a41af0aa85f8';
+    const email = 'guest@example.com';
+    const username= 'Guest';
+    req.session.user = {_id, email, username, isGuest: true};
+    res.status(200).send({_id, email, username, isGuest});
+});
 
-  const user = await doesUserExist(_id);
-  if (!user) return res.status(400).send({ error: "User doesn't exist." });
+router.get('/notesTree', isLoggedIn, async (req, res) => {
+    // Get ID and return error message if user doesn't exist
+    // const _id = req.params.userId;
+    const { _id } = req.session.user;
+    const { error } = validateID({ _id });
+    if (error) return res.status(400).send({ error: "This user couldn't be found, please try again." });
 
-  const { notesTree } = user;
-  res.status(200).json({ notesTree, _id });
+    const user = await doesUserExist(_id);
+    if (!user) return res.status(400).send({ error: "User doesn't exist." });
+
+    const {notesTree} = user;
+    res.status(200).json({notesTree, _id});
 });
 
 router.post("/notesTree", isLoggedIn, async (req, res) => {

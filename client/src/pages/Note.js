@@ -12,6 +12,8 @@ import Tippy from "@tippy.js/react";
 import "tippy.js/dist/tippy.css";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
 
@@ -39,8 +41,20 @@ export default function Note() {
   const [isSaving, setIsSaving] = useState(false);
   const [isNavOpen, setNavOpen] = useState(false);
   const [numKeyPresses, setKeyPresses] = useState(0);
-  const API_URL =
-    process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
+  const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
+
+
+  function print(quality = 1) {
+    const filename = 'ThisIsYourPDFFilename.pdf';
+
+    html2canvas(document.querySelector('#editorjs'),
+      { scale: quality }
+    ).then(canvas => {
+      let pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
+      pdf.save(filename);
+    });
+  }
 
   useEffect(() => {
     getNoteTree()
@@ -404,17 +418,14 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-              <span>&#9776;</span>
-            )}
+                <span>&#9776;</span>
+              )}
           </button>
           <h2 className="ml-2 text-sm">{selectedNote && selectedNote.title}</h2>
           {isSaving && (
-            <>
-              <div className="ml-3 lds-dual-ring"></div>
-              <h3 className="ml-2 text-gray-700 font-hairline text-sm">
-                Saving...
-              </h3>
-            </>
+            <h3 className="ml-2 text-gray-700 font-hairline text-sm">
+              Saving...
+            </h3>
           )}
           <div
             className={
@@ -458,6 +469,7 @@ export default function Note() {
               setShowNoteModal={setShowNoteModal}
               setShowFolderModal={setShowFolderModal}
             />
+            <button onClick={() => print(4)}>print</button>
           </div>
         </nav>
         <div
@@ -475,12 +487,12 @@ export default function Note() {
               onReady={onReady}
             />
           ) : (
-            <div className="">
-              <h1 className="text-2xl font-semibold text-center mt-12">
-                Select a note to start writing!
+              <div className="">
+                <h1 className="text-2xl font-semibold text-center mt-12">
+                  Select a note to start writing!
               </h1>
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </main>
 
