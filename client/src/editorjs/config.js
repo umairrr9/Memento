@@ -5,7 +5,7 @@
  *
  * or create your own: https://editorjs.io/the-first-plugin
  */
-// import CheckList from '@editorjs/checklist'
+// import Checklist from '@editorjs/checklist'
 import Checklist from "./checklist/index";
 import Code from "@editorjs/code";
 import Delimiter from "@editorjs/delimiter";

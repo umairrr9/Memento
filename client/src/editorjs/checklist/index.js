@@ -152,6 +152,7 @@ class Checklist {
 
     if (item.checked) {
       checkListItem.classList.add(this.CSS.itemChecked);
+      checkbox.classList.add(this.CSS.checkboxChecked);
     }
 
     checkListItem.appendChild(checkbox);
@@ -298,7 +299,7 @@ class Checklist {
       if (value) {
         this._data.items.push({
           text: value,
-          checked: this._elements.items[i].classList.contains(this.CSS.itemChecked)
+          checked: this._elements.items[i].classList.contains(this.CSS.checkboxChecked)
         });
       }
     }
