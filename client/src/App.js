@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Landing from './pages/Landing';
 import Form from './pages/Form';
 import Note from './pages/Note';
-// import Temporary from './pages/Temporary';
 import {
   BrowserRouter as Router,
   Switch,
@@ -25,7 +24,7 @@ function App() {
             <Temporary />
           </Route> */}
           <Route path="/note">
-            <Note />
+            <Note/>
           </Route>
           <Route path="/print">
             <PrintNote/>
@@ -37,7 +36,7 @@ function App() {
             <Form isLogin={true}/>
           </Route>
           <Route path="/">
-            <Landing />
+            <Landing/>
           </Route>
       </Switch>
     </Router>

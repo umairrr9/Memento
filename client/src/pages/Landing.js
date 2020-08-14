@@ -27,20 +27,23 @@ function Landing() {
   }
 
   return (
-    <div>
+    <>
       <NavBar />
       
-      <div className="">
+      <div id="content">
+
+        {/* Top of Landing Page */}
         <div className="px-8" id="pattern">
+
             <div className="font-semibold text-5xl text-black leading-tight text-center py-3 sm:p-12"> 
-              <h1 className="px-2 pt-12"> Productivity and simplicity with Memento. </h1>
+              <h1 className="px-2 pt-12 font-inter"> Productivity and simplicity with Memento. </h1>
             </div>
 
             <div>
                 
                 <br />
 
-                <div id="text" className="text-center sm:w-1/2 m-auto text-2xl text-gray-500 ">
+                <div id="text" className="text-center sm:w-1/2 m-auto text-2xl text-gray-500 font-baloo-2">
                   <p>
                     Use Memento to take and store notes in the simplest way
                     possible; whether you need to study, write meeting notes, make lists or
@@ -80,6 +83,7 @@ function Landing() {
             
           </div>
 
+          {/* Why Memento Section */}
           <div id="features" className="">
             <h1 className="text-5xl text-brandBlue-A"> Features </h1>
             <p>
@@ -96,17 +100,26 @@ function Landing() {
 
               <ImageCaption image={inSync} imageClasses="w-auto h-48 object-cover inline mt-8 sm:mt-0"
               caption="Access your notes anywhere" captionClasses="mt-1 text-white" />
-
             </div>
 
 
+          </div>
+
+          {/* Documentation Section */}
+          <div>
+
+          </div>
+
+          {/* About Us Section */}
+          <div>
+            
           </div>
 
 
 
       </div>
 
-  </div>
+  </>
   )
     
 }

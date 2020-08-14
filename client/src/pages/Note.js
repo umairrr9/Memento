@@ -8,12 +8,8 @@ import DeleteFolderModal from "../components/DeleteFolderModal";
 import DeleteNoteModal from "../components/DeleteNoteModal";
 import RenameFolderModal from "../components/RenameFolderModal";
 import RenameNoteModal from "../components/RenameNoteModal";
-import Tippy from "@tippy.js/react";
-import "tippy.js/dist/tippy.css";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 // TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
 
@@ -41,20 +37,14 @@ export default function Note() {
   const [isSaving, setIsSaving] = useState(false);
   const [isNavOpen, setNavOpen] = useState(false);
   const [numKeyPresses, setKeyPresses] = useState(0);
+  const [guest, setIsGuest] = useState(null);
   const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
-
-  function print(quality = 1) {
-    const filename = 'ThisIsYourPDFFilename.pdf';
-
-    html2canvas(document.querySelector('#editorjs'),
-      { scale: quality }
-    ).then(canvas => {
-      let pdf = new jsPDF('p', 'mm', 'a4');
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
-      pdf.save(filename);
-    });
-  }
+  useEffect(() => {
+    isGuest().then(json => {
+      setIsGuest(json.isGuest);
+    })
+  }, [])
 
   useEffect(() => {
     getNoteTree()
@@ -88,7 +78,7 @@ export default function Note() {
         }
       })
       .catch((error) => {
-        console.error(error);
+        // console.error(error);
         alert("It seems like there's an error, try again!");
         if (process.env.NODE_ENV === "production") window.location.href = "/";
       });
@@ -164,6 +154,20 @@ export default function Note() {
   //   setTree(newTree);
   //   console.log("hi", newTree);
   // }
+
+  function isGuest() {
+    let url = API_URL + `/users/isGuest`;
+    return fetch(url, {
+      method: "GET",
+      // headers: {
+      //   'Content-Type': 'application/json'
+      // }
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+      });
+  }
 
   function deleteNote(noteId) {
     let url = API_URL + `/notes/${noteId}`;
@@ -348,13 +352,14 @@ export default function Note() {
         // console.log(outputData);
         setNote(selectedNote.noteId, outputData)
           .then((json) => {
-            setIsSaving(true);
             if (json.error) {
               throw new Error();
+            } else {
+              setIsSaving(true);
             }
             // console.log(json.newNote);
           })
-          .catch(() => alert("The note couldn't be saved in the database"))
+          .catch(() => alert("Sorry, the note couldn't be saved, please try again."))
           .finally(() =>
             setTimeout(() => {
               setIsSaving(false);
@@ -362,14 +367,14 @@ export default function Note() {
           );
         setData(outputData);
       } catch (e) {
-        console.error(e);
+        // console.error(e);
       }
     }
   };
 
   // if the keyboard has been pressed a few times, save the note
   const handleKeyPress = async () => {
-    if (editorLoading) return;
+    if (editorLoading || guest) return;
     if (numKeyPresses >= 6) {
       onSave();
       setKeyPresses(0);
@@ -421,7 +426,7 @@ export default function Note() {
                 <span>&#9776;</span>
               )}
           </button>
-          <h2 className="ml-2 text-sm">{selectedNote && selectedNote.title}</h2>
+          <h2 className="ml-2 text-sm truncate title-max-w">{selectedNote && selectedNote.title}</h2>
           {isSaving && (
             <h3 className="ml-2 text-gray-700 font-hairline text-sm">
               Saving...
@@ -433,34 +438,36 @@ export default function Note() {
               (isNavOpen ? "mr-32 sm:mr-56" : "")
             }
           >
-            <Tippy content="Save">
-              <button onClick={onSave} className="focus:outline-none px-2">
-                <svg
-                  height={24}
-                  viewBox="0 0 24 24"
-                  width={24}
-                  className="text-brandBlue-A"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path
-                    fill="currentColor"
-                    d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
-                  />
-                </svg>
-              </button>
-            </Tippy>
-            <SettingsDropdown
-              id={1}
-              tree={tree}
-              setSelectedFolder={setSelectedFolder}
-              isShowing={selectedDropdown}
-              setIsShowing={setSelectedDropdown}
-              setShowDeleteNoteModal={setShowDeleteNoteModal}
-              setShowDeleteFolderModal={setShowDeleteFolderModal}
-              setShowRenameNoteModal={setShowRenameNoteModal}
-              setShowRenameFolderModal={setShowRenameFolderModal}
-            />
-            <PlusDropdown
+            {!guest ? <button onClick={onSave} className="focus:outline-none px-2">
+              <svg
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                className="text-brandBlue-A"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                  fill="currentColor"
+                  d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
+                />
+              </svg>
+            </button> : null}
+
+            {guest ? null :
+              <SettingsDropdown
+                id={1}
+                tree={tree}
+                setSelectedFolder={setSelectedFolder}
+                isShowing={selectedDropdown}
+                setIsShowing={setSelectedDropdown}
+                setShowDeleteNoteModal={setShowDeleteNoteModal}
+                setShowDeleteFolderModal={setShowDeleteFolderModal}
+                setShowRenameNoteModal={setShowRenameNoteModal}
+                setShowRenameFolderModal={setShowRenameFolderModal}
+                selectedNote={selectedNote}
+                guest={guest}
+              />}
+            {!guest ? <PlusDropdown
               id={2}
               isShowing={selectedDropdown}
               setIsShowing={setSelectedDropdown}
@@ -468,12 +475,11 @@ export default function Note() {
               tree={tree}
               setShowNoteModal={setShowNoteModal}
               setShowFolderModal={setShowFolderModal}
-            />
-            <button onClick={() => window.print()}>print</button>
+            /> : null}
           </div>
         </nav>
         <div
-          className="pt-10 px-4 md:px-12 lg:px-0"
+          className={"px-4 md:px-12 lg:px-0 pt-10"}
           onKeyPress={handleKeyPress}
         >
           {!editorLoading ? (
@@ -490,7 +496,7 @@ export default function Note() {
               <div className="">
                 <h1 className="text-2xl font-semibold text-center mt-12">
                   Select a note to start writing!
-              </h1>
+                </h1>
               </div>
             )}
         </div>

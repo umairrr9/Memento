@@ -299,7 +299,7 @@ class Checklist {
       if (value) {
         this._data.items.push({
           text: value,
-          checked: this._elements.items[i].classList.contains(this.CSS.checkboxChecked)
+          checked: this._elements.items[i].classList.contains(this.CSS.itemChecked)
         });
       }
     }

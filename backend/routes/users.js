@@ -101,37 +101,45 @@ router.post("/signup", async (req, res) => {
     console.error(error);
     res.status(400).send({ error: "Error, the user wasn't saved." });
   }
-  
+
   req.session.user = { _id, email, username };
 
   // Send user object
   res.status(200).send({ _id, email, username });
 });
 
-router.post("/guest", async (req, res) => { 
-    const _id = '5f34255dead5a41af0aa85f8';
-    const email = 'guest@example.com';
-    const username= 'Guest';
-    req.session.user = {_id, email, username, isGuest: true};
-    res.status(200).send({_id, email, username, isGuest});
+router.get("/isGuest", async (req, res) => {
+  const isGuest = req.session.user.isGuest || false;
+  res.status(200).send({isGuest});
+});
+
+router.post("/guest", async (req, res) => {
+  const _id = '5f34255dead5a41af0aa85f8';
+  const email = 'guest@example.com';
+  const username = 'Guest';
+  const isGuest = true;
+  req.session.user = { _id, email, username, isGuest };
+  res.status(200).send({ _id, email, username, isGuest });
 });
 
 router.get('/notesTree', isLoggedIn, async (req, res) => {
-    // Get ID and return error message if user doesn't exist
-    // const _id = req.params.userId;
-    const { _id } = req.session.user;
-    const { error } = validateID({ _id });
-    if (error) return res.status(400).send({ error: "This user couldn't be found, please try again." });
+  // Get ID and return error message if user doesn't exist
+  // const _id = req.params.userId;
+  const { _id } = req.session.user;
+  const { error } = validateID({ _id });
+  if (error) return res.status(400).send({ error: "This user couldn't be found, please try again." });
 
-    const user = await doesUserExist(_id);
-    if (!user) return res.status(400).send({ error: "User doesn't exist." });
+  const user = await doesUserExist(_id);
+  if (!user) return res.status(400).send({ error: "User doesn't exist." });
 
-    const {notesTree} = user;
-    res.status(200).json({notesTree, _id});
+  const { notesTree } = user;
+  res.status(200).json({ notesTree, _id });
 });
 
 router.post("/notesTree", isLoggedIn, async (req, res) => {
-  const { _id } = req.session.user;
+  const { _id, isGuest = null } = req.session.user;
+  if (isGuest) return res.status(400).send({ error: "Sorry, you must create an account before you can do that." });
+
   const { error } = validateID({ _id });
   if (error) return res.status(400).send({ error: error.details[0].message });
 

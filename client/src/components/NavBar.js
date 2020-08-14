@@ -29,7 +29,9 @@ const NavBar = () => {
       <div className="flex items-center justify-between px-4 py-3 md:p-0">
         <div className="flex items-center">
           <img className="inline w-16 h-16" src={require('../assets/transparent.png')} alt="Memento Logo"/>
-          <h1 className="ml-2 inline text-xl text-brandBlue-A font-bold hover:text-brandBlue-B">Memento</h1>
+          <Route to="/">
+          <h1 className="ml-2 inline text-2xl text-brandBlue-A font-inter hover:text-brandBlue-B">Memento</h1>
+          </Route>
         </div>
         <div className="md:hidden">
           <button
@@ -54,7 +56,7 @@ const NavBar = () => {
         </div>
       </div>
       {
-        <nav className={isOpen ? 'block px-4 pt-2 pb-4 md:flex md:p-0' : 'hidden px-4 pt-2 pb-4 md:flex md:p-0'}>
+        <nav className={"px-4 pt-2 pb-4 md:flex md:p-0 items-center " + (isOpen ? 'block' : 'hidden')}>
           {/* <a
             href="#"
             className="block px-2 py-1 text-gray-500 font-bold rounded hover:text-gray-800"
@@ -62,9 +64,9 @@ const NavBar = () => {
             Features
           </a>
            */}
-          <Link otherClasses="" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Features"/>
-          <Link otherClasses="mt-1 md:mt-0 md:ml-2" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="About Us"/>
-          <Link otherClasses="mt-1 md:mt-0 md:ml-2 md:mr-16" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Something"/>
+          <Link otherClasses="" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Why Memento"/>
+          <Link otherClasses="mt-1 md:mt-0 md:ml-2" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Documentation"/>
+          <Link otherClasses="mt-1 md:mt-0 md:ml-2 md:mr-16" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="About Us"/>
           <Route to="/login">
           <Link otherClasses="mt-1 md:mt-0 md:ml-2" href="#" color="brandBlue-A" hoverColor="brandBlue-B" focusColor="brandBlue-B" text="Login"/>
           </Route>
@@ -80,7 +82,7 @@ const NavBar = () => {
 
           <Route
             to="/signup"
-            className="bg-white mt-1 hover:text-brandBlue-B hover:border-brandBlue-B inline-block border-brandBlue-A border-2 border-solid text-brandBlue-A font-bold px-2 py-1 rounded-full md:mt-0 md:ml-2"
+            className="bg-white mt-1 hover:text-brandBlue-B hover:border-brandBlue-B inline-block border-brandBlue-A border-2 border-solid text-brandBlue-A font-bold text-lg px-2 py-1 rounded-full md:mt-0 md:ml-2"
           >
             Sign Up
           </Route>

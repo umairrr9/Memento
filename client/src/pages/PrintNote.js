@@ -57,7 +57,6 @@ export default function PrintNote() {
             editorInstance.current = instance;
           }}
           onReady={() => setTimeout(() => window.print(), 2000)}
-          onChange={() => console.log(data)}
         />
       ) : null}
     </div>

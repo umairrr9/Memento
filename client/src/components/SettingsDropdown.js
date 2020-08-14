@@ -3,11 +3,6 @@ import Dropdown from "./Dropdown";
 
 export default function SettingsDropdown(
   {
-    //   buttonStyles,
-    //   buttonOnClick,
-    //   innerButton,
-    //   children,
-    //   dropdownStyles,
     id,
     isShowing,
     setIsShowing,
@@ -16,9 +11,12 @@ export default function SettingsDropdown(
     setShowRenameNoteModal,
     setShowRenameFolderModal,
     setSelectedFolder,
-    tree
+    tree,
+    selectedNote,
+    guest
   }
 ) {
+
   return (
     <Dropdown
       id={id}
@@ -34,77 +32,78 @@ export default function SettingsDropdown(
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
 
-      <a
-        className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
-          //   + (color === "white" ? " text-gray-800" : "text-white")
-        }
-        // onClick={(e) => e.preventDefault()}
-        onClick={() => {
-          setShowDeleteFolderModal(true);
+        <a
+          className={
+            "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+            //   + (color === "white" ? " text-gray-800" : "text-white")
+          }
+          // onClick={(e) => e.preventDefault()}
+          onClick={() => {
+            setShowDeleteFolderModal(true);
 
-          setSelectedFolder(tree[0]);
-        }}
-      >
-        Delete Folder
-      </a>
+            setSelectedFolder(tree[0]);
+          }}
+        >
+          Delete Folder
+        </a>
 
-      <a
-        className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
-          //   + (color === "white" ? " text-gray-800" : "text-white")
-        }
-        // onClick={(e) => e.preventDefault()}
-        onClick={() => {
-          setShowDeleteNoteModal(true);
+          <a
+            className={
+              "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              //   + (color === "white" ? " text-gray-800" : "text-white")
+            }
+            // onClick={(e) => e.preventDefault()}
+            onClick={() => {
+              setShowDeleteNoteModal(true);
 
-          setSelectedFolder(tree[0]);
-        }}
-      >
-        Delete Note
-      </a>
-      
-      <a
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Delete Note
+        </a>
+
+          <a
+            className={
+              "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              // + (color === "white" ? " text-gray-800" : "text-white")
+            }
+            // onClick={(e) => e.preventDefault()}
+            onClick={() => {
+
+              setShowRenameFolderModal(true);
+
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Rename Folder
+        </a>
+
+          <a
+            className={
+              "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              // + (color === "white" ? " text-gray-800" : "text-white")
+            }
+            // onClick={(e) => e.preventDefault()}
+            onClick={() => {
+
+              setShowRenameNoteModal(true);
+
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Rename Note
+        </a>
+
+      {selectedNote ? <a
         className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
+          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
-        // onClick={(e) => e.preventDefault()}
-        onClick={() => {
-          
-          setShowRenameFolderModal(true);
-
-          setSelectedFolder(tree[0]);
-        }}
+        // onClick={() => window.location.href=`/print?note=${selectedNote.noteId}`}
+        onClick={() => window.open(`/print?note=${selectedNote.noteId}`, '_blank')}
       >
-        Rename Folder
-      </a>
-
-      <a
-        className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
-          // + (color === "white" ? " text-gray-800" : "text-white")
-        }
-        // onClick={(e) => e.preventDefault()}
-        onClick={() => {
-          
-          setShowRenameNoteModal(true);
-
-          setSelectedFolder(tree[0]);
-        }}
-      >
-        Rename Note
-      </a>
-      
-      <a
-        className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent"
-          // + (color === "white" ? " text-gray-800" : "text-white")
-        }
-        onClick={(e) => e.preventDefault()}
-      >
-        Export
-      </a>
+        Print
+      </a> : null}
     </Dropdown>
   );
 }
