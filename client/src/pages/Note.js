@@ -11,8 +11,6 @@ import RenameNoteModal from "../components/RenameNoteModal";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
 
-// TODO Convert page to pdf: https://itnext.io/javascript-convert-html-css-to-pdf-print-supported-very-sharp-and-not-blurry-c5ffe441eb5e
-
 export default function Note() {
   const editorInstance = useRef(null);
   const [editorLoading, setEditorLoading] = useState(true);
@@ -38,13 +36,15 @@ export default function Note() {
   const [isNavOpen, setNavOpen] = useState(false);
   const [numKeyPresses, setKeyPresses] = useState(0);
   const [guest, setIsGuest] = useState(null);
-  const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
+  const [user, setUser] = useState({});
+  const API_URL =
+    process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
   useEffect(() => {
-    isGuest().then(json => {
+    isGuest().then((json) => {
       setIsGuest(json.isGuest);
-    })
-  }, [])
+    });
+  }, []);
 
   useEffect(() => {
     getNoteTree()
@@ -359,7 +359,9 @@ export default function Note() {
             }
             // console.log(json.newNote);
           })
-          .catch(() => alert("Sorry, the note couldn't be saved, please try again."))
+          .catch(() =>
+            alert("Sorry, the note couldn't be saved, please try again.")
+          )
           .finally(() =>
             setTimeout(() => {
               setIsSaving(false);
@@ -398,7 +400,7 @@ export default function Note() {
       >
         <nav
           className={
-            "bg-gray-100 flex items-center justify-start h-8 w-full fixed z-10"
+            "bg-gray-100 flex items-center justify-start h-8 w-full fixed z-10 "
           }
         >
           <button
@@ -423,37 +425,43 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-                <span>&#9776;</span>
-              )}
+              <span>&#9776;</span>
+            )}
           </button>
-          <h2 className="ml-2 text-sm truncate title-max-w">{selectedNote && selectedNote.title}</h2>
-          {isSaving && (
+          {selectedNote ? (
+            <h2 className="ml-2 text-sm truncate title-max-w">
+              {selectedNote.title}
+            </h2>
+          ) : null}
+          {isSaving ? (
             <h3 className="ml-2 text-gray-700 font-hairline text-sm">
               Saving...
             </h3>
-          )}
+          ) : null}
           <div
             className={
               "flex items-center ml-auto duration-500 " +
               (isNavOpen ? "mr-32 sm:mr-56" : "")
             }
           >
-            {!guest ? <button onClick={onSave} className="focus:outline-none px-2">
-              <svg
-                height={24}
-                viewBox="0 0 24 24"
-                width={24}
-                className="text-brandBlue-A"
-              >
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path
-                  fill="currentColor"
-                  d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
-                />
-              </svg>
-            </button> : null}
+            {!guest ? (
+              <button onClick={onSave} className="focus:outline-none hover:shadow-md rounded outline-none focus:shadow-md mx-2">
+                <svg
+                  height={24}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  className="text-brandBlue-A"
+                >
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    fill="currentColor"
+                    d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
+                  />
+                </svg>
+              </button>
+            ) : null}
 
-            {guest ? null :
+            {guest ? null : (
               <SettingsDropdown
                 id={1}
                 tree={tree}
@@ -466,16 +474,19 @@ export default function Note() {
                 setShowRenameFolderModal={setShowRenameFolderModal}
                 selectedNote={selectedNote}
                 guest={guest}
-              />}
-            {!guest ? <PlusDropdown
-              id={2}
-              isShowing={selectedDropdown}
-              setIsShowing={setSelectedDropdown}
-              setSelectedFolder={setSelectedFolder}
-              tree={tree}
-              setShowNoteModal={setShowNoteModal}
-              setShowFolderModal={setShowFolderModal}
-            /> : null}
+              />
+            )}
+            {!guest ? (
+              <PlusDropdown
+                id={2}
+                isShowing={selectedDropdown}
+                setIsShowing={setSelectedDropdown}
+                setSelectedFolder={setSelectedFolder}
+                tree={tree}
+                setShowNoteModal={setShowNoteModal}
+                setShowFolderModal={setShowFolderModal}
+              />
+            ) : null}
           </div>
         </nav>
         <div
@@ -493,12 +504,12 @@ export default function Note() {
               onReady={onReady}
             />
           ) : (
-              <div className="">
-                <h1 className="text-2xl font-semibold text-center mt-12">
-                  Select a note to start writing!
-                </h1>
-              </div>
-            )}
+            <div className="">
+              <h1 className="text-2xl font-semibold text-center mt-12">
+                Select a note to start writing!
+              </h1>
+            </div>
+          )}
         </div>
       </main>
 

@@ -22,7 +22,7 @@ export default function SettingsDropdown(
       id={id}
       isShowing={isShowing}
       setIsShowing={setIsShowing}
-      buttonStyles="rounded hover:shadow-md outline-none focus:outline-none bg-gray-100"
+      buttonStyles="rounded hover:shadow-md focus:shadow-md outline-none focus:outline-none bg-gray-100"
       innerButton={
         <svg height={24} viewBox="0 0 24 24" width={24} className="text-brandBlue-A">
           <path d="M0 0h24v24H0z" fill="none" />

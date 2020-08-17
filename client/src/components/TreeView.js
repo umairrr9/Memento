@@ -37,15 +37,15 @@ const TreeView = ({
             }
           }}
         >
-          {!node.noteId && (
+          {!node.noteId ? (
             <span className="text-xl">
               {!isOpen ? <span>&#9656; </span> : <span>&#9662; </span>}
             </span>
-          )}
-          <h2 className="py-1 border-b-2 truncate">{node.title}</h2>
+          ) : null}
+          <h2 className="py-1 border-b-2 truncate hover:border-gray-400">{node.title}</h2>
         </div>
       )}
-      <div className={"" + (!isOpen ? "hidden" : "")}>
+      <div className={(!isOpen ? "hidden" : "")}>
         {children.length >= 1
           ? children.map((t) => (
             <React.Fragment key={t.id}>
@@ -60,7 +60,7 @@ const TreeView = ({
               ></TreeView>
             </React.Fragment>
           ))
-          : !node.noteId && (
+          : !node.noteId ? (
             <h3
               className="text-gray-700 text-sm my-1"
               style={{
@@ -69,7 +69,7 @@ const TreeView = ({
             >
               No pages inside
             </h3>
-          )}
+          ) : null}
       </div>
     </>
   );

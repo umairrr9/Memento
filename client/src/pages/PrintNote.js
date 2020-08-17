@@ -41,14 +41,8 @@ export default function PrintNote() {
     }
   }, []);
 
-//   useEffect(() => {
-//       if (!editorLoading) {
-//           window.print();
-//       }
-//   }, [editorLoading])
-
   return (
-    <div className="">
+    <div className="pointer-events-none">
       {!editorLoading ? (
         <EditorJs
           tools={TOOLS}

@@ -24,7 +24,7 @@ export default function PlusDropdown(
       id={id}
       isShowing={isShowing}
       setIsShowing={setIsShowing}
-      buttonStyles="rounded hover:shadow-md outline-none focus:outline-none bg-gray-100"
+      buttonStyles="rounded hover:shadow-md focus:shadow-md outline-none focus:outline-none bg-gray-100"
       innerButton={
         <svg
           xmlns="http://www.w3.org/2000/svg"
