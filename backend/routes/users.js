@@ -202,6 +202,7 @@ router.patch("/:userId", async (req, res) => {
   if (!user) return res.status(400).send({ error: "User doesn't exist." });
 
   const { email, username, password } = req.body;
+
   const newUserFields = {
     email,
     username,

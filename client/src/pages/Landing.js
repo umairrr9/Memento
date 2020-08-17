@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import NavBar from '../components/NavBar';
 import Button from '../components/Button';
 import researching from '../assets/researching.svg';
@@ -6,10 +6,13 @@ import inSync from '../assets/in_sync.svg';
 import thoughtProcess from '../assets/thought_process.svg';
 import {Link} from "react-router-dom";
 import ImageCaption from "../components/ImageCaption";
+import ProfileModal from "../components/ProfileModal";
 const API_URL =
 process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
 function Landing() {
+
+  const [showModal, setShowModal] = useState(false);
 
   function loginAsGuest() {
     let url = API_URL + `/users/guest`;
@@ -37,6 +40,7 @@ function Landing() {
 
             <div className="font-semibold text-5xl text-black leading-tight text-center py-3 sm:p-12"> 
               <h1 className="px-2 pt-12 font-inter"> Productivity and simplicity with Memento. </h1>
+              <button onClick={() => setShowModal(!showModal)}>modal</button>
             </div>
 
             <div>
@@ -117,8 +121,9 @@ function Landing() {
 
 
 
-      </div>
 
+      </div>
+      <ProfileModal showModal={showModal} modalTitle={"Profile Settings"} closeOnClick={() => setShowModal(false)}/>
   </>
   )
     

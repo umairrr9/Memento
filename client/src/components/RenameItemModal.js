@@ -19,7 +19,6 @@ export default function RenameItemModal({
       closeOnClick={closeOnClick}
       saveOnClick={saveOnClick}
       showModal={showModal}
-      //setShowModal={setShowModal}
       modalTitle={modalTitle}
     >
       <div className="overflow-y-auto my-4" style={{ height: "10rem" }}>

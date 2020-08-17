@@ -8,6 +8,20 @@ export default function PrintNote() {
   const [data, setData] = useState({});
   const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
+  function afterPrint() {
+    window.close();
+  }
+
+  useEffect(() => {
+    function watchAfterPrint() {
+      window.addEventListener("afterprint", afterPrint);
+    }
+    watchAfterPrint();
+    return () => {
+      window.removeEventListener("afterprint", afterPrint);
+    };
+  })
+
   function getNote(noteId) {
     let url = API_URL + `/notes/${noteId}`;
     return fetch(url, {

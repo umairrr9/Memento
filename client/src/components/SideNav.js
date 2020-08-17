@@ -11,7 +11,7 @@ function SideNav({ isNavOpen, tree, setSelectedNote }) {
     >
       {isNavOpen ? (
         <>
-          <div className="mb-6 flex items-center h-8 px-3 hover:bg-gray-400">
+          <div className="mb-6 flex items-center h-8 px-3">
             <h3 className="max-w-full truncate">Harris</h3>
           </div>
           <div className="px-3">
