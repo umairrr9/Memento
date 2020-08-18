@@ -2,8 +2,10 @@ const {
   User,
   validate,
   validateID,
-  doesUserExist,
   validateUserLogin,
+  doesUserExist,
+  validatePassword,
+  validateUpdatedUser
 } = require("../models/user");
 const { createHash, checkPassword } = require("../static/hash");
 const { verifyJWT, generateJWT } = require("../static/auth");
@@ -108,10 +110,15 @@ router.post("/signup", async (req, res) => {
   res.status(200).send({ _id, email, username });
 });
 
-router.get("/isGuest", async (req, res) => {
-  const isGuest = req.session.user.isGuest || false;
-  res.status(200).send({isGuest});
-});
+// router.get("/isGuest", async (req, res) => {
+//   const isGuest = req.session.user.isGuest || false;
+//   res.status(200).send({isGuest});
+// });
+
+router.get("/user", async (req, res) => {
+    // const isGuest = req.session.user.isGuest || false;
+    res.status(200).send(req.session.user);
+  });
 
 router.post("/guest", async (req, res) => {
   const _id = '5f34255dead5a41af0aa85f8';
@@ -161,6 +168,78 @@ router.post("/notesTree", isLoggedIn, async (req, res) => {
   res.status(200).json({ _id, oldNotesTree, newNotesTree });
 });
 
+// UPDATE USER
+router.patch("/updateUser", async (req, res) => {
+  // Validate ID
+  const { _id, isGuest = null } = req.session.user;
+  if (isGuest) return res.status(400).send({ error: "Sorry, you must create an account before you can do that." });
+  
+  let user = await doesUserExist(_id);
+  if (!user) return res.status(400).send({ error: "User doesn't exist." });
+
+  const { email = "", username = "", currentPassword = "", newPassword = "" } = req.body;
+
+  const {
+    email: oldEmail,
+    username: oldUsername,
+    password: oldPassword,
+  } = user;
+
+  if (currentPassword || newPassword) {
+    const hashedCurrentPwd = createHash(currentPassword, _id);
+
+    if (hashedCurrentPwd !== oldPassword) return res.status(400).send({ error: "Your current password is incorrect, please try again." });
+
+    const { error: passwordError } = validatePassword({password: newPassword});
+    if (passwordError) {
+      return res.status(400).send({ error: "Your new password doesn't match the pattern, please try again." });
+    }
+  }
+
+  const newUserFields = {
+    email,
+    username
+  };
+  const oldUserFields = {
+    email: oldEmail,
+    username: oldUsername
+  };
+  let newUser = replaceWithNew(newUserFields, oldUserFields);
+
+  // Validate the updated user values
+  const { error } = validateUpdatedUser(newUser);
+  if (error) {
+    return res.status(400).send({ error: error.details[0].message });
+  }
+
+  if (newPassword) 
+    newUser.password = createHash(newPassword, _id);
+
+  // Update the user object with the values from newUser
+  user = Object.assign(user, newUser);
+
+  const duplicateUser = await User.findOne().or([{ email }, { username }]);
+  if (duplicateUser && duplicateUser._id !== _id) return res.status(400).send({ error: "Error, the email/username is taken, please try again." });
+ 
+  // Try to save the user in the DB and return error message if it fails
+  try {
+    await user.save();
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send({ error: "Error, the user wasn't updated, please try again." });
+  }
+
+  // Create the user object
+  const userObj = { _id, email, username, oldEmail, oldUsername };
+
+  // If the password's changed, add a message to user object
+  if (newPassword)
+    userObj.password = "The password has been successfully changed.";
+
+  // Return user object
+  res.status(200).send(userObj);
+});
+
 // GET USER BY ID
 router.get("/:userId", async (req, res) => {
   // Get ID and return error message if user doesn't exist
@@ -194,63 +273,7 @@ router.delete("/:userId", async (req, res) => {
   res.status(200).send(`User of ID ${_id} was successfully deleted.`);
 });
 
-// UPDATE USER BY ID
-router.patch("/:userId", async (req, res) => {
-  // Validate ID
-  const _id = req.params.userId;
-  let user = await doesUserExist(_id);
-  if (!user) return res.status(400).send({ error: "User doesn't exist." });
 
-  const { email, username, password } = req.body;
-
-  const newUserFields = {
-    email,
-    username,
-    password: createHash(password, _id),
-  };
-  const {
-    email: oldEmail,
-    username: oldUsername,
-    password: oldPassword,
-  } = user;
-  const oldUserFields = {
-    email: oldEmail,
-    username: oldUsername,
-    password: oldPassword,
-  };
-  let newUser = replaceWithNew(newUserFields, oldUserFields);
-
-  // Validate the updated user values
-  const { error } = validate(newUser);
-  if (error) {
-    if (error.details[0].type === "string.pattern.base")
-      return res
-        .status(400)
-        .send({ error: "Your password doesn't match the pattern." });
-    return res.status(400).send({ error: error.details[0].message });
-  }
-
-  // Update the user object with the values from newUser
-  user = Object.assign(user, newUser);
-
-  // Try to save the user in the DB and return error message if it fails
-  try {
-    await user.save();
-  } catch (error) {
-    console.error(error);
-    res.status(400).send({ error: "Error, the user wasn't saved." });
-  }
-
-  // Create the user object
-  const userObj = { _id, email, username, oldEmail, oldUsername };
-
-  // If the password's changed, add a message to user object
-  if (password)
-    userObj.password = "(The password has been successfully changed.)";
-
-  // Return user object
-  res.status(200).send(userObj);
-});
 
 // router.get('/:userId/notesTree', async (req, res) => {
 //     // Get ID and return error message if user doesn't exist

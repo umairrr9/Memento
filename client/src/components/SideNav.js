@@ -2,6 +2,7 @@ import React from "react";
 import TreeView from "./TreeView";
 
 function SideNav({ isNavOpen, tree, setSelectedNote }) {
+
   return (
     <div
       className={
@@ -11,20 +12,18 @@ function SideNav({ isNavOpen, tree, setSelectedNote }) {
     >
       {isNavOpen ? (
         <>
-          <div className="mb-6 flex items-center h-8 px-3">
-            <h3 className="max-w-full truncate">Harris</h3>
-          </div>
-          <div className="px-3">
-          <TreeView
-            node={tree[0]}
-            level={-1}
-            tree={tree}
-            setSelectedNote={setSelectedNote}
-            isRedirecting={true}
-          />
+          <div className="p-3">
+            <TreeView
+              node={tree[0]}
+              level={-1}
+              tree={tree}
+              setSelectedNote={setSelectedNote}
+              isRedirecting={true}
+            />
           </div>
         </>
       ) : null}
+
     </div>
   );
 }

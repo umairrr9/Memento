@@ -1,19 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import useForm from "./useForm";
 
 export default function ProfileModal({
     closeOnClick,
     showModal,
-    modalTitle,
+    user,
+    setShowModal
 }) {
 
-    // const [username, setUsername] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [oldPassword, setOldPassword] = useState("");
-    // const [newPassword, setNewPassword] = useState("");
-    // const [confirmPassword, setConfirmPassword] = useState("");
-    const { values, handleChange, handleSubmit, setValue } = useForm(getErrors);
+    const { values, handleChange, handleSubmit, setValue, setValues } = useForm(getErrors);
     const { email, currentPassword, newPassword, confirmPassword, username, currentPasswordError,  newPasswordError, confirmPasswordError } = values;
     const [error, setError] = useState(null);
     const [response, setResponse] = useState("");
@@ -23,51 +19,91 @@ export default function ProfileModal({
     const [emailSection, setEmailSection] = useState(false);
     const [passwordSection, setPasswordSection] = useState(false);
 
-    const changeInfo = () => {
+    useEffect(() => {
+        if (error === false) {
+            changeInfo();
+        }
+    }, [error]);
 
-    }
+    function changeInfo() {
+        let url = `/api/users/updateUser`;
+        let body = JSON.stringify({ email, username, currentPassword, newPassword });
+        fetch(url, {
+          method: "PATCH",
+          body,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(res => res.json())
+        .then(json => {
+          console.log(json);
+          if (json.error) {
+            setResponse(json.error);
+            console.log(json.error);
+          }
+          else {
+            setShowModal(false);
+            setValues({});
+            alert("Settings successfully updated.");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          setResponse("Error, something was wrong, please try again.");
+        });
+        setError(null);
+      }
 
     function getErrors() {
 
-        if (!currentPassword.match(passwordPattern)) {
-            setValue("currentPasswordError", "The password should be at least 8 characters long and contain at least one uppercase, lowercase, number, and one special character.");
-            setError(true);
-            return;
-        } else {
-            setValue("currentPasswordError", "");
+        setResponse(null);
+
+        if (currentPassword || newPassword || confirmPassword) {
+
+            if (currentPassword && !currentPassword.match(passwordPattern)) {
+                setValue("currentPasswordError", "The password should be at least 8 characters long and contain at least one uppercase, lowercase, number, and one special character.");
+                setError(true);
+                return;
+            } else {
+                setValue("currentPasswordError", "");
+            }
+            
+
+            if (newPassword && !newPassword.match(passwordPattern)) {
+                setValue("newPasswordError", "The password should be at least 8 characters long and contain at least one uppercase, lowercase, number, and one special character.");
+                setError(true);
+                return;
+            } else {
+                setValue("newPasswordError", "");
+            }
+
+            if (newPassword !== confirmPassword) {
+                setValue("confirmPasswordError", "The password's don't match, please try again.");
+                setError(true);
+                return;
+            } else {
+                setValue("confirmPasswordError", "");
+            }
         }
 
-        if (!newPassword.match(passwordPattern)) {
-            setValue("newPasswordError", "The password should be at least 8 characters long and contain at least one uppercase, lowercase, number, and one special character.");
-            setError(true);
-            return;
-        } else {
-            setValue("newPasswordError", "");
-        }
-
-        if (newPassword !== confirmPassword) {
-            setValue("confirmPasswordError", "The password's don't match, please try again");
-            setError(true);
-            return;
-        } else {
-            setValue("confirmPasswordError", "");
-        }
+        setError(false);
     }
-// className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+
     return (
         <Modal
             closeOnClick={closeOnClick}
             saveOnClick={handleSubmit}
             showModal={showModal}
-            modalTitle={modalTitle}
+            modalTitle={"Profile Settings"}
         >
             <div
                 className="relative py-2 px-6 flex-auto overflow-y-scroll"
-                style={{ maxHeight: "20rem" }}
+                style={{ maxHeight: "18rem" }}
             >
 
                 <div className="mb-6">
-                    <h3 className="text-gray-500 font-lato text-md font-bold my-2">harrisuddin</h3>
+                    <h3 className="text-gray-500 font-lato text-md font-bold my-2">{user && user.username}</h3>
 
                     <button
                         className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
@@ -81,18 +117,18 @@ export default function ProfileModal({
                         <label className="block text-gray-700 text-sm font-bold mb-2">Change Username:</label>
                     </div>
                     <div className="ml-8">
-                        <input name="username" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="new username" onChange={handleChange} />
+                        <input name="username" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="New Username" onChange={handleChange} value={username || ""}/>
                     </div>
                 </div> : null}
 
                 <div className="my-6">
-                    <h3 className="text-gray-500 font-lato text-md font-bold my-2">uddin@example.com</h3>
+                    <h3 className="text-gray-500 font-lato text-md font-bold my-2">{user && user.email}</h3>
 
                     <button
                         className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
                         onClick={() => {
                             setEmailSection(!emailSection)
-                        }}>change email</button>
+                        }}>Change Email</button>
                 </div>
 
                 {emailSection ? <div className="flex items-center justify-between my-6">
@@ -100,7 +136,7 @@ export default function ProfileModal({
                         <label className="block text-gray-700 text-sm font-bold mb-2">Change Email:</label>
                     </div>
                     <div className="ml-8">
-                        <input name="email" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="new email" onChange={handleChange} />
+                        <input name="email" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="New Email" onChange={handleChange} value={email || ""}/>
                     </div>
                 </div> : null}
 
@@ -111,7 +147,7 @@ export default function ProfileModal({
                         className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 border border-brandBlue-A hover:border-transparent rounded"
                         onClick={() => {
                             setPasswordSection(!passwordSection)
-                        }}>change password</button>
+                        }}>Change Password</button>
                 </div>
 
                 {passwordSection ? <div>
@@ -121,7 +157,7 @@ export default function ProfileModal({
                             <label className="block text-gray-700 text-sm font-bold mb-2">Current Password:</label>
                         </div>
                         <div className="ml-8">
-                            <input name="currentPassword" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="current password" onChange={handleChange} />
+                            <input name="currentPassword" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="Current Password" onChange={handleChange} />
                         </div>
                     </div>
 
@@ -132,20 +168,28 @@ export default function ProfileModal({
                             <label className="block text-gray-700 text-sm font-bold mb-2">New Password:</label>
                         </div>
                         <div className="ml-8">
-                            <input name="newPassword" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="new password" onChange={handleChange} />
+                            <input name="newPassword" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="New Password" onChange={handleChange} />
                         </div>
                     </div>
+
+                    {newPasswordError ? <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{newPasswordError}</p> : null}
+
 
                     <div className="flex items-center justify-between my-6">
                         <div>
                             <label className="block text-gray-700 text-sm font-bold mb-2">Confirm New Password:</label>
                         </div>
                         <div className="ml-8">
-                            <input name="confirmPassword" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="new password" onChange={handleChange} />
+                            <input name="confirmPassword" className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="New Password" onChange={handleChange} />
                         </div>
                     </div>
 
+                    {confirmPasswordError ? <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{confirmPasswordError}</p> : null}
+
+
                 </div> : null}
+
+                {response ? <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{response}</p> : null}
 
             </div>
         </Modal>

@@ -10,6 +10,7 @@ import RenameFolderModal from "../components/RenameFolderModal";
 import RenameNoteModal from "../components/RenameNoteModal";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
+import ProfileModal from "../components/ProfileModal";
 
 export default function Note() {
   const editorInstance = useRef(null);
@@ -24,10 +25,11 @@ export default function Note() {
   const [data, setData] = useState({});
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
-  const [ShowDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
-  const [ShowDeleteFolderModal, setShowDeleteFolderModal] = useState(false);
-  const [ShowRenameNoteModal, setShowRenameNoteModal] = useState(false);
-  const [ShowRenameFolderModal, setShowRenameFolderModal] = useState(false);
+  const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
+  const [showDeleteFolderModal, setShowDeleteFolderModal] = useState(false);
+  const [showRenameNoteModal, setShowRenameNoteModal] = useState(false);
+  const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(tree[0]);
   const [selectedNote, setSelectedNote] = useState(null);
   const [selectedDropdown, setSelectedDropdown] = useState(-1);
@@ -41,9 +43,14 @@ export default function Note() {
     process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
   useEffect(() => {
-    isGuest().then((json) => {
-      setIsGuest(json.isGuest);
-    });
+    getUser().then((json) => {
+      const isGuest = json.isGuest || false;
+      setIsGuest(isGuest);
+      setUser(json);
+    })
+      .catch(() => {
+        alert("Sorry, something went wrong, we couldn't get your user details.")
+      });
   }, []);
 
   useEffect(() => {
@@ -77,7 +84,7 @@ export default function Note() {
             });
         }
       })
-      .catch((error) => {
+      .catch(() => {
         // console.error(error);
         alert("It seems like there's an error, try again!");
         if (process.env.NODE_ENV === "production") window.location.href = "/";
@@ -155,8 +162,8 @@ export default function Note() {
   //   console.log("hi", newTree);
   // }
 
-  function isGuest() {
-    let url = API_URL + `/users/isGuest`;
+  function getUser() {
+    let url = API_URL + `/users/user`;
     return fetch(url, {
       method: "GET",
       // headers: {
@@ -425,8 +432,8 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-              <span>&#9776;</span>
-            )}
+                <span>&#9776;</span>
+              )}
           </button>
           {selectedNote ? (
             <h2 className="ml-2 text-sm truncate title-max-w">
@@ -461,32 +468,35 @@ export default function Note() {
               </button>
             ) : null}
 
-            {guest ? null : (
-              <SettingsDropdown
-                id={1}
-                tree={tree}
-                setSelectedFolder={setSelectedFolder}
-                isShowing={selectedDropdown}
-                setIsShowing={setSelectedDropdown}
-                setShowDeleteNoteModal={setShowDeleteNoteModal}
-                setShowDeleteFolderModal={setShowDeleteFolderModal}
-                setShowRenameNoteModal={setShowRenameNoteModal}
-                setShowRenameFolderModal={setShowRenameFolderModal}
-                selectedNote={selectedNote}
-                guest={guest}
-              />
+            {!guest ? null : (
+              <>
+                <SettingsDropdown
+                  id={1}
+                  tree={tree}
+                  setSelectedFolder={setSelectedFolder}
+                  isShowing={selectedDropdown}
+                  setIsShowing={setSelectedDropdown}
+                  setShowDeleteNoteModal={setShowDeleteNoteModal}
+                  setShowDeleteFolderModal={setShowDeleteFolderModal}
+                  setShowRenameNoteModal={setShowRenameNoteModal}
+                  setShowRenameFolderModal={setShowRenameFolderModal}
+                  selectedNote={selectedNote}
+                  setShowProfileModal={setShowProfileModal}
+                  showProfileModal={showProfileModal}
+                  guest={guest}
+                />
+
+                <PlusDropdown
+                  id={2}
+                  isShowing={selectedDropdown}
+                  setIsShowing={setSelectedDropdown}
+                  setSelectedFolder={setSelectedFolder}
+                  tree={tree}
+                  setShowNoteModal={setShowNoteModal}
+                  setShowFolderModal={setShowFolderModal}
+                />
+              </>
             )}
-            {!guest ? (
-              <PlusDropdown
-                id={2}
-                isShowing={selectedDropdown}
-                setIsShowing={setSelectedDropdown}
-                setSelectedFolder={setSelectedFolder}
-                tree={tree}
-                setShowNoteModal={setShowNoteModal}
-                setShowFolderModal={setShowFolderModal}
-              />
-            ) : null}
           </div>
         </nav>
         <div
@@ -504,12 +514,12 @@ export default function Note() {
               onReady={onReady}
             />
           ) : (
-            <div className="">
-              <h1 className="text-2xl font-semibold text-center mt-12">
-                Select a note to start writing!
+              <div className="">
+                <h1 className="text-2xl font-semibold text-center mt-12">
+                  Select a note to start writing!
               </h1>
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </main>
 
@@ -558,7 +568,7 @@ export default function Note() {
           setShowFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
-        showModal={ShowDeleteFolderModal}
+        showModal={showDeleteFolderModal}
         setShowModal={setShowDeleteFolderModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
@@ -575,7 +585,7 @@ export default function Note() {
           setShowFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
-        showModal={ShowDeleteNoteModal}
+        showModal={showDeleteNoteModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
@@ -592,7 +602,7 @@ export default function Note() {
           setShowRenameFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
-        showModal={ShowRenameFolderModal}
+        showModal={showRenameFolderModal}
         setShowModal={setShowRenameFolderModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
@@ -610,12 +620,16 @@ export default function Note() {
           setShowRenameNoteModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
-        showModal={ShowRenameNoteModal}
+        showModal={showRenameNoteModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
         isRenameNote={true}
       />
+
+      <ProfileModal user={user} showModal={showProfileModal} setShowModal={setShowProfileModal} closeOnClick={() => setShowProfileModal(false)} />
+
+
     </>
   );
 }

@@ -97,12 +97,15 @@ function Landing() {
             <div className="m-auto text-center sm:flex sm:align-center sm:justify-around mt-10">
 
               <ImageCaption image={thoughtProcess} imageClasses="w-auto h-48 object-cover inline"
+              alt="Illustration of creative person looking at notes."
               caption="Unleash your creativity" captionClasses="mt-1 text-white" />
 
               <ImageCaption image={researching} imageClasses="w-auto h-48 object-cover inline mt-8 sm:mt-0"
+              alt="Illustration of person laying down whilst using laptop."
               caption="Get productive" captionClasses="mt-1 text-white" />
 
               <ImageCaption image={inSync} imageClasses="w-auto h-48 object-cover inline mt-8 sm:mt-0"
+              alt="Illustration demonstrating use of application across multiple devices."
               caption="Access your notes anywhere" captionClasses="mt-1 text-white" />
             </div>
 

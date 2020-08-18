@@ -1,4 +1,4 @@
-import React, { useState, createRef } from "react";
+import React, { createRef } from "react";
 import Popper from "popper.js";
 
 export default function Dropdown({

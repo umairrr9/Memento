@@ -39,9 +39,9 @@ export default function PlusDropdown(
       }
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
-      <a
+      <button
         className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
           //   + (color === "white" ? " text-gray-800" : "text-white")
         }
         // onClick={(e) => e.preventDefault()}
@@ -51,10 +51,10 @@ export default function PlusDropdown(
         }}
       >
         Add New Note
-      </a>
-      <a
+      </button>
+      <button
         className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
         // onClick={(e) => e.preventDefault()}
@@ -64,7 +64,7 @@ export default function PlusDropdown(
         }}
       >
         Add New Folder
-      </a>
+      </button>
     </Dropdown>
   );
 }

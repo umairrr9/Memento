@@ -13,7 +13,9 @@ export default function SettingsDropdown(
     setSelectedFolder,
     tree,
     selectedNote,
-    guest
+    guest,
+    setShowProfileModal,
+    showProfileModal
   }
 ) {
 
@@ -32,9 +34,9 @@ export default function SettingsDropdown(
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
 
-        <a
+        <button
           className={
-            "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+            "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
             //   + (color === "white" ? " text-gray-800" : "text-white")
           }
           // onClick={(e) => e.preventDefault()}
@@ -45,11 +47,11 @@ export default function SettingsDropdown(
           }}
         >
           Delete Folder
-        </a>
+        </button>
 
-          <a
+          <button
             className={
-              "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
               //   + (color === "white" ? " text-gray-800" : "text-white")
             }
             // onClick={(e) => e.preventDefault()}
@@ -60,11 +62,11 @@ export default function SettingsDropdown(
             }}
           >
             Delete Note
-        </a>
+        </button>
 
-          <a
+          <button
             className={
-              "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
               // + (color === "white" ? " text-gray-800" : "text-white")
             }
             // onClick={(e) => e.preventDefault()}
@@ -76,11 +78,11 @@ export default function SettingsDropdown(
             }}
           >
             Rename Folder
-        </a>
+        </button>
 
-          <a
+          <button
             className={
-              "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
               // + (color === "white" ? " text-gray-800" : "text-white")
             }
             // onClick={(e) => e.preventDefault()}
@@ -92,18 +94,30 @@ export default function SettingsDropdown(
             }}
           >
             Rename Note
-        </a>
+        </button>
 
-      {selectedNote ? <a
+      {selectedNote ? <button
         className={
-          "text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
         // onClick={() => window.location.href=`/print?note=${selectedNote.noteId}`}
         onClick={() => window.open(`/print?note=${selectedNote.noteId}`, '_blank')}
       >
         Print
-      </a> : null}
+      </button> : null}
+
+      <button
+            className={
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              // + (color === "white" ? " text-gray-800" : "text-white")
+            }
+            // onClick={(e) => e.preventDefault()}
+            onClick={() => setShowProfileModal(!showProfileModal)}
+          >
+            Profile
+        </button>
+
     </Dropdown>
   );
 }

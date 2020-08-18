@@ -42,6 +42,34 @@ function validateUser(user) {
   return schema.validate(user, { abortEarly: false });
 }
 
+function validateUserLogin(user) {
+  const schema = Joi.object({
+    email: Joi.string().min(5).max(255).required().email(),
+    password: Joi.string().pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$')).required(),    
+    username: Joi.string().min(1).max(40).alphanum()
+  });
+
+  return schema.validate(user, { abortEarly: false });
+}
+
+function validateUpdatedUser(user) {
+  const schema = Joi.object({
+    email: Joi.string().min(5).max(255).required().email(),
+    username: Joi.string().min(1).max(40).alphanum().required()
+  });
+
+  return schema.validate(user, { abortEarly: false });
+}
+
+
+function validatePassword(obj) {
+  const schema = Joi.object({
+    password: Joi.string().pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$')).required()
+  });
+
+  return schema.validate(obj, { abortEarly: false });
+}
+
 function validateID(_id) {
   const schema = Joi.object({
     _id: Joi.string().alphanum().length(24)
@@ -59,19 +87,10 @@ async function doesUserExist(_id) {
   }
 }
 
-function validateUserLogin(user) {
-  const schema = Joi.object({
-    email: Joi.string().min(5).max(255).email(),
-    password: Joi.string().pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$')).required(),
-    username: Joi.string().min(1).max(40).alphanum()
-  });
-
-  return schema.validate(user, { abortEarly: false });
-}
-
-
 exports.User = User;
 exports.validate = validateUser;
 exports.validateID = validateID;
 exports.doesUserExist = doesUserExist;
+exports.validatePassword = validatePassword;
+exports.validateUpdatedUser = validateUpdatedUser;
 exports.validateUserLogin = validateUserLogin;
