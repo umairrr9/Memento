@@ -13,7 +13,6 @@ export default function SettingsDropdown(
     setSelectedFolder,
     tree,
     selectedNote,
-    guest,
     setShowProfileModal,
     showProfileModal
   }

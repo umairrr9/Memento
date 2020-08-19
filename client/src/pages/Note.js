@@ -14,7 +14,7 @@ import ProfileModal from "../components/ProfileModal";
 
 export default function Note() {
   const editorInstance = useRef(null);
-  const [editorLoading, setEditorLoading] = useState(true);
+  const [editorLoading, setEditorLoading] = useState("Loading...");
   const [tree, setTree] = useState([
     {
       title: null,
@@ -43,13 +43,16 @@ export default function Note() {
     process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
   useEffect(() => {
-    getUser().then((json) => {
-      const isGuest = json.isGuest || false;
-      setIsGuest(isGuest);
-      setUser(json);
-    })
+    getUser()
+      .then((json) => {
+        const isGuest = json.isGuest || false;
+        setIsGuest(isGuest);
+        setUser(json);
+      })
       .catch(() => {
-        alert("Sorry, something went wrong, we couldn't get your user details.")
+        alert(
+          "Sorry, something went wrong, we couldn't get your user details."
+        );
       });
   }, []);
 
@@ -76,12 +79,14 @@ export default function Note() {
               let noteInTree = t.find((obj) => obj.noteId === noteId);
               setSelectedNote(noteInTree);
               // set editor loading to false
-              setEditorLoading(false);
+              setEditorLoading("");
             })
             .catch(() => {
               alert("Sorry, this note couldn't be found.");
               window.location.href = "/note";
             });
+        } else {
+          setEditorLoading("Select a note to start writing!");
         }
       })
       .catch(() => {
@@ -432,8 +437,8 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-                <span>&#9776;</span>
-              )}
+              <span>&#9776;</span>
+            )}
           </button>
           {selectedNote ? (
             <h2 className="ml-2 text-sm truncate title-max-w">
@@ -451,25 +456,26 @@ export default function Note() {
               (isNavOpen ? "mr-32 sm:mr-56" : "")
             }
           >
-            {!guest ? (
-              <button onClick={onSave} className="focus:outline-none hover:shadow-md rounded outline-none focus:shadow-md mx-2">
-                <svg
-                  height={24}
-                  viewBox="0 0 24 24"
-                  width={24}
-                  className="text-brandBlue-A"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path
-                    fill="currentColor"
-                    d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
-                  />
-                </svg>
-              </button>
-            ) : null}
-
-            {!guest ? null : (
+            {guest ? null : (
               <>
+                <button
+                  onClick={onSave}
+                  className="focus:outline-none hover:shadow-md rounded outline-none focus:shadow-md mx-2"
+                >
+                  <svg
+                    height={24}
+                    viewBox="0 0 24 24"
+                    width={24}
+                    className="text-brandBlue-A"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      fill="currentColor"
+                      d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
+                    />
+                  </svg>
+                </button>
+
                 <SettingsDropdown
                   id={1}
                   tree={tree}
@@ -483,7 +489,6 @@ export default function Note() {
                   selectedNote={selectedNote}
                   setShowProfileModal={setShowProfileModal}
                   showProfileModal={showProfileModal}
-                  guest={guest}
                 />
 
                 <PlusDropdown
@@ -514,12 +519,12 @@ export default function Note() {
               onReady={onReady}
             />
           ) : (
-              <div className="">
-                <h1 className="text-2xl font-semibold text-center mt-12">
-                  Select a note to start writing!
+            <div className="">
+              <h1 className="text-2xl font-semibold text-center mt-12">
+                {editorLoading}
               </h1>
-              </div>
-            )}
+            </div>
+          )}
         </div>
       </main>
 
@@ -627,9 +632,12 @@ export default function Note() {
         isRenameNote={true}
       />
 
-      <ProfileModal user={user} showModal={showProfileModal} setShowModal={setShowProfileModal} closeOnClick={() => setShowProfileModal(false)} />
-
-
+      <ProfileModal
+        user={user}
+        showModal={showProfileModal}
+        setShowModal={setShowProfileModal}
+        closeOnClick={() => setShowProfileModal(false)}
+      />
     </>
   );
 }

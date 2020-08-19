@@ -5,8 +5,9 @@ const {
   validateUserLogin,
   doesUserExist,
   validatePassword,
-  validateUpdatedUser
+  validateUpdatedUser,
 } = require("../models/user");
+const {Note} = require("../models/note");
 const { createHash, checkPassword } = require("../static/hash");
 const { verifyJWT, generateJWT } = require("../static/auth");
 const { replaceWithNew, isLoggedIn } = require("../static/helper");
@@ -116,25 +117,28 @@ router.post("/signup", async (req, res) => {
 // });
 
 router.get("/user", async (req, res) => {
-    // const isGuest = req.session.user.isGuest || false;
-    res.status(200).send(req.session.user);
-  });
+  // const isGuest = req.session.user.isGuest || false;
+  res.status(200).send(req.session.user);
+});
 
 router.post("/guest", async (req, res) => {
-  const _id = '5f34255dead5a41af0aa85f8';
-  const email = 'guest@example.com';
-  const username = 'Guest';
+  const _id = "5f34255dead5a41af0aa85f8";
+  const email = "guest@example.com";
+  const username = "Guest";
   const isGuest = true;
   req.session.user = { _id, email, username, isGuest };
   res.status(200).send({ _id, email, username, isGuest });
 });
 
-router.get('/notesTree', isLoggedIn, async (req, res) => {
+router.get("/notesTree", isLoggedIn, async (req, res) => {
   // Get ID and return error message if user doesn't exist
   // const _id = req.params.userId;
   const { _id } = req.session.user;
   const { error } = validateID({ _id });
-  if (error) return res.status(400).send({ error: "This user couldn't be found, please try again." });
+  if (error)
+    return res
+      .status(400)
+      .send({ error: "This user couldn't be found, please try again." });
 
   const user = await doesUserExist(_id);
   if (!user) return res.status(400).send({ error: "User doesn't exist." });
@@ -145,7 +149,12 @@ router.get('/notesTree', isLoggedIn, async (req, res) => {
 
 router.post("/notesTree", isLoggedIn, async (req, res) => {
   const { _id, isGuest = null } = req.session.user;
-  if (isGuest) return res.status(400).send({ error: "Sorry, you must create an account before you can do that." });
+  if (isGuest)
+    return res
+      .status(400)
+      .send({
+        error: "Sorry, you must create an account before you can do that.",
+      });
 
   const { error } = validateID({ _id });
   if (error) return res.status(400).send({ error: error.details[0].message });
@@ -169,15 +178,25 @@ router.post("/notesTree", isLoggedIn, async (req, res) => {
 });
 
 // UPDATE USER
-router.patch("/updateUser", async (req, res) => {
+router.patch("/updateUser", isLoggedIn, async (req, res) => {
   // Validate ID
   const { _id, isGuest = null } = req.session.user;
-  if (isGuest) return res.status(400).send({ error: "Sorry, you must create an account before you can do that." });
-  
+  if (isGuest)
+    return res
+      .status(400)
+      .send({
+        error: "Sorry, you must create an account before you can do that.",
+      });
+
   let user = await doesUserExist(_id);
   if (!user) return res.status(400).send({ error: "User doesn't exist." });
 
-  const { email = "", username = "", currentPassword = "", newPassword = "" } = req.body;
+  const {
+    email = "",
+    username = "",
+    currentPassword = "",
+    newPassword = "",
+  } = req.body;
 
   const {
     email: oldEmail,
@@ -188,21 +207,33 @@ router.patch("/updateUser", async (req, res) => {
   if (currentPassword || newPassword) {
     const hashedCurrentPwd = createHash(currentPassword, _id);
 
-    if (hashedCurrentPwd !== oldPassword) return res.status(400).send({ error: "Your current password is incorrect, please try again." });
+    if (hashedCurrentPwd !== oldPassword)
+      return res
+        .status(400)
+        .send({
+          error: "Your current password is incorrect, please try again.",
+        });
 
-    const { error: passwordError } = validatePassword({password: newPassword});
+    const { error: passwordError } = validatePassword({
+      password: newPassword,
+    });
     if (passwordError) {
-      return res.status(400).send({ error: "Your new password doesn't match the pattern, please try again." });
+      return res
+        .status(400)
+        .send({
+          error:
+            "Your new password doesn't match the pattern, please try again.",
+        });
     }
   }
 
   const newUserFields = {
     email,
-    username
+    username,
   };
   const oldUserFields = {
     email: oldEmail,
-    username: oldUsername
+    username: oldUsername,
   };
   let newUser = replaceWithNew(newUserFields, oldUserFields);
 
@@ -212,21 +243,25 @@ router.patch("/updateUser", async (req, res) => {
     return res.status(400).send({ error: error.details[0].message });
   }
 
-  if (newPassword) 
-    newUser.password = createHash(newPassword, _id);
+  if (newPassword) newUser.password = createHash(newPassword, _id);
 
   // Update the user object with the values from newUser
   user = Object.assign(user, newUser);
 
   const duplicateUser = await User.findOne().or([{ email }, { username }]);
-  if (duplicateUser && duplicateUser._id !== _id) return res.status(400).send({ error: "Error, the email/username is taken, please try again." });
- 
+  if (duplicateUser && duplicateUser._id !== _id)
+    return res
+      .status(400)
+      .send({ error: "Error, the email/username is taken, please try again." });
+
   // Try to save the user in the DB and return error message if it fails
   try {
     await user.save();
   } catch (error) {
     console.error(error);
-    return res.status(400).send({ error: "Error, the user wasn't updated, please try again." });
+    return res
+      .status(400)
+      .send({ error: "Error, the user wasn't updated, please try again." });
   }
 
   // Create the user object
@@ -238,6 +273,38 @@ router.patch("/updateUser", async (req, res) => {
 
   // Return user object
   res.status(200).send(userObj);
+});
+
+// DELETE USER BY ID
+router.delete("/delete", async (req, res) => {
+  // Validate ID
+  const { _id, isGuest = null } = req.session.user;
+  if (isGuest)
+    return res
+      .status(400)
+      .send({
+        error: "Sorry, you must create an account before you can do that.",
+      });
+
+  const { error } = validateID({ _id });
+  if (error) return res.status(400).send({ error: error.details[0].message });
+
+  console.log(_id);
+
+  // Try to delete the user from the DB and return error message if it fails
+  try {
+    await User.deleteOne({ _id });
+    await Note.deleteMany({ userId: _id });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({ error: "Error, the user wasn't deleted." });
+  }
+
+  // delete session cookie
+  req.session.user = {};
+
+  // Confirm deletion with a message
+  res.status(200).json(`User of ID ${_id} was successfully deleted.`);
 });
 
 // GET USER BY ID
@@ -253,27 +320,6 @@ router.get("/:userId", async (req, res) => {
   const { email, username } = user;
   res.status(200).send({ email, username, _id });
 });
-
-// DELETE USER BY ID
-router.delete("/:userId", async (req, res) => {
-  // Validate ID
-  const _id = req.params.userId;
-  const { error } = validateID({ _id });
-  if (error) return res.status(400).send({ error: error.details[0].message });
-
-  // Try to delete the user from the DB and return error message if it fails
-  try {
-    await User.deleteOne({ _id });
-  } catch (error) {
-    console.error(error);
-    res.status(400).send({ error: "Error, the user wasn't deleted." });
-  }
-
-  // Confirm deletion with a message
-  res.status(200).send(`User of ID ${_id} was successfully deleted.`);
-});
-
-
 
 // router.get('/:userId/notesTree', async (req, res) => {
 //     // Get ID and return error message if user doesn't exist
