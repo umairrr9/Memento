@@ -121,6 +121,11 @@ router.get("/user", async (req, res) => {
   res.status(200).send(req.session.user);
 });
 
+router.get("/logout", async (req, res) => {
+  req.session.user = {};
+  res.status(200).json("You have been logged out");
+});
+
 router.post("/guest", async (req, res) => {
   const _id = "5f34255dead5a41af0aa85f8";
   const email = "guest@example.com";
@@ -289,8 +294,6 @@ router.delete("/delete", async (req, res) => {
   const { error } = validateID({ _id });
   if (error) return res.status(400).send({ error: error.details[0].message });
 
-  console.log(_id);
-
   // Try to delete the user from the DB and return error message if it fails
   try {
     await User.deleteOne({ _id });
@@ -305,7 +308,7 @@ router.delete("/delete", async (req, res) => {
 
   // Confirm deletion with a message
   res.status(200).json(`User of ID ${_id} was successfully deleted.`);
-});
+})
 
 // GET USER BY ID
 router.get("/:userId", async (req, res) => {

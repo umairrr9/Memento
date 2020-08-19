@@ -38,15 +38,26 @@ export default function ProfileModal({
     }
   }, [error]);
 
+  function logout() {
+    let url = `/api/users/logout`;
+    fetch(url, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        alert("You have been logged out.");
+        window.location.href = "/";
+      })
+      .catch(() => alert("You couldn't be logged out, please try again."));
+  }
+
   function deleteAccount() {
     let url = `/api/users/delete`;
-    let body = "";
     fetch(url, {
       method: "DELETE",
-      body,
       headers: {
         "Content-Type": "application/json",
-      }
+      },
     })
       .then((res) => res.json())
       .then((json) => {
@@ -319,6 +330,15 @@ export default function ProfileModal({
             Delete Account
           </button>
         ) : null}
+
+        <button
+          className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
+          onClick={() => {
+            logout();
+          }}
+        >
+          Logout
+        </button>
 
         {response ? (
           <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
