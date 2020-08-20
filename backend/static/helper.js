@@ -14,12 +14,16 @@ function replaceWithNew(newFields, oldFields) {
     return obj;
 }
 
+function doesUserIDExist(req) {
+    return req.session.user._id ? true : false;
+}
+
 function isLoggedIn(req, res, next) {
-    if (!req.session.user._id) {
+    if (!doesUserIDExist(req)) {
         return res.status(400).send({error: "Please login then try again."});
     } else {
         next();
     }
 }
 
-module.exports = {replaceWithNew, isLoggedIn};
+module.exports = {replaceWithNew, isLoggedIn, doesUserIDExist};

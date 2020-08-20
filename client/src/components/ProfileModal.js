@@ -8,7 +8,7 @@ export default function ProfileModal({
   user,
   setShowModal,
 }) {
-  const { values, handleChange, handleSubmit, setValue, setValues } = useForm(
+  const { values, handleChange, handleSubmit, setValue, setValues, passwordPattern } = useForm(
     getErrors
   );
   const {
@@ -23,9 +23,6 @@ export default function ProfileModal({
   } = values;
   const [error, setError] = useState(null);
   const [response, setResponse] = useState("");
-  const passwordPattern = new RegExp(
-    "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$"
-  );
 
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [usernameSection, setUsernameSection] = useState(false);
@@ -37,19 +34,6 @@ export default function ProfileModal({
       changeInfo();
     }
   }, [error]);
-
-  function logout() {
-    let url = `/api/users/logout`;
-    fetch(url, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        alert("You have been logged out.");
-        window.location.href = "/";
-      })
-      .catch(() => alert("You couldn't be logged out, please try again."));
-  }
 
   function deleteAccount() {
     let url = `/api/users/delete`;
@@ -166,7 +150,7 @@ export default function ProfileModal({
           </h3>
 
           <button
-            className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
+            className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded focus:outline-none focus:bg-brandBlue-A focus:text-white"
             onClick={() => {
               setUsernameSection(!usernameSection);
             }}
@@ -200,7 +184,7 @@ export default function ProfileModal({
           </h3>
 
           <button
-            className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
+            className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded focus:outline-none focus:bg-brandBlue-A focus:text-white"
             onClick={() => {
               setEmailSection(!emailSection);
             }}
@@ -234,7 +218,7 @@ export default function ProfileModal({
           </h3>
 
           <button
-            className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 border border-brandBlue-A hover:border-transparent rounded"
+            className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 border border-brandBlue-A hover:border-transparent rounded focus:outline-none focus:bg-brandBlue-A focus:text-white"
             onClick={() => {
               setPasswordSection(!passwordSection);
             }}
@@ -313,32 +297,28 @@ export default function ProfileModal({
           </div>
         ) : null}
 
+        <div className="mt-6">
+        <h3 className="text-gray-500 font-lato text-md font-bold my-2">
+          Delete Account
+        </h3>
         <button
-          className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
+          className={"text-md focus:outline-none font-lato font-semibold hover:text-white p-2 mb-2 border bg-transparent hover:border-transparent rounded focus:text-white " + (showDeleteButton ? "hover:bg-brandBlue-A text-brandBlue-A border-brandBlue-A focus:bg-brandBlue-A" : "hover:bg-red-500 text-red-500 border-red-500 focus:bg-red-500")} 
           onClick={() => {
             setShowDeleteButton(!showDeleteButton);
           }}
         >
           {showDeleteButton ? "Cancel" : "Delete Account"}
         </button>
+        </div>
 
         {showDeleteButton ? (
           <button
-            className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
+            className="bg-transparent hover:bg-red-500 text-red-500 text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-red-500 hover:border-transparent rounded focus:outline-none focus:bg-red-500 focus:text-white"
             onClick={() => deleteAccount()}
           >
             Delete Account
           </button>
         ) : null}
-
-        <button
-          className="bg-transparent hover:bg-brandBlue-A text-brandBlue-A text-md font-lato font-semibold hover:text-white p-2 mb-2 border border-brandBlue-A hover:border-transparent rounded"
-          onClick={() => {
-            logout();
-          }}
-        >
-          Logout
-        </button>
 
         {response ? (
           <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">

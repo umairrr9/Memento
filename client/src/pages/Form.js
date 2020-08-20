@@ -9,11 +9,10 @@ import { Link } from 'react-router-dom';
 // https://material.io/resources/icons/?style=baseline
 
 const Form = ({isLogin}) => {
-  const { values, handleChange, handleSubmit, setValue } = useForm(getErrors);
+  const { values, handleChange, handleSubmit, setValue, passwordPattern } = useForm(getErrors);
   const { email, password, confirmPassword, username, emailError, passwordError, confirmPasswordError, usernameError } = values;
   const [error, setError] = useState(null);
   const [response, setResponse] = useState("");
-  const passwordPattern = new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$');
 
   useEffect(() => {
     document.body.classList.add('architect');

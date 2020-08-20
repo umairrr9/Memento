@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Link from "./Link"
-import {Link as Route} from "react-router-dom";
+import {logout} from "../api";
+import { HashLink as Link } from 'react-router-hash-link';
 
 
-const NavBar = () => {
+const NavBar = ({loggedIn}) => {
   const [isOpen, setOpen] = useState(false);
   const [notScrolled, setScrolled] = useState(true);
 
@@ -24,16 +24,16 @@ const NavBar = () => {
   }, []);
 
   return (
-    <nav className={"md:flex md:justify-between md:items-center md:px-8 md:py-1 fixed w-full z-10 " +
-    (notScrolled ? "bg-transparent" : "bg-white shadow-md")}>
-      <div className="flex items-center justify-between px-4 py-3 md:p-0">
+    <nav className={"lg:flex lg:justify-between lg:items-center lg:px-8 lg:py-1 fixed w-full z-10 " +
+    (notScrolled ? "bg-white shadow-md lg:bg-transparent lg:shadow-none" : "bg-white shadow-md")}>
+      <div className="flex items-center justify-between px-4 py-3 lg:p-0">
         <div className="flex items-center">
           <img className="inline w-16 h-16" src={require('../assets/transparent.png')} alt="Memento Logo"/>
-          <Route to="/">
+          <Link to="/">
           <h1 className="ml-2 inline text-2xl text-brandBlue-A font-inter hover:text-brandBlue-B">Memento</h1>
-          </Route>
+          </Link>
         </div>
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <button
             onClick={() => setOpen(!isOpen)}
             type="button"
@@ -56,13 +56,53 @@ const NavBar = () => {
         </div>
       </div>
       {
-        <nav className={"px-4 pt-2 pb-4 md:flex md:p-0 items-center " + (isOpen ? 'block' : 'hidden')}>
+        <nav className={"px-4 pt-2 pb-4 lg:flex lg:p-0 items-center " + (isOpen ? 'block' : 'hidden')}>
+
+          <Link
+            className="focus:outline-none block px-2 py-1 text-lg font-lato text-gray-500 hover:text-gray-800 focus:text-gray-800"
+            to="/#whymemento"
+          >
+            Why Memento
+          </Link>
+
+          <Link
+            className="mt-1 lg:mt-0 lg:ml-2 focus:outline-none block px-2 py-1 text-lg font-lato text-gray-500 hover:text-gray-800 focus:text-gray-800"
+            to="/#tutorial"
+          >
+            Tutorial
+          </Link>
+
+          <Link
+            className="mt-1 lg:mt-0 lg:ml-2 lg:mr-16 focus:outline-none block px-2 py-1 text-lg font-lato text-gray-500 hover:text-gray-800 focus:text-gray-800"
+            to="/#aboutus"
+          >
+            About Us
+          </Link>
          
-          <Link otherClasses="" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Why Memento"/>
-          <Link otherClasses="mt-1 md:mt-0 md:ml-2" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="Documentation"/>
-          <Link otherClasses="mt-1 md:mt-0 md:ml-2 md:mr-16" href="#" color="gray-500" hoverColor="gray-800" focusColor="gray-800" text="About Us"/>
-          <Link otherClasses="mt-1 md:mt-0 md:ml-2" href="/login" color="brandBlue-A" hoverColor="brandBlue-B" focusColor="brandBlue-B" text="Login"/>
-          <Link otherClasses="bg-white mt-1 hover:text-brandBlue-B hover:border-brandBlue-B inline-block border-brandBlue-A border-2 border-solid text-brandBlue-A font-bold text-lg px-2 py-1 rounded-full md:mt-0 md:ml-2" href="/signup" color="brandBlue-A" hoverColor="brandBlue-B" focusColor="brandBlue-B" text="Sign Up" />
+          {loggedIn ?
+            <button
+            className="shadow-md inline-block bg-transparent lg:mt-0 lg:ml-2 mt-1 focus:outline-none px-2 py-1 text-lg font-lato text-brandBlue-A hover:text-white focus:text-brandBlue-B border border-brandBlue-A hover:bg-brandBlue-A hover:border-transparent rounded"
+              onClick={() => logout()}> Logout
+            </button>
+             :
+             <>
+              <Link
+                className="mt-1 lg:mt-0 lg:ml-2 focus:outline-none block px-2 py-1 text-lg font-lato text-brandBlue-A hover:text-brandBlue-B focus:text-brandBlue-B"
+                to="/login"
+              >
+                Login
+              </Link>
+
+              <Link
+                className="shadow-md inline-block bg-transparent lg:mt-0 lg:ml-2 mt-1 focus:outline-none px-2 py-1 text-lg font-lato text-brandBlue-A hover:text-white focus:text-brandBlue-B border border-brandBlue-A hover:bg-brandBlue-A hover:border-transparent rounded"
+                to="/signup"
+              >
+                Sign Up
+              </Link>
+            
+            </>
+          }
+
         </nav>
       }
     </nav>

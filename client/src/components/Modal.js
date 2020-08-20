@@ -30,7 +30,7 @@ export default function Modal({children, closeOnClick, saveOnClick, showModal, m
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
                   <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                    className="text-red-500 hover:text-red-700 focus:text-red-700 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
                     type="button"
                     style={{ transition: "all .15s ease" }}
                     onClick={closeOnClick}
@@ -38,7 +38,7 @@ export default function Modal({children, closeOnClick, saveOnClick, showModal, m
                     Close
                   </button>
                   <button
-                    className="bg-brandBlue-A text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                    className="bg-brandBlue-A focus:shadow-lg text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                     type="button"
                     style={{ transition: "all .15s ease" }}
                     onClick={saveOnClick}

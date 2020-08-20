@@ -11,6 +11,7 @@ import RenameNoteModal from "../components/RenameNoteModal";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
 import ProfileModal from "../components/ProfileModal";
+import {logout, getUser, setNote, getNote, createNewNote, setNoteTree, getNoteTree } from "../api";
 
 export default function Note() {
   const editorInstance = useRef(null);
@@ -39,8 +40,6 @@ export default function Note() {
   const [numKeyPresses, setKeyPresses] = useState(0);
   const [guest, setIsGuest] = useState(null);
   const [user, setUser] = useState({});
-  const API_URL =
-    process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
   useEffect(() => {
     getUser()
@@ -167,117 +166,6 @@ export default function Note() {
   //   console.log("hi", newTree);
   // }
 
-  function getUser() {
-    let url = API_URL + `/users/user`;
-    return fetch(url, {
-      method: "GET",
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-      });
-  }
-
-  function deleteNote(noteId) {
-    let url = API_URL + `/notes/${noteId}`;
-
-    return fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-      });
-  }
-
-  function setNote(noteId, note) {
-    let url = API_URL + `/notes/${noteId}`;
-    let body = JSON.stringify({ note });
-
-    return fetch(url, {
-      method: "POST",
-      body,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-      });
-  }
-
-  function getNote(noteId) {
-    let url = API_URL + `/notes/${noteId}`;
-    return fetch(url, {
-      method: "GET",
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-      });
-  }
-
-  function createNewNote() {
-    let url = API_URL + `/notes/create`;
-
-    return fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-      });
-  }
-
-  function getNoteTree() {
-    let url = API_URL + `/users/notesTree`;
-
-    return fetch(url, {
-      method: "GET",
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-        // console.log(json);
-        // if (!json.error) {
-        //   setTree(json.notesTree);
-        // }
-      });
-  }
-
-  function setNoteTree(tree) {
-    let url = API_URL + `/users/notesTree`;
-    let body = JSON.stringify({ notesTree: tree });
-
-    return fetch(url, {
-      method: "POST",
-      body,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-      });
-  }
-
   function addFolder(parentFolderId, title, tree) {
     if (!(title.length >= 1)) return;
     let id = tree.length + 1;
@@ -347,15 +235,15 @@ export default function Note() {
       );
   }
 
-  const onReady = () => {
-    // https://editorjs.io/configuration#editor-modifications-callback
-    console.log("Editor.js is ready to work!");
-  };
+  // const onReady = () => {
+  //   // https://editorjs.io/configuration#editor-modifications-callback
+  //   console.log("Editor.js is ready to work!");
+  // };
 
-  const onChange = (api) => {
-    // https://editorjs.io/configuration#editor-modifications-callback
-    console.log("Now I know that Editor's content changed!");
-  };
+  // const onChange = (api) => {
+  //   // https://editorjs.io/configuration#editor-modifications-callback
+  //   console.log("Now I know that Editor's content changed!");
+  // };
 
   const onSave = async () => {
     if (editorInstance.current) {
@@ -437,8 +325,8 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-              <span>&#9776;</span>
-            )}
+                <span>&#9776;</span>
+              )}
           </button>
           {selectedNote ? (
             <h2 className="ml-2 text-sm truncate title-max-w">
@@ -489,6 +377,7 @@ export default function Note() {
                   selectedNote={selectedNote}
                   setShowProfileModal={setShowProfileModal}
                   showProfileModal={showProfileModal}
+                  logout={logout}
                 />
 
                 <PlusDropdown
@@ -515,16 +404,16 @@ export default function Note() {
               editorInstance={(instance) => {
                 editorInstance.current = instance;
               }}
-              onChange={onChange}
-              onReady={onReady}
+              // onChange={onChange}
+              // onReady={onReady}
             />
           ) : (
-            <div className="">
-              <h1 className="text-2xl font-semibold text-center mt-12">
-                {editorLoading}
-              </h1>
-            </div>
-          )}
+              <div className="">
+                <h1 className="text-2xl font-semibold text-center mt-12">
+                  {editorLoading}
+                </h1>
+              </div>
+            )}
         </div>
       </main>
 

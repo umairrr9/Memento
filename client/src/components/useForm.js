@@ -2,6 +2,10 @@ import { useState } from 'react';
 
 const useForm = (callback) => {
 
+  const passwordPattern = new RegExp(
+    "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$"
+  );
+
   const [values, setValues] = useState({});
 
   const handleSubmit = (event) => {
@@ -29,7 +33,8 @@ const useForm = (callback) => {
     values,
     handleIsLogin,
     setValues,
-    setValue
+    setValue,
+    passwordPattern
   }
 };
 

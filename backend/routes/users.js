@@ -10,7 +10,7 @@ const {
 const {Note} = require("../models/note");
 const { createHash, checkPassword } = require("../static/hash");
 const { verifyJWT, generateJWT } = require("../static/auth");
-const { replaceWithNew, isLoggedIn } = require("../static/helper");
+const { replaceWithNew, isLoggedIn, doesUserIDExist } = require("../static/helper");
 const express = require("express");
 const router = express.Router();
 
@@ -120,6 +120,10 @@ router.get("/user", async (req, res) => {
   // const isGuest = req.session.user.isGuest || false;
   res.status(200).send(req.session.user);
 });
+
+router.get("/isLoggedIn", async (req, res) => {
+  return res.status(200).json(doesUserIDExist(req));
+})
 
 router.get("/logout", async (req, res) => {
   req.session.user = {};

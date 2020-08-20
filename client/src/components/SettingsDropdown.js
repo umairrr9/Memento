@@ -14,7 +14,8 @@ export default function SettingsDropdown(
     tree,
     selectedNote,
     setShowProfileModal,
-    showProfileModal
+    showProfileModal,
+    logout
   }
 ) {
 
@@ -115,6 +116,17 @@ export default function SettingsDropdown(
             onClick={() => setShowProfileModal(!showProfileModal)}
           >
             Profile
+        </button>
+
+        <button
+            className={
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+              // + (color === "white" ? " text-gray-800" : "text-white")
+            }
+            // onClick={(e) => e.preventDefault()}
+            onClick={() => logout()}
+          >
+            Logout
         </button>
 
     </Dropdown>
