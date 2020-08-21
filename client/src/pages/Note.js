@@ -11,9 +11,10 @@ import RenameNoteModal from "../components/RenameNoteModal";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
 import ProfileModal from "../components/ProfileModal";
-import {logout, getUser, setNote, getNote, createNewNote, setNoteTree, getNoteTree } from "../api";
+import { logout, getUser, setNote, getNote, createNewNote, setNoteTree, getNoteTree, deleteNote } from "../api";
 
 export default function Note() {
+  let newTree = [];
   const editorInstance = useRef(null);
   const [editorLoading, setEditorLoading] = useState("Loading...");
   const [tree, setTree] = useState([
@@ -79,6 +80,8 @@ export default function Note() {
               setSelectedNote(noteInTree);
               // set editor loading to false
               setEditorLoading("");
+              // set browser title
+              setBrowserTitle(noteInTree.title);
             })
             .catch(() => {
               alert("Sorry, this note couldn't be found.");
@@ -95,14 +98,33 @@ export default function Note() {
       });
   }, []);
 
-  // function traverse(node, level, tree) {
-  //   if (node.title) {console.log(node.title, level);}
-  //   let children = tree.filter((n) => n.parentId === node.id);
-  //   if (children.length === 0) return;
-  //   for (let i in children) {
-  //     traverse(children[i], level + 1, tree);
-  //   }
-  // }
+  function deleteNode(node, tree) {
+    if (node.id) {
+      if (node.noteId) {
+        deleteNote(node.noteId)
+        .then((json) => {
+          if (json.error) throw new Error(json.error);
+        })
+        .catch((err) => console.error(err));
+      }
+      let index = newTree.findIndex((n) => n.id === node.id);
+      newTree.splice(index, 1);
+    }
+    let children = tree.filter((n) => n.parentId === node.id);
+    if (children.length === 0) return;
+    for (let i in children) {
+      deleteNode(children[i], tree);
+    }
+  }
+
+  function traverse(node, level, tree) {
+    if (node.title) {console.log(node.title, level);}
+    let children = tree.filter((n) => n.parentId === node.id);
+    if (children.length === 0) return;
+    for (let i in children) {
+      traverse(children[i], level + 1, tree);
+    }
+  }
 
   // let t = null;
   // function deleteFolder(node, tree) {
@@ -165,6 +187,10 @@ export default function Note() {
   //   setTree(newTree);
   //   console.log("hi", newTree);
   // }
+
+  function setBrowserTitle(title) {
+    document.title = title;
+  }
 
   function addFolder(parentFolderId, title, tree) {
     if (!(title.length >= 1)) return;
@@ -370,7 +396,6 @@ export default function Note() {
                   setSelectedFolder={setSelectedFolder}
                   isShowing={selectedDropdown}
                   setIsShowing={setSelectedDropdown}
-                  setShowDeleteNoteModal={setShowDeleteNoteModal}
                   setShowDeleteFolderModal={setShowDeleteFolderModal}
                   setShowRenameNoteModal={setShowRenameNoteModal}
                   setShowRenameFolderModal={setShowRenameFolderModal}
@@ -378,6 +403,7 @@ export default function Note() {
                   setShowProfileModal={setShowProfileModal}
                   showProfileModal={showProfileModal}
                   logout={logout}
+                  onSave={onSave}
                 />
 
                 <PlusDropdown
@@ -404,8 +430,6 @@ export default function Note() {
               editorInstance={(instance) => {
                 editorInstance.current = instance;
               }}
-              // onChange={onChange}
-              // onReady={onReady}
             />
           ) : (
               <div className="">
@@ -458,31 +482,22 @@ export default function Note() {
           setShowDeleteFolderModal(false);
         }}
         saveOnClick={() => {
+          newTree = tree;
+          deleteNode(selectedFolder, tree);
+          setTree(newTree);
+          setNoteTree(newTree).then((json) => { 
+            if (json.error) throw new Error(json.error);
+          })
+          .catch((err) => console.error(err));
           setSelectedFolder(tree[0]);
-          setShowFolderModal(false);
+          setShowDeleteFolderModal(false);
         }}
-        onTitleChange={(e) => setTitle(e.target.value)}
         showModal={showDeleteFolderModal}
         setShowModal={setShowDeleteFolderModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
-      />
-
-      <DeleteNoteModal
-        closeOnClick={() => {
-          setSelectedFolder(tree[0]);
-          setShowDeleteNoteModal(false);
-        }}
-        saveOnClick={() => {
-          setSelectedFolder(tree[0]);
-          setShowFolderModal(false);
-        }}
-        onTitleChange={(e) => setTitle(e.target.value)}
-        showModal={showDeleteNoteModal}
-        tree={tree}
-        setSelectedFolder={setSelectedFolder}
-        selectedFolder={selectedFolder}
+        isDeleteNote={true}
       />
 
       <RenameFolderModal

@@ -15,7 +15,8 @@ export default function SettingsDropdown(
     selectedNote,
     setShowProfileModal,
     showProfileModal,
-    logout
+    logout,
+    onSave
   }
 ) {
 
@@ -34,66 +35,53 @@ export default function SettingsDropdown(
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
 
-        <button
-          className={
-            "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-            //   + (color === "white" ? " text-gray-800" : "text-white")
-          }
-          // onClick={(e) => e.preventDefault()}
-          onClick={() => {
-            setShowDeleteFolderModal(true);
+      <button
+        className={
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          //   + (color === "white" ? " text-gray-800" : "text-white")
+        }
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+          setShowDeleteFolderModal(true);
 
-            setSelectedFolder(tree[0]);
-          }}
-        >
-          Delete Folder
+          setSelectedFolder(tree[0]);
+        }}
+      >
+        Delete
         </button>
 
-          <button
-            className={
-              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-              //   + (color === "white" ? " text-gray-800" : "text-white")
-            }
-            // onClick={(e) => e.preventDefault()}
-            onClick={() => {
-              setShowDeleteNoteModal(true);
+ 
 
-              setSelectedFolder(tree[0]);
-            }}
-          >
-            Delete Note
+      <button
+        className={
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          // + (color === "white" ? " text-gray-800" : "text-white")
+        }
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
+
+          setShowRenameFolderModal(true);
+
+          setSelectedFolder(tree[0]);
+        }}
+      >
+        Rename Folder
         </button>
 
-          <button
-            className={
-              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-              // + (color === "white" ? " text-gray-800" : "text-white")
-            }
-            // onClick={(e) => e.preventDefault()}
-            onClick={() => {
+      <button
+        className={
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          // + (color === "white" ? " text-gray-800" : "text-white")
+        }
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => {
 
-              setShowRenameFolderModal(true);
+          setShowRenameNoteModal(true);
 
-              setSelectedFolder(tree[0]);
-            }}
-          >
-            Rename Folder
-        </button>
-
-          <button
-            className={
-              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-              // + (color === "white" ? " text-gray-800" : "text-white")
-            }
-            // onClick={(e) => e.preventDefault()}
-            onClick={() => {
-
-              setShowRenameNoteModal(true);
-
-              setSelectedFolder(tree[0]);
-            }}
-          >
-            Rename Note
+          setSelectedFolder(tree[0]);
+        }}
+      >
+        Rename Note
         </button>
 
       {selectedNote ? <button
@@ -102,31 +90,31 @@ export default function SettingsDropdown(
           // + (color === "white" ? " text-gray-800" : "text-white")
         }
         // onClick={() => window.location.href=`/print?note=${selectedNote.noteId}`}
-        onClick={() => window.open(`/print?note=${selectedNote.noteId}`, '_blank')}
+        onClick={() => { onSave(); window.open(`/print?note=${selectedNote.noteId}`, '_blank') }}
       >
         Print
       </button> : null}
 
       <button
-            className={
-              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-              // + (color === "white" ? " text-gray-800" : "text-white")
-            }
-            // onClick={(e) => e.preventDefault()}
-            onClick={() => setShowProfileModal(!showProfileModal)}
-          >
-            Profile
+        className={
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          // + (color === "white" ? " text-gray-800" : "text-white")
+        }
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => setShowProfileModal(!showProfileModal)}
+      >
+        Profile
         </button>
 
-        <button
-            className={
-              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-              // + (color === "white" ? " text-gray-800" : "text-white")
-            }
-            // onClick={(e) => e.preventDefault()}
-            onClick={() => logout()}
-          >
-            Logout
+      <button
+        className={
+          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+          // + (color === "white" ? " text-gray-800" : "text-white")
+        }
+        // onClick={(e) => e.preventDefault()}
+        onClick={() => logout()}
+      >
+        Logout
         </button>
 
     </Dropdown>

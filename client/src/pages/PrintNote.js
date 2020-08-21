@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import EditorJs from "@natterstefan/react-editor-js";
 import TOOLS from "../editorjs/config";
+import { API_URL } from '../api';
 
 export default function PrintNote() {
   const editorInstance = useRef(null);
   const [editorLoading, setEditorLoading] = useState(true);
   const [data, setData] = useState({});
-  const API_URL = process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
-
+  
   function afterPrint() {
     window.close();
   }

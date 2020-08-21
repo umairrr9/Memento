@@ -3,10 +3,11 @@ import NavBar from '../components/NavBar';
 import researching from '../assets/researching.svg';
 import inSync from '../assets/in_sync.svg';
 import thoughtProcess from '../assets/thought_process.svg';
-import { Link } from "react-router-dom";
+import { HashLink as Link } from 'react-router-hash-link';
 import ImageCaption from "../components/ImageCaption";
 import { loginAsGuest, isLoggedIn } from "../api";
 import Diagonal from '../components/Diagonal';
+import Card from '../components/Card';
 
 function Landing() {
 
@@ -113,33 +114,84 @@ function Landing() {
           </div>
 
 
-          <Diagonal colour={"gray-200"}/>
+          <Diagonal colour={"gray-100"}/>
 
         </div>
 
         {/* Why Memento Section */}
-        <div id="whymemento" className="px-8 pb-16 bg-gray-200 relative">
+        <div id="whymemento" className="pt-6 pb-16 px-8 bg-gray-100 relative">
 
-
-
-          <h1 className="text-5xl text-brandBlue-A"> Why Memento </h1>
+          <h1 className="text-5xl font-inter">Why Memento</h1>
           
+          <div id="left" className="w-1/2">
+
+          <ul>
+              <li className="my-2 w-56 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Add headings, tables, checklists, delimiters and more to your notes.</li>
+              <li className="my-2 w-56 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Notes are saved after every 7 characters entered or through the save button.</li>
+              <li className="my-2 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Our hierarchical structure allows you to organise your folders and notes.</li>
+              <li className="my-2 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Folders and notes can be renamed and deleted.</li>
+              <li className="my-2 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Print your notes.</li>
+            </ul>
+
+            
+            {/*  */}
+            
+            <div className="max-w-sm bg-white rounded overflow-hidden shadow-lg">
+              {/* <img className="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains" /> */}
+              <div className="px-6 py-3">
+                <h2 className="font-inter text-brandBlue-A font-bold text-xl mb-2">Inline Tools</h2>
+                <p className="font-lato text-gray-600 text-base">
+                Add headings, tables, checklists, delimiters and more to your notes.
+                </p>
+              </div>
+              <div className="px-6 pt-2 pb-2">
+                <Link className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:text-brandBlue-A" to="/#tutorial">Learn More</Link>
+              </div>
+            </div>
+
+            {/*  */}
 
 
+            <p className="text-gray-600 font-lato">Learn more about these features and how to use them in the next section.</p>
 
+            <p className="text-gray-600 font-lato py-3">
+              Welcome to Memento! We designed this note taking app to allow you to unleash your inner creativity
+              and maximise productivity in the simplest way possible.
+            </p>
+
+            
+
+            <p className="text-gray-600 font-lato">
+              We believe simplicity is key to being productive. When we keep things simple, we have more clarity and focus
+              as there’s nothing to take our attention away. Therefore our design should help you stay focused and be more
+              productive when you’re taking notes! 
+            </p>
+            {/* and no, not just because Leonardo Da Vinci said
+              “Simplicity is the ultimate sophistication” or because Bruce Lee said “Simplicity is the key to
+              brilliance”. */}
+          </div>
+
+          <div id="right">
+
+          </div>
+
+          <Diagonal colour={"white"}/>
 
         </div>
 
+{/* make it so there is 1 delete modal */}
 
 
         {/* Tutorial Section */}
-        <div id="tutorial" className="px-8 bg-black">
+        <div id="tutorial" className="px-8">
           <h1 className="text-5xl text-brandBlue-A"> Tutorial </h1>
+          
+
           
         </div>
 
         {/* About Us Section */}
-        <div id="aboutus" className="px-8 bg-gray-300">
+        <div id="aboutus" className="px-8 bg-gray-100">
           <h1 className="text-5xl text-brandBlue-A"> About Us </h1>
           
         </div>

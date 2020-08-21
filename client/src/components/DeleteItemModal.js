@@ -6,12 +6,12 @@ export default function DeleteItemModal({
     closeOnClick,
     saveOnClick,
     showModal,
-    onTitleChange,
     tree,
     setSelectedFolder,
     selectedFolder,
     modalTitle,
     labelTitle,
+    isDeleteNote
   }) {
     return (
       <Modal
@@ -26,6 +26,7 @@ export default function DeleteItemModal({
             level={-1}
             tree={tree}
             setSelectedFolder={setSelectedFolder}
+            isDeleteNote={isDeleteNote}
           />
         </div>
         <div>
@@ -37,13 +38,6 @@ export default function DeleteItemModal({
           >
             {labelTitle}
           </label>
-  
-          <input
-            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-brandBlue-A"
-            id="inline-full-name"
-            type="text"
-            onChange={onTitleChange}
-          ></input>
         </div>
       </Modal>
     );
