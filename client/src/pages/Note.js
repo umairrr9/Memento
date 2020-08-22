@@ -478,7 +478,7 @@ export default function Note() {
       <DeleteItemModal
         closeOnClick={() => {
           setSelectedFolder(tree[0]);
-          DeleteItemModal(false);
+          setShowDeleteItemModal(false);
         }}
         saveOnClick={() => {
           newTree = tree;
