@@ -12,6 +12,16 @@
     }
 }
 
+blockquote::before{
+    content: "\201c";
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 100px;
+    color: #00bcff;
+    display: block;
+    margin-bottom: -50px;
+    margin-top: -50px;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 

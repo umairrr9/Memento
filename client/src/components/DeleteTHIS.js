@@ -9,19 +9,17 @@ export default function DeleteItemModal({
     tree,
     setSelectedFolder,
     selectedFolder,
-    isDeleteNote,
     modalTitle,
     labelTitle,
+    isDeleteNote
   }) {
     return (
       <Modal
         closeOnClick={closeOnClick}
         saveOnClick={saveOnClick}
         showModal={showModal}
-        modalTitle={"Delete Note or Folder"}
-        labelTitle={"Deleting a folder will remove notes/folders within."}
+        modalTitle={modalTitle}
       >
-        
         <div className="overflow-y-auto my-4" style={{ height: "10rem" }}>
           <TreeView
             node={tree[0]}
@@ -41,18 +39,6 @@ export default function DeleteItemModal({
             {labelTitle}
           </label>
         </div>
-
       </Modal>
-      // <DeleteItemModal
-      //   modalTitle="Delete an item"
-      //   labelTitle="The item's contents will be deleted."
-      //   closeOnClick={closeOnClick}
-      //   saveOnClick={saveOnClick}
-      //   showModal={showModal}
-      //   tree={tree}
-      //   setSelectedFolder={setSelectedFolder}
-      //   selectedFolder={selectedFolder}
-      //   isDeleteNote={isDeleteNote}
-      // />
     );
   }

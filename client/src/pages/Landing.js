@@ -123,64 +123,98 @@ function Landing() {
 
           <h1 className="text-5xl font-inter">Why Memento</h1>
           
-          <div id="left" className="w-1/2">
-
-          <ul>
-              <li className="my-2 w-56 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Add headings, tables, checklists, delimiters and more to your notes.</li>
-              <li className="my-2 w-56 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Notes are saved after every 7 characters entered or through the save button.</li>
-              <li className="my-2 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Our hierarchical structure allows you to organise your folders and notes.</li>
-              <li className="my-2 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Folders and notes can be renamed and deleted.</li>
-              <li className="my-2 bg-white rounded text-center font-lato text-brandBlue-A text-xl shadow-lg">Print your notes.</li>
-            </ul>
-
+          <div id="cards" className="text-center">
             
-            {/*  */}
+            <Card
+              title={"Inline Tools"}
+              description={"Add headings, tables, checklists, delimiters and more to your notes."}
+              link={"tutorial"}
+            />
+
+            <Card
+              title={"Saving"}
+              description={"Notes are saved after every 7 characters entered or through the save button."}
+              link={"tutorial"}
+            />
+
+            <Card 
+              title={"Organising"}
+              description={"Our hierarchical structure allows you to organise your folders and notes."}
+              link={"tutorial"}
+            />
+
+            <Card 
+              title={"Note Settings"}
+              description={"Folders and notes can be renamed and deleted. blablablablabla blaaj jnj."}
+              link={"tutorial"}
+            />
+
+            <Card 
+              title={"Printing"}
+              description={"Print your notes. fjndksjfkmsdvndmd vdkjsdffdg fdnksmdvsj djngfsdnjf."}
+              link={"tutorial"}
+            />
+
+            <Card 
+              title={"Printing"}
+              description={"Print your notes. fjndksjfkmsdvndmd vdkjsdffdg fdnksmdvsj djngfsdnjf."}
+              link={"tutorial"}
+            />
             
-            <div className="max-w-sm bg-white rounded overflow-hidden shadow-lg">
-              {/* <img className="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains" /> */}
-              <div className="px-6 py-3">
-                <h2 className="font-inter text-brandBlue-A font-bold text-xl mb-2">Inline Tools</h2>
-                <p className="font-lato text-gray-600 text-base">
-                Add headings, tables, checklists, delimiters and more to your notes.
-                </p>
-              </div>
-              <div className="px-6 pt-2 pb-2">
-                <Link className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:text-brandBlue-A" to="/#tutorial">Learn More</Link>
-              </div>
-            </div>
-
-            {/*  */}
-
-
-            <p className="text-gray-600 font-lato">Learn more about these features and how to use them in the next section.</p>
-
-            <p className="text-gray-600 font-lato py-3">
-              Welcome to Memento! We designed this note taking app to allow you to unleash your inner creativity
-              and maximise productivity in the simplest way possible.
-            </p>
-
-            
-
-            <p className="text-gray-600 font-lato">
-              We believe simplicity is key to being productive. When we keep things simple, we have more clarity and focus
-              as there’s nothing to take our attention away. Therefore our design should help you stay focused and be more
-              productive when you’re taking notes! 
-            </p>
-            {/* and no, not just because Leonardo Da Vinci said
-              “Simplicity is the ultimate sophistication” or because Bruce Lee said “Simplicity is the key to
-              brilliance”. */}
           </div>
 
-          <div id="right">
+          <div id="left and right" className="flex mt-4">
+
+
+<div id="left" className="w-1/2">
+
+<h2 className="text-3xl text-gray-600 font-lato">Our Emphasis on Simplicity</h2>
+
+<p className="text-gray-600 text-xl font-lato py-3">
+    Welcome to Memento! We designed this note taking app to allow you to unleash your inner creativity
+    and maximise productivity in the simplest way possible.
+</p>
+
+  <p className="text-gray-600 font-lato text-xl">
+    We believe simplicity is key to being productive. When we keep things simple, we have more clarity and focus
+    as there’s nothing to take our attention away. Therefore our design should help you stay focused and be more
+    productive when you’re taking notes! 
+  </p>
+  
+</div>
+
+<div id="right" className="">
+
+    <blockquote className="max-w-sm my-6 p-6 bg-blue-100 border border-l-8 border-brandBlue-A text-blue-900 box-border">
+      <p className="italic text-lg leading-6 m-0 pb-3">
+        Simplicity is the ultimate sophistication.
+      </p>
+      <p className="font-bold text-lg leading-6 m-0 ">
+        - Leonardo Da Vinci
+      </p>
+    </blockquote>
+
+    <blockquote className="max-w-sm my-6 p-6 bg-blue-100 border border-l-8 border-brandBlue-A text-blue-900 box-border">
+      <p className="italic text-lg leading-6 m-0 pb-3">
+        Simplicity is the key to brilliance.
+      </p>
+      <p className="font-bold text-lg leading-6 m-0 ">
+        - Bruce Lee
+      </p>
+    </blockquote>
+
+</div>
+
 
           </div>
+
+          
+
+          
 
           <Diagonal colour={"white"}/>
 
         </div>
-
-{/* make it so there is 1 delete modal */}
-
 
         {/* Tutorial Section */}
         <div id="tutorial" className="px-8">

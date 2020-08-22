@@ -6,8 +6,7 @@ export default function SettingsDropdown(
     id,
     isShowing,
     setIsShowing,
-    setShowDeleteNoteModal,
-    setShowDeleteFolderModal,
+    setShowDeleteItemModal,
     setShowRenameNoteModal,
     setShowRenameFolderModal,
     setSelectedFolder,
@@ -42,12 +41,12 @@ export default function SettingsDropdown(
         }
         // onClick={(e) => e.preventDefault()}
         onClick={() => {
-          setShowDeleteFolderModal(true);
+          setShowDeleteItemModal(true);
 
           setSelectedFolder(tree[0]);
         }}
       >
-        Delete
+        Delete Note/Folder
         </button>
 
  

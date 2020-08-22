@@ -4,8 +4,7 @@ import TOOLS from "../editorjs/config";
 import SideNav from "../components/SideNav";
 import AddFolderModal from "../components/AddFolderModal";
 import AddNoteModal from "../components/AddNoteModal";
-import DeleteFolderModal from "../components/DeleteFolderModal";
-import DeleteNoteModal from "../components/DeleteNoteModal";
+import DeleteItemModal from "../components/DeleteItemModal";
 import RenameFolderModal from "../components/RenameFolderModal";
 import RenameNoteModal from "../components/RenameNoteModal";
 import SettingsDropdown from "../components/SettingsDropdown";
@@ -28,7 +27,7 @@ export default function Note() {
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
-  const [showDeleteFolderModal, setShowDeleteFolderModal] = useState(false);
+  const [showDeleteItemModal, setShowDeleteItemModal] = useState(false);
   const [showRenameNoteModal, setShowRenameNoteModal] = useState(false);
   const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -396,7 +395,7 @@ export default function Note() {
                   setSelectedFolder={setSelectedFolder}
                   isShowing={selectedDropdown}
                   setIsShowing={setSelectedDropdown}
-                  setShowDeleteFolderModal={setShowDeleteFolderModal}
+                  setShowDeleteItemModal={setShowDeleteItemModal}
                   setShowRenameNoteModal={setShowRenameNoteModal}
                   setShowRenameFolderModal={setShowRenameFolderModal}
                   selectedNote={selectedNote}
@@ -476,10 +475,10 @@ export default function Note() {
         selectedFolder={selectedFolder}
       />
 
-      <DeleteFolderModal
+      <DeleteItemModal
         closeOnClick={() => {
           setSelectedFolder(tree[0]);
-          setShowDeleteFolderModal(false);
+          DeleteItemModal(false);
         }}
         saveOnClick={() => {
           newTree = tree;
@@ -490,10 +489,10 @@ export default function Note() {
           })
           .catch((err) => console.error(err));
           setSelectedFolder(tree[0]);
-          setShowDeleteFolderModal(false);
+          setShowDeleteItemModal(false);
         }}
-        showModal={showDeleteFolderModal}
-        setShowModal={setShowDeleteFolderModal}
+        showModal={showDeleteItemModal}
+        setShowModal={setShowDeleteItemModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
