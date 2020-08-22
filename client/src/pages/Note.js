@@ -10,7 +10,16 @@ import RenameNoteModal from "../components/RenameNoteModal";
 import SettingsDropdown from "../components/SettingsDropdown";
 import PlusDropdown from "../components/PlusDropdown";
 import ProfileModal from "../components/ProfileModal";
-import { logout, getUser, setNote, getNote, createNewNote, setNoteTree, getNoteTree, deleteNote } from "../api";
+import {
+  logout,
+  getUser,
+  setNote,
+  getNote,
+  createNewNote,
+  setNoteTree,
+  getNoteTree,
+  deleteNote,
+} from "../api";
 
 export default function Note() {
   let newTree = [];
@@ -26,7 +35,6 @@ export default function Note() {
   const [data, setData] = useState({});
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showNoteModal, setShowNoteModal] = useState(false);
-  const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
   const [showDeleteItemModal, setShowDeleteItemModal] = useState(false);
   const [showRenameNoteModal, setShowRenameNoteModal] = useState(false);
   const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
@@ -101,10 +109,10 @@ export default function Note() {
     if (node.id) {
       if (node.noteId) {
         deleteNote(node.noteId)
-        .then((json) => {
-          if (json.error) throw new Error(json.error);
-        })
-        .catch((err) => console.error(err));
+          .then((json) => {
+            if (json.error) throw new Error(json.error);
+          })
+          .catch((err) => console.error(err));
       }
       let index = newTree.findIndex((n) => n.id === node.id);
       newTree.splice(index, 1);
@@ -115,77 +123,6 @@ export default function Note() {
       deleteNode(children[i], tree);
     }
   }
-
-  function traverse(node, level, tree) {
-    if (node.title) {console.log(node.title, level);}
-    let children = tree.filter((n) => n.parentId === node.id);
-    if (children.length === 0) return;
-    for (let i in children) {
-      traverse(children[i], level + 1, tree);
-    }
-  }
-
-  // let t = null;
-  // function deleteFolder(node, tree) {
-  //   let newTree = tree;
-  //   if (node.title) {
-  //     // console.log(node.title, level);
-  //     newTree = tree.filter(n => n.id !== node.id);
-  //   }
-  //   // console.log(newTree);
-  //   // setTree(newTree);
-  //   t = newTree;
-  //   let children = tree.filter((n) => n.parentId === node.id);
-  //   if (children.length === 0) {
-  //     return;
-  //   }
-  //   for (let i in children) {
-  //     // console.log(children[i]);
-  //     deleteFolder(children[i], newTree);
-  //   }
-  // }
-
-  // function deleteFolder(node, tree) {
-  //   let newTree = null;
-  //   if (node.title) {
-  //     newTree = [];
-  //     for (let i = 1; i < tree.length; i++) {
-  //       if (tree[i].noteId) {
-  //         try {
-  //           deleteNote(tree[i].noteId).then(json => {
-  //             console.log(json);
-  //           });
-  //         } catch (err) { }
-  //       }
-  //       if (tree[i].parentId !== node.id) newTree.push(tree[i]);
-  //     }
-  //   }
-  //   let children = tree.filter((n) => n.parentId === node.id);
-  //   if (children.length === 0) return;
-  //   for (let i in children) {
-  //     deleteFolder(children[i], tree);
-  //   }
-  // }
-
-  // let t = null;
-  // function deleteFolder(node, tree) {
-  //   let newTree = [];
-  //   // newTree = tree.filter(n => n.parentId !== node.id);
-  //   // newTree = newTree.filter(n => n.id !== node.id);
-  //   for (let i = 1; i < tree.length; i++) {
-  //     if (tree[i].noteId) {
-  //       try {
-  //         deleteNote(tree[i].noteId).then(json => {
-  //           console.log(json);
-  //         });
-  //       } catch (err) {}
-  //     }
-  //     if (tree[i].parentId !== node.id) newTree.push(tree[i]);
-  //   }
-  //   newTree = newTree.filter(n => n.id !== 0 && n.id !== node.id);
-  //   setTree(newTree);
-  //   console.log("hi", newTree);
-  // }
 
   function setBrowserTitle(title) {
     document.title = title;
@@ -350,8 +287,8 @@ export default function Note() {
                 </svg>
               </span>
             ) : (
-                <span>&#9776;</span>
-              )}
+              <span>&#9776;</span>
+            )}
           </button>
           {selectedNote ? (
             <h2 className="ml-2 text-sm truncate title-max-w">
@@ -431,12 +368,10 @@ export default function Note() {
               }}
             />
           ) : (
-              <div className="">
-                <h1 className="text-2xl font-semibold text-center mt-12">
-                  {editorLoading}
-                </h1>
-              </div>
-            )}
+            <h1 className="text-2xl font-semibold text-center mt-12">
+              {editorLoading}
+            </h1>
+          )}
         </div>
       </main>
 
@@ -484,10 +419,11 @@ export default function Note() {
           newTree = tree;
           deleteNode(selectedFolder, tree);
           setTree(newTree);
-          setNoteTree(newTree).then((json) => { 
-            if (json.error) throw new Error(json.error);
-          })
-          .catch((err) => console.error(err));
+          setNoteTree(newTree)
+            .then((json) => {
+              if (json.error) throw new Error(json.error);
+            })
+            .catch((err) => console.error(err));
           setSelectedFolder(tree[0]);
           setShowDeleteItemModal(false);
         }}
