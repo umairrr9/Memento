@@ -53,7 +53,7 @@ router.post("/create", isLoggedIn, async (req, res) => {
     // Try to save the note in the DB and return error message if it fails
     try {
         await note.save();
-    } catch (error) {
+    } catch {
         res.status(400).send({ error: "Error, the note wasn't saved." });
     }
 
@@ -138,8 +138,8 @@ router.post("/:noteId", async (req, res) => {
     if (!noteDoc) return res.status(400).send({ error: "Sorry, this note doesn't exist." });
 
     const userID = req.session.user._id;
+    
     if (noteDoc.userId !== userID) return res.status(400).send({ error: "Sorry, you can't access this note." });
-
     // const {title: oldTitle, content: oldContent, userId: oldUserId} = note;
     // const userId = oldUserId; // userid can't be changed
     // const {title, content} = req.body;

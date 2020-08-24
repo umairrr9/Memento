@@ -40,7 +40,7 @@ const TreeView = ({
               {!isOpen ? <span>&#9656; </span> : <span>&#9662; </span>}
             </span>
           ) : null}
-          <h2 className="py-1 border-b-2 truncate hover:border-gray-400">{node.title}</h2>
+          <h2 className="py-1 border-b-2 hover:border-gray-400">{node.title}</h2>
         </div>
       )}
       <div className={(!isOpen ? "hidden" : "")}>

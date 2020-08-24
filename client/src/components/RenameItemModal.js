@@ -21,7 +21,7 @@ export default function RenameItemModal({
       showModal={showModal}
       modalTitle={modalTitle}
     >
-      <div className="overflow-y-auto my-4" style={{ height: "10rem" }}>
+      <div className="overflow-y-auto overflow-x-auto my-4" style={{ height: "10rem" }}>
         <TreeView
           node={tree[0]}
           level={-1}

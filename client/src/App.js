@@ -2,11 +2,8 @@ import React from "react";
 import Landing from "./pages/Landing";
 import Form from "./pages/Form";
 import Note from "./pages/Note";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import PrintNote from "./pages/PrintNote";
-
-// "email": "guest@example.com",
-// "password": "8lfmm!DC0eY0igLCF*"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
   return (

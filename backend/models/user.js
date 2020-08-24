@@ -25,6 +25,10 @@ const userSchema = mongoose.Schema({
   notesTree: {
     type: Array,
     default: [{title: null, parentId: null, id: 0}]
+  },
+  confirmed: {
+    type: Boolean,
+    default: false
   }
 });
 

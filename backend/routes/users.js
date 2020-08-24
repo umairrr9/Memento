@@ -7,10 +7,16 @@ const {
   validatePassword,
   validateUpdatedUser,
 } = require("../models/user");
-const {Note} = require("../models/note");
+const jwt = require("jsonwebtoken");
+const { Note } = require("../models/note");
 const { createHash, checkPassword } = require("../static/hash");
 const { verifyJWT, generateJWT } = require("../static/auth");
-const { replaceWithNew, isLoggedIn, doesUserIDExist } = require("../static/helper");
+const { sendEmail } = require("../static/transporter");
+const {
+  replaceWithNew,
+  isLoggedIn,
+  doesUserIDExist,
+} = require("../static/helper");
 const express = require("express");
 const router = express.Router();
 
@@ -41,6 +47,12 @@ router.post("/login", async (req, res) => {
       .status(400)
       .send({ error: "Login combination failed, please try again." });
   const { _id } = user;
+
+  if (!user.confirmed) {
+    return res
+      .status(400)
+      .send({ error: "Please confirm your account before logging in." });
+  }
 
   const newUserFields = {
     email,
@@ -97,6 +109,28 @@ router.post("/signup", async (req, res) => {
   const { _id } = user;
   user.password = createHash(password, _id);
 
+  // send confirmation email
+  jwt.sign(
+    {
+      _id,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d",
+    },
+    (err, token) => {
+      if (err) {
+        console.error(err);
+      } else {
+        const url = process.env.URL + `/confirmation/${token}`;
+        const to = user.email;
+        const subject = "Confirm Email";
+        const html = `Please confirm your Memento account with the following link: <a href=${url}>${url}</a>`;
+        sendEmail(to, subject, html);
+      }
+    }
+  );
+
   // Try to save the user in the DB and return error message if it fails
   try {
     await user.save();
@@ -105,7 +139,8 @@ router.post("/signup", async (req, res) => {
     res.status(400).send({ error: "Error, the user wasn't saved." });
   }
 
-  req.session.user = { _id, email, username };
+  // req.session.user = { _id, email, username };
+  // res.redirect(process.env.URL + "/login");
 
   // Send user object
   res.status(200).send({ _id, email, username });
@@ -122,8 +157,14 @@ router.get("/user", async (req, res) => {
 });
 
 router.get("/isLoggedIn", async (req, res) => {
-  return res.status(200).json(doesUserIDExist(req));
-})
+  const {_id} = req.session.user;
+  try {
+    const user = await doesUserExist(_id);
+    if (user.confirmed) return res.status(200).json(true);
+  } catch {
+    return res.status(200).json(false);
+  }
+});
 
 router.get("/logout", async (req, res) => {
   req.session.user = {};
@@ -152,6 +193,12 @@ router.get("/notesTree", isLoggedIn, async (req, res) => {
   const user = await doesUserExist(_id);
   if (!user) return res.status(400).send({ error: "User doesn't exist." });
 
+  if (!user.confirmed) {
+    return res
+      .status(400)
+      .send({ error: "Please confirm your account before logging in." });
+  }
+
   const { notesTree } = user;
   res.status(200).json({ notesTree, _id });
 });
@@ -159,17 +206,17 @@ router.get("/notesTree", isLoggedIn, async (req, res) => {
 router.post("/notesTree", isLoggedIn, async (req, res) => {
   const { _id, isGuest = null } = req.session.user;
   if (isGuest)
-    return res
-      .status(400)
-      .send({
-        error: "Sorry, you must create an account before you can do that.",
-      });
+    return res.status(400).send({
+      error: "Sorry, you must create an account before you can do that.",
+    });
 
   const { error } = validateID({ _id });
   if (error) return res.status(400).send({ error: error.details[0].message });
 
   const user = await doesUserExist(_id);
   if (!user) return res.status(400).send({ error: "User doesn't exist." });
+
+  
 
   const { notesTree: oldNotesTree } = user;
   const { notesTree: newNotesTree } = req.body;
@@ -191,11 +238,9 @@ router.patch("/updateUser", isLoggedIn, async (req, res) => {
   // Validate ID
   const { _id, isGuest = null } = req.session.user;
   if (isGuest)
-    return res
-      .status(400)
-      .send({
-        error: "Sorry, you must create an account before you can do that.",
-      });
+    return res.status(400).send({
+      error: "Sorry, you must create an account before you can do that.",
+    });
 
   let user = await doesUserExist(_id);
   if (!user) return res.status(400).send({ error: "User doesn't exist." });
@@ -217,22 +262,17 @@ router.patch("/updateUser", isLoggedIn, async (req, res) => {
     const hashedCurrentPwd = createHash(currentPassword, _id);
 
     if (hashedCurrentPwd !== oldPassword)
-      return res
-        .status(400)
-        .send({
-          error: "Your current password is incorrect, please try again.",
-        });
+      return res.status(400).send({
+        error: "Your current password is incorrect, please try again.",
+      });
 
     const { error: passwordError } = validatePassword({
       password: newPassword,
     });
     if (passwordError) {
-      return res
-        .status(400)
-        .send({
-          error:
-            "Your new password doesn't match the pattern, please try again.",
-        });
+      return res.status(400).send({
+        error: "Your new password doesn't match the pattern, please try again.",
+      });
     }
   }
 
@@ -289,11 +329,9 @@ router.delete("/delete", async (req, res) => {
   // Validate ID
   const { _id, isGuest = null } = req.session.user;
   if (isGuest)
-    return res
-      .status(400)
-      .send({
-        error: "Sorry, you must create an account before you can do that.",
-      });
+    return res.status(400).send({
+      error: "Sorry, you must create an account before you can do that.",
+    });
 
   const { error } = validateID({ _id });
   if (error) return res.status(400).send({ error: error.details[0].message });
@@ -312,7 +350,7 @@ router.delete("/delete", async (req, res) => {
 
   // Confirm deletion with a message
   res.status(200).json(`User of ID ${_id} was successfully deleted.`);
-})
+});
 
 // GET USER BY ID
 router.get("/:userId", async (req, res) => {

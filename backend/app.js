@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require("cookie-session");
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+// const { getNodeMailer } = require('./static/transporter');
+const {User, doesUserExist} = require('./models/user');
 var path = require("path");
 var cors = require('cors');
 require("dotenv/config");
@@ -49,6 +52,23 @@ const usersRoute = require("./routes/users");
 const notesRoute = require("./routes/notes");
 app.use("/api/users/", usersRoute); 
 app.use("/api/notes/", notesRoute); 
+
+app.get('/confirmation/:token', async (req, res) => {
+  try {
+    const token = req.params.token;
+    const { _id } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await doesUserExist(_id);
+    user.confirmed = true;
+    await user.save();
+  } catch (err) {
+    console.error(err);
+    return res.status(400).send("Sorry, we couldn't confirm your account, please try again.");
+  }
+
+  res.redirect(process.env.URL + "/login");
+
+});
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../client/build/index.html"));

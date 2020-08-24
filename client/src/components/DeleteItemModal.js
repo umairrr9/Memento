@@ -22,7 +22,7 @@ export default function DeleteItemModal({
         labelTitle={"Deleting a folder will remove notes/folders within."}
       >
         
-        <div className="overflow-y-auto my-4" style={{ height: "10rem" }}>
+        <div className="overflow-y-auto overflow-x-auto my-4" style={{ height: "10rem" }}>
           <TreeView
             node={tree[0]}
             level={-1}
