@@ -9,22 +9,11 @@ const {
 } = require("../models/user");
 const jwt = require("jsonwebtoken");
 const { Note } = require("../models/note");
-const { createHash, checkPassword } = require("../static/hash");
-const { verifyJWT, generateJWT } = require("../static/auth");
+const { createHash } = require("../static/hash");
 const { sendEmail } = require("../static/transporter");
-const {
-  replaceWithNew,
-  isLoggedIn,
-  doesUserIDExist,
-} = require("../static/helper");
+const { replaceWithNew, isLoggedIn } = require("../static/helper");
 const express = require("express");
 const router = express.Router();
-
-///// TASK: Make endpoints handle errors e.g JSON error more kindly /////
-///// TASK: Turn repeated code into functions /////
-///// TASK: Use JWT and sessions to validate users /////
-///// TASK: Allow username/password login combo /////
-///// TASK: Create function for line 41 loop
 
 // LOGIN USER
 router.post("/login", async (req, res) => {
@@ -146,18 +135,13 @@ router.post("/signup", async (req, res) => {
   res.status(200).send({ _id, email, username });
 });
 
-// router.get("/isGuest", async (req, res) => {
-//   const isGuest = req.session.user.isGuest || false;
-//   res.status(200).send({isGuest});
-// });
-
 router.get("/user", async (req, res) => {
   // const isGuest = req.session.user.isGuest || false;
   res.status(200).send(req.session.user);
 });
 
 router.get("/isLoggedIn", async (req, res) => {
-  const {_id} = req.session.user;
+  const { _id } = req.session.user;
   try {
     const user = await doesUserExist(_id);
     if (user.confirmed) return res.status(200).json(true);
@@ -215,8 +199,6 @@ router.post("/notesTree", isLoggedIn, async (req, res) => {
 
   const user = await doesUserExist(_id);
   if (!user) return res.status(400).send({ error: "User doesn't exist." });
-
-  
 
   const { notesTree: oldNotesTree } = user;
   const { notesTree: newNotesTree } = req.body;

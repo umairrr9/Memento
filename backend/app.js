@@ -5,14 +5,12 @@ const bodyParser = require("body-parser");
 const session = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-// const { getNodeMailer } = require('./static/transporter');
-const {User, doesUserExist} = require('./models/user');
+const {doesUserExist} = require('./models/user');
 var path = require("path");
 var cors = require('cors');
 require("dotenv/config");
 
 var app = express();
-
 app.use(cors());
 
 // Connect to DB
