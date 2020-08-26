@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import NavBar from "../components/NavBar";
-import researching from "../assets/researching.svg";
-import inSync from "../assets/in_sync.svg";
-import thoughtProcess from "../assets/thought_process.svg";
 import { HashLink as Link } from "react-router-hash-link";
-import ImageCaption from "../components/ImageCaption";
 import { loginAsGuest, isLoggedIn } from "../api";
+import NavBar from "../components/NavBar";
+import ImageCaption from "../components/ImageCaption";
 import Diagonal from "../components/Diagonal";
 import Card from "../components/Card";
 import CardWithImage from "../components/CardWithImage";
 import Footer from "../components/Footer";
+import researching from "../assets/researching.svg";
+import inSync from "../assets/in_sync.svg";
+import thoughtProcess from "../assets/thought_process.svg";
 import Signup from "../assets/tutorial/signup.png";
 import AddItem from "../assets/tutorial/additem.png";
 import Note from "../assets/tutorial/note.png";
@@ -24,21 +24,6 @@ import Print from "../assets/tutorial/print.png";
 
 function Landing() {
   const [loggedIn, setIsLoggedIn] = useState(false);
-
-  // function loginAsGuest() {
-  //   let url = API_URL + `/users/guest`;
-
-  //   return fetch(url, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((json) => {
-  //       return json;
-  //     });
-  // }
 
   useEffect(() => {
     document.body.classList.remove("architect");
@@ -56,9 +41,9 @@ function Landing() {
 
       <div className="" id="content">
         {/* Landing Page Front */}
-        <div className="px-8 hover:pb-16 pt-3 relative" id="front">
-          <div className="text-center leading-tight pt-3 sm:p-12">
-            <h1 className="text-5xl text-black pt-12 font-inter">
+        <div className="px-4 sm:px-8 pt-12 sm:pt-4 relative" id="front">
+          <div className="text-center leading-tight sm:p-12">
+            <h1 className="text-4xl sm:text-5xl text-black pt-12 font-inter">
               Productivity and simplicity with Memento.
             </h1>
             <p className="m-auto text-2xl text-gray-500 font-lato w-3/4 pt-3">
@@ -68,6 +53,8 @@ function Landing() {
             </p>
           </div>
 
+          {/* If logged in, display 'Go To Your Notes' button.
+              If logged out, display 'Signup' and 'Try As Guest' buttons. */}
           <div
             id="buttons"
             className="my-8 sm:my-0 h-40 sm:h-auto flex flex-col sm:block text-center justify-center"
@@ -96,7 +83,7 @@ function Landing() {
                   }}
                   to="#"
                 >
-                  Try as Guest
+                  Try As Guest
                 </Link>
 
                 <Link
@@ -146,7 +133,6 @@ function Landing() {
             <Card
               title={"Inline Tools"}
               description={
-                // "Add headings, tables, checklists, delimiters and more to your notes."
                 "Memento allows you to add headings, tables, lists, checklists, code, quotes and delimiters."
               }
               link={"inline1"}
@@ -216,168 +202,165 @@ function Landing() {
         <div id="tutorial" className="px-8 relative pb-16">
           <h1 className="text-5xl pt-6"> Tutorial </h1>
 
-            <CardWithImage
-              imgSource={Signup}
-              imgAlt={"Signing up on Memento."}
-              title="Getting Started"
-              description="Create an account by clicking on the ‘Sign Up’ button and completing the form.
+          <CardWithImage
+            imgSource={Signup}
+            imgAlt={"Signing up on Memento."}
+            title="Getting Started"
+            description="Create an account by clicking on the ‘Sign Up’ button and completing the form.
             Upon completion of the form, check your email to confirm your account and from there you’ll
             be able to log in."
-            />
+          />
 
-            <CardWithImage
-              imgSource={AddItem}
-              imgAlt={"Memento's add note modal."}
-              title="Creating a Note or Folder"
-              description="Click the plus icon which is at the top right of the note page. This will open
+          <CardWithImage
+            imgSource={AddItem}
+            imgAlt={"Memento's add note modal."}
+            title="Creating a Note or Folder"
+            description="Click the plus icon which is at the top right of the note page. This will open
             up a dropdown menu in which you can choose to add either a note or a folder. When you have
             decided which item you want to add, you must give it a name and select which folder you would
             like to save it in, if any. Then click ‘Save Changes’."
-            />
+          />
 
-            
-            <CardWithImage
-              id={"organising"}
-              imgSource={SideNav}
-              imgAlt={"Sidebar navigation of Memento."}
-              title="Side Navigation & Hierarchical Structure"
-              description="As we’ve just said, you can add notes or folders within other folders, which can
+          <CardWithImage
+            id={"organising"}
+            imgSource={SideNav}
+            imgAlt={"Sidebar navigation of Memento."}
+            title="Side Navigation & Hierarchical Structure"
+            description="As we’ve just said, you can add notes or folders within other folders, which can
             be seen in the side navigation bar on the left side of the note page after clicking on the
             icon at the top left of the note page. Clicking on a folder will display all of the notes and
             folders nested within, whereas clicking a note would open it for you to view and edit. Our
             hierarchical structure gives you full flexibility and the freedom to organise and structure
             your notes as you would like."
-            />
-            
-            
-            <CardWithImage
-              imgSource={Note}
-              imgAlt={"Writing a note on Memento."}
-              title="Writing Notes"
-              description="When you’ve created/opened a note, you can simply click on the editor and begin
+          />
+
+          <CardWithImage
+            imgSource={Note}
+            imgAlt={"Writing a note on Memento."}
+            title="Writing Notes"
+            description="When you’ve created/opened a note, you can simply click on the editor and begin
             typing away. This is a block-type editor, meaning each section or paragraph is a separate
             block. When you click on a block, on the right, there will be a small icon consisting of dots.
             Clicking this will allow you to tune the block; you can move it below or above other sections 
             of text, or even delete it. Clicking the plus button on the left side of an empty block allows
             you to add inline tools."
-            />
+          />
 
-            <CardWithImage
-              id={"inline1"}
-              imgSource={Inline1}
-              imgAlt={"Using various inline tools in Memento."}
-              title="Inline Tools 1"
-            >
-              <div className="text-gray-700">
-                <ul>
-                  <li className="list-disc my-2">
-                    <span className="font-bold">Heading</span> - use headings to
-                    organise your notes into sections and improve readability.
-                    You can tune heading blocks to change its size from H1
-                    (largest) to H6 (smallest).
-                  </li>
+          <CardWithImage
+            id={"inline1"}
+            imgSource={Inline1}
+            imgAlt={"Using various inline tools in Memento."}
+            title="Inline Tools 1"
+          >
+            <div className="text-gray-700">
+              <ul>
+                <li className="list-disc my-2">
+                  <span className="font-bold">Heading</span> - use headings to
+                  organise your notes into sections and improve readability. You
+                  can tune heading blocks to change its size from H1 (largest)
+                  to H6 (smallest).
+                </li>
 
-                  <li className="list-disc my-2">
-                    <span className="font-bold">Table</span> - use tables to
-                    display organised data, allowing you to quickly read
-                    results. Add rows and columns by clicking the plus icon
-                    which appears upon hovering the borders of cells.
-                  </li>
+                <li className="list-disc my-2">
+                  <span className="font-bold">Table</span> - use tables to
+                  display organised data, allowing you to quickly read results.
+                  Add rows and columns by clicking the plus icon which appears
+                  upon hovering the borders of cells.
+                </li>
 
-                  <li className="list-disc my-2">
-                    <span className="font-bold">Lists</span> - use lists to
-                    organise text and improve readability. You can tune lists to
-                    choose between ordered and unordered lists.
-                  </li>
+                <li className="list-disc my-2">
+                  <span className="font-bold">Lists</span> - use lists to
+                  organise text and improve readability. You can tune lists to
+                  choose between ordered and unordered lists.
+                </li>
 
-                  <li className="list-disc my-2">
-                    <span className="font-bold">Code</span> - use code blocks to
-                    differentiate code from other text within the note. The grey
-                    box and monospace font helps achieve this.
-                  </li>
+                <li className="list-disc my-2">
+                  <span className="font-bold">Code</span> - use code blocks to
+                  differentiate code from other text within the note. The grey
+                  box and monospace font helps achieve this.
+                </li>
 
-                  <li className="list-disc my-2">
-                    <span className="font-bold">Quote</span> - use quote blocks
-                    to format quotes with style.
-                  </li>
+                <li className="list-disc my-2">
+                  <span className="font-bold">Quote</span> - use quote blocks to
+                  format quotes with style.
+                </li>
 
-                  <li className="list-disc my-2">
-                    <span className="font-bold">Checklist</span> - use checklists
-                    to organise tasks, write shopping lists and more. Click on
-                    the circle next to a checklist item in order to check or
-                    uncheck.
-                  </li>
+                <li className="list-disc my-2">
+                  <span className="font-bold">Checklist</span> - use checklists
+                  to organise tasks, write shopping lists and more. Click on the
+                  circle next to a checklist item in order to check or uncheck.
+                </li>
 
-                  <li className="list-disc my-2">
-                    <span className="font-bold">Delimiter</span> - use delimiters
-                    to separate different sections of content.
-                  </li>
-                </ul>
-              </div>
-            </CardWithImage>
+                <li className="list-disc my-2">
+                  <span className="font-bold">Delimiter</span> - use delimiters
+                  to separate different sections of content.
+                </li>
+              </ul>
+            </div>
+          </CardWithImage>
 
-            <CardWithImage
-              id={"inline2"}
-              imgSource={Inline2}
-              imgAlt={"Using various inline tools in Memento."}
-              title="Inline Tools 2"
-              description="There are other inline tools and content which are not accessible through the plus icon.
+          <CardWithImage
+            id={"inline2"}
+            imgSource={Inline2}
+            imgAlt={"Using various inline tools in Memento."}
+            title="Inline Tools 2"
+            description="There are other inline tools and content which are not accessible through the plus icon.
             Unfortunately at the moment, images can only be added through links of images online which end with its
             extension, e.g. .png. We recommend using Pixabay for images. Also, select plain text in order to make
             it bold, italic, underlined, highlighted, a link, inline code or even convert it to a heading list or
             quote."
-            />
+          />
 
-            <CardWithImage
-              id={"save"}
-              imgSource={Save}
-              imgAlt={"Saving a note in Memento."}
-              title="Saving"
-              description="Whilst writing your notes, you don’t have to worry about losing your work as notes are
+          <CardWithImage
+            id={"save"}
+            imgSource={Save}
+            imgAlt={"Saving a note in Memento."}
+            title="Saving"
+            description="Whilst writing your notes, you don’t have to worry about losing your work as notes are
             saved after every 7 characters entered. However we do recommend that you manually save using the ‘save’
             icon before accessing another note or closing the tab."
-            />
+          />
 
-            <CardWithImage
-              imgSource={Delete}
-              imgAlt={"Memento's delete modal."}
-              title="Delete Item"
-              description="Click the 3 dots icon which is at the top right of the note page. This will open up a
+          <CardWithImage
+            imgSource={Delete}
+            imgAlt={"Memento's delete modal."}
+            title="Delete Item"
+            description="Click the 3 dots icon which is at the top right of the note page. This will open up a
             dropdown menu in which you can select ‘Delete Note/Folder’. Choose which item you would like to delete
             and click ‘Save Changes’."
-            />
+          />
 
-            <CardWithImage
-              imgSource={Rename}
-              imgAlt={"Memento's rename modal."}
-              title="Rename Item"
-              description="Click the 3 dots icon which is at the top right of the note page. This will open up a
+          <CardWithImage
+            imgSource={Rename}
+            imgAlt={"Memento's rename modal."}
+            title="Rename Item"
+            description="Click the 3 dots icon which is at the top right of the note page. This will open up a
             dropdown menu in which you can select ‘Rename Note’ or ‘Rename Folder’. Choose which item you want to
             rename, specify the new name and click ‘Save Changes’."
-            />
+          />
 
-            <CardWithImage
-              id={"print"}
-              imgSource={Print}
-              imgAlt={"Print screen of a note in Memento."}
-              title="Printing"
-              description="Click the 3 dots icon which is at the top right of the note page. This will open up a
+          <CardWithImage
+            id={"print"}
+            imgSource={Print}
+            imgAlt={"Print screen of a note in Memento."}
+            title="Printing"
+            description="Click the 3 dots icon which is at the top right of the note page. This will open up a
             dropdown menu in which you can select ‘Print’. Your work will be saved before a new tab opens with
             printing options."
-            />
+          />
 
-            <CardWithImage
-              id={"control"}
-              imgSource={Profile}
-              imgAlt={"Memento's profile modal."}
-              title="Edit & Delete Profile"
-              description="Click the 3 dots icon which is at the top right of the note page. This will open up a
+          <CardWithImage
+            id={"control"}
+            imgSource={Profile}
+            imgAlt={"Memento's profile modal."}
+            title="Edit & Delete Profile"
+            description="Click the 3 dots icon which is at the top right of the note page. This will open up a
             dropdown menu in which you can select ‘Profile’. Your username and email will be displayed with the
             option to change them as well as change your password and delete your account. In order to change
             your password you must enter your current password, enter your new password and confirm your new
             password."
-            />
-            
+          />
+
           <Diagonal colour={"gray-800"} />
         </div>
 

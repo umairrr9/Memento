@@ -10,8 +10,7 @@ const NavBar = ({ loggedIn }) => {
     setScrolled(window.pageYOffset === 0);
   }
 
-  // This will check if the user has scrolled any amount.
-  // If so, set notScrolled to false.
+  // If user scrolls, set notScrolled to false.
   useEffect(() => {
     function watchScroll() {
       window.addEventListener("scroll", isScrolling);
@@ -23,6 +22,7 @@ const NavBar = ({ loggedIn }) => {
   }, []);
 
   return (
+    // If user hasn't scrolled / is at the top of the page, the nav bar is transparent.
     <nav
       className={
         "lg:flex lg:justify-between lg:items-center lg:px-8 lg:py-1 fixed w-full z-10 " +

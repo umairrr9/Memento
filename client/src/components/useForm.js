@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const useForm = (callback) => {
-
   const passwordPattern = new RegExp(
     "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!?@#$£%^&+=])(?=.*[a-z]).{8,}$"
   );
@@ -15,16 +14,19 @@ const useForm = (callback) => {
 
   const handleChange = (event) => {
     event.persist();
-    setValues(values => ({ ...values, [event.target.name]: event.target.value }));
+    setValues((values) => ({
+      ...values,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   const handleIsLogin = (event) => {
     if (event) event.preventDefault();
-    setValues(values => ({ ...values, isLogin: !values.isLogin }));
-  }
+    setValues((values) => ({ ...values, isLogin: !values.isLogin }));
+  };
 
   const setValue = (key, value) => {
-    setValues(values => ({ ...values, [key]: value }));
+    setValues((values) => ({ ...values, [key]: value }));
   };
 
   return {
@@ -34,8 +36,8 @@ const useForm = (callback) => {
     handleIsLogin,
     setValues,
     setValue,
-    passwordPattern
-  }
+    passwordPattern,
+  };
 };
 
 export default useForm;

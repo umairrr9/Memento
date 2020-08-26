@@ -49,6 +49,7 @@ export default function Note() {
   const [guest, setIsGuest] = useState(null);
   const [user, setUser] = useState({});
 
+  // get the user details when the page opens
   useEffect(() => {
     getUser()
       .then((json) => {
@@ -60,19 +61,18 @@ export default function Note() {
         alert(
           "Sorry, something went wrong, we couldn't get your user details."
         );
+        if (process.env.NODE_ENV === "production") window.location.href = "/";
       });
   }, []);
 
+  // get the note via the note id in the url params and get the notes tree for the user
   useEffect(() => {
     getNoteTree()
       .then((json) => {
         if (json.error) {
           throw new Error(json.error);
         }
-        let t = null;
-        if (!json.error) {
-          t = json.notesTree;
-        }
+        let t = json.notesTree;
         setTree(t);
         const noteId =
           new URLSearchParams(window.location.search).get("note") || "";
@@ -88,7 +88,7 @@ export default function Note() {
               // set editor loading to false
               setEditorLoading("");
               // set browser title
-              setBrowserTitle(noteInTree.title);
+              setBrowserTitle(noteInTree.title + " - Memento");
             })
             .catch(() => {
               alert("Sorry, this note couldn't be found.");
@@ -99,15 +99,18 @@ export default function Note() {
         }
       })
       .catch(() => {
-        // console.error(error);
         alert("It seems like there's an error, try again!");
         if (process.env.NODE_ENV === "production") window.location.href = "/";
       });
   }, []);
 
+  // delete the node and its children from the tree.
+  // before calling this function, set newTree equal to
+  // the tree which the node is being deleted from.
   function deleteNode(node, tree) {
     if (node.id) {
       if (node.noteId) {
+        // make api request to server to delete this node
         deleteNote(node.noteId)
           .then((json) => {
             if (json.error) throw new Error(json.error);
@@ -137,8 +140,6 @@ export default function Note() {
     setNoteTree(newTree)
       .then((json) => {
         if (json.error) {
-          // alert("Sorry, the folder couldn't be added, try again later.");
-          // return;
           throw new Error();
         }
         setTree(newTree);
@@ -211,27 +212,29 @@ export default function Note() {
     if (editorInstance.current) {
       try {
         const outputData = await editorInstance.current.save();
-        // console.log(outputData);
         setNote(selectedNote.noteId, outputData)
           .then((json) => {
+            // if there are no errors,
+            // set is saving to true
             if (json.error) {
               throw new Error();
             } else {
               setIsSaving(true);
             }
-            // console.log(json.newNote);
           })
+          // if there is any errors, alert the user
           .catch(() =>
             alert("Sorry, the note couldn't be saved, please try again.")
           )
+          // finally, set is saving to false after a delay
           .finally(() =>
             setTimeout(() => {
               setIsSaving(false);
             }, 1000)
           );
         setData(outputData);
-      } catch (e) {
-        // console.error(e);
+      } catch {
+        alert("Sorry, the note couldn't be saved, please try again.");
       }
     }
   };

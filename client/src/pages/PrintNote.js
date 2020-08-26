@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import EditorJs from "@natterstefan/react-editor-js";
 import TOOLS from "../editorjs/config";
-import { API_URL } from '../api';
+import { getNote } from "../api";
 
 export default function PrintNote() {
   const editorInstance = useRef(null);
   const [editorLoading, setEditorLoading] = useState(true);
   const [data, setData] = useState({});
-  
+
   function afterPrint() {
     window.close();
   }
@@ -20,21 +20,7 @@ export default function PrintNote() {
     return () => {
       window.removeEventListener("afterprint", afterPrint);
     };
-  })
-
-  function getNote(noteId) {
-    let url = API_URL + `/notes/${noteId}`;
-    return fetch(url, {
-      method: "GET",
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        return json;
-      });
-  }
+  });
 
   useEffect(() => {
     const noteId =

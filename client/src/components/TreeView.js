@@ -8,7 +8,7 @@ const TreeView = ({
   setSelectedNote,
   isRedirecting,
   isRenameNote,
-  isDeleteNote
+  isDeleteNote,
 }) => {
   const [isOpen, setOpen] = useState(node.parentId === null ? true : false);
   let children = tree.filter((n) => n.parentId === node.id);
@@ -30,7 +30,8 @@ const TreeView = ({
             } else if (isRenameNote) {
               if (node.noteId) setSelectedFolder(node);
             } else {
-              if (node.noteId && isRedirecting) window.location.href = `/note?note=${node.noteId}`;
+              if (node.noteId && isRedirecting)
+                window.location.href = `/note?note=${node.noteId}`;
               if (!node.noteId && setSelectedFolder) setSelectedFolder(node);
             }
           }}
@@ -40,12 +41,14 @@ const TreeView = ({
               {!isOpen ? <span>&#9656; </span> : <span>&#9662; </span>}
             </span>
           ) : null}
-          <h2 className="py-1 border-b-2 hover:border-gray-400">{node.title}</h2>
+          <h2 className="py-1 border-b-2 hover:border-gray-400">
+            {node.title}
+          </h2>
         </div>
       )}
-      <div className={(!isOpen ? "hidden" : "")}>
-        {children.length >= 1
-          ? children.map((t) => (
+      <div className={!isOpen ? "hidden" : ""}>
+        {children.length >= 1 ? (
+          children.map((t) => (
             <React.Fragment key={t.id}>
               <TreeView
                 node={t}
@@ -59,16 +62,16 @@ const TreeView = ({
               ></TreeView>
             </React.Fragment>
           ))
-          : !node.noteId ? (
-            <h3
-              className="text-gray-700 text-sm my-1"
-              style={{
-                marginLeft: `${level + 1}rem`,
-              }}
-            >
-              No pages inside
-            </h3>
-          ) : null}
+        ) : !node.noteId ? (
+          <h3
+            className="text-gray-700 text-sm my-1"
+            style={{
+              marginLeft: `${level + 1}rem`,
+            }}
+          >
+            No pages inside
+          </h3>
+        ) : null}
       </div>
     </>
   );

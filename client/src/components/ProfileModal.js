@@ -8,9 +8,14 @@ export default function ProfileModal({
   user,
   setShowModal,
 }) {
-  const { values, handleChange, handleSubmit, setValue, setValues, passwordPattern } = useForm(
-    getErrors
-  );
+  const {
+    values,
+    handleChange,
+    handleSubmit,
+    setValue,
+    setValues,
+    passwordPattern,
+  } = useForm(getErrors);
   const {
     email,
     currentPassword,
@@ -35,6 +40,7 @@ export default function ProfileModal({
     }
   }, [error]);
 
+  // Handles account deletion
   function deleteAccount() {
     let url = `/api/users/delete`;
     fetch(url, {
@@ -58,6 +64,7 @@ export default function ProfileModal({
       });
   }
 
+  // Handles changing username, email or password
   function changeInfo() {
     let url = `/api/users/updateUser`;
     let body = JSON.stringify({
@@ -92,6 +99,7 @@ export default function ProfileModal({
     setError(null);
   }
 
+  // Handles errors
   function getErrors() {
     setResponse(null);
 
@@ -144,6 +152,7 @@ export default function ProfileModal({
         className="relative py-2 px-6 flex-auto overflow-y-scroll"
         style={{ maxHeight: "18rem" }}
       >
+        {/* Display and change username */}
         <div className="mb-6">
           <h3 className="text-gray-500 font-lato text-md font-bold my-2">
             {user && user.username}
@@ -178,6 +187,7 @@ export default function ProfileModal({
           </div>
         ) : null}
 
+        {/* Display and change email */}
         <div className="my-6">
           <h3 className="text-gray-500 font-lato text-md font-bold my-2">
             {user && user.email}
@@ -212,6 +222,7 @@ export default function ProfileModal({
           </div>
         ) : null}
 
+        {/* Change password */}
         <div className="my-6">
           <h3 className="text-gray-500 font-lato text-md font-bold my-2">
             Password
@@ -297,18 +308,24 @@ export default function ProfileModal({
           </div>
         ) : null}
 
+        {/* Delete account */}
         <div className="mt-6">
-        <h3 className="text-gray-500 font-lato text-md font-bold my-2">
-          Delete Account
-        </h3>
-        <button
-          className={"text-md focus:outline-none font-lato font-semibold hover:text-white p-2 mb-2 border bg-transparent hover:border-transparent rounded focus:text-white " + (showDeleteButton ? "hover:bg-brandBlue-A text-brandBlue-A border-brandBlue-A focus:bg-brandBlue-A" : "hover:bg-red-500 text-red-500 border-red-500 focus:bg-red-500")} 
-          onClick={() => {
-            setShowDeleteButton(!showDeleteButton);
-          }}
-        >
-          {showDeleteButton ? "Cancel" : "Delete Account"}
-        </button>
+          <h3 className="text-gray-500 font-lato text-md font-bold my-2">
+            Delete Account
+          </h3>
+          <button
+            className={
+              "text-md focus:outline-none font-lato font-semibold hover:text-white p-2 mb-2 border bg-transparent hover:border-transparent rounded focus:text-white " +
+              (showDeleteButton
+                ? "hover:bg-brandBlue-A text-brandBlue-A border-brandBlue-A focus:bg-brandBlue-A"
+                : "hover:bg-red-500 text-red-500 border-red-500 focus:bg-red-500")
+            }
+            onClick={() => {
+              setShowDeleteButton(!showDeleteButton);
+            }}
+          >
+            {showDeleteButton ? "Cancel" : "Delete Account"}
+          </button>
         </div>
 
         {showDeleteButton ? (

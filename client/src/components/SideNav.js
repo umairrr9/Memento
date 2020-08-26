@@ -1,9 +1,10 @@
 import React from "react";
 import TreeView from "./TreeView";
+import { HashLink as Link } from "react-router-hash-link";
 
-function SideNav({ isNavOpen, tree, setSelectedNote }) {
-
+export default function SideNav({ isNavOpen, tree, setSelectedNote }) {
   return (
+    // If the nav bar is open, display the tree of notes and folders
     <div
       className={
         "top-0 left-0 overflow-x-auto duration-500 fixed h-full bg-gray-100 z-10 " +
@@ -12,6 +13,14 @@ function SideNav({ isNavOpen, tree, setSelectedNote }) {
     >
       {isNavOpen ? (
         <>
+        <div className="w-full h-8 px-3 pt-1">
+          <Link
+            className="text-xl text-brandBlue-A font-inter outline-none focus:outline-none focus:text-brandBlue-B hover:text-brandBlue-B"
+            to="/"
+          >
+            Memento
+          </Link>
+          </div>
           <div className="p-3">
             <TreeView
               node={tree[0]}
@@ -23,13 +32,6 @@ function SideNav({ isNavOpen, tree, setSelectedNote }) {
           </div>
         </>
       ) : null}
-
     </div>
   );
 }
-
-// https://medium.com/@swatisucharita94/recursive-rendering-in-react-42666102eae2
-// https://draftjs.org/
-// https://codesandbox.io/embed/react-editor-js-23opz
-
-export default SideNav;

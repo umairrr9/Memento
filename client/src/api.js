@@ -2,7 +2,7 @@ export const API_URL =
 process.env.NODE_ENV === "development" ? "http://localhost:80/api" : "/api";
 
 export function logout() {
-    let url = `/api/users/logout`;
+    let url = API_URL + `/users/logout`;
     fetch(url, {
       method: "GET",
     })
@@ -15,7 +15,7 @@ export function logout() {
   }
 
   export function isLoggedIn() {
-    let url = `/api/users/isLoggedIn`;
+    let url = API_URL + `/users/isLoggedIn`;
     return fetch(url, {
       method: "GET",
     })
@@ -43,10 +43,7 @@ export function logout() {
   export function getUser() {
     let url = API_URL + `/users/user`;
     return fetch(url, {
-      method: "GET",
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
+      method: "GET"
     })
       .then((res) => res.json())
       .then((json) => {
@@ -90,9 +87,6 @@ export function logout() {
     let url = API_URL + `/notes/${noteId}`;
     return fetch(url, {
       method: "GET",
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
     })
       .then((res) => res.json())
       .then((json) => {
@@ -119,18 +113,11 @@ export function logout() {
     let url = API_URL + `/users/notesTree`;
 
     return fetch(url, {
-      method: "GET",
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
+      method: "GET"
     })
       .then((res) => res.json())
       .then((json) => {
         return json;
-        // console.log(json);
-        // if (!json.error) {
-        //   setTree(json.notesTree);
-        // }
       });
   }
 

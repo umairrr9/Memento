@@ -20,7 +20,10 @@ export default function AddItemModal({
       showModal={showModal}
       modalTitle={modalTitle}
     >
-      <div className="overflow-y-auto overflow-x-auto my-4" style={{ height: "10rem" }}>
+      <div
+        className="overflow-y-auto overflow-x-auto my-4"
+        style={{ height: "10rem" }}
+      >
         <TreeView
           node={tree[0]}
           level={-1}
@@ -29,7 +32,9 @@ export default function AddItemModal({
         />
       </div>
       <div>
-        <h2 className="text-gray-500 font-bold my-2">Selected folder: {selectedFolder && selectedFolder.title}</h2>
+        <h2 className="text-gray-500 font-bold my-2">
+          Selected folder: {selectedFolder && selectedFolder.title}
+        </h2>
 
         <label
           className="block text-gray-500 font-bold my-2"

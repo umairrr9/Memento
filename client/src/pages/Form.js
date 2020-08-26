@@ -104,11 +104,12 @@ const Form = ({ isLogin }) => {
         if (json.error) {
           setResponse(json.error);
         } else {
-          // window.location.href = isLogin ? "/note" : "/login";
           if (isLogin) {
             window.location.href = "/note";
           } else {
-            setSuccessResponse("Please confirm your email address to use Memento.")
+            setSuccessResponse(
+              "Please confirm your email address to use Memento."
+            );
           }
         }
       })
@@ -262,13 +263,13 @@ const Form = ({ isLogin }) => {
               className="bg-red-100 flex items-center border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"
               role="alert"
             >
-              <p className="ml-2 inline font-lato">{response}</p>
+              <p className="ml-2 inline font-lato text-red-500 text-xs italic">
+                {response}
+              </p>
             </div>
           ) : null}
           {successResponse ? (
-            <div
-              className="bg-blue-100 flex items-center border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-6"
-            >
+            <div className="bg-blue-100 flex items-center border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-6">
               <p className="ml-2 inline font-lato">{successResponse}</p>
             </div>
           ) : null}

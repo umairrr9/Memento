@@ -1,30 +1,22 @@
 import React from "react";
 import Dropdown from "./Dropdown";
-// const [showFolderModal, setShowFolderModal] = useState(false);
 
-export default function PlusDropdown(
-  {
-    //   buttonStyles,
-    //   buttonOnClick,
-    //   innerButton,
-    //   children,
-    //   dropdownStyles,
-
-    setShowNoteModal,
-    setShowFolderModal,
-    tree,
-    setSelectedFolder,
-    id,
-    isShowing,
-    setIsShowing
-  }
-) {
+export default function PlusDropdown({
+  setShowNoteModal,
+  setShowFolderModal,
+  tree,
+  setSelectedFolder,
+  id,
+  isShowing,
+  setIsShowing,
+}) {
   return (
     <Dropdown
       id={id}
       isShowing={isShowing}
       setIsShowing={setIsShowing}
       buttonStyles="rounded hover:shadow-md focus:shadow-md outline-none focus:outline-none bg-gray-100"
+      // Plus button icon
       innerButton={
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -39,12 +31,11 @@ export default function PlusDropdown(
       }
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
     >
+      {/* Dropdown menu options */}
       <button
         className={
           "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-          //   + (color === "white" ? " text-gray-800" : "text-white")
         }
-        // onClick={(e) => e.preventDefault()}
         onClick={() => {
           setShowNoteModal(true);
           setSelectedFolder(tree[0]);
@@ -55,9 +46,7 @@ export default function PlusDropdown(
       <button
         className={
           "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-          // + (color === "white" ? " text-gray-800" : "text-white")
         }
-        // onClick={(e) => e.preventDefault()}
         onClick={() => {
           setShowFolderModal(true);
           setSelectedFolder(tree[0]);
