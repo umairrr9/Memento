@@ -5,19 +5,20 @@ import LinkedIn from "../assets/linkedin.svg";
 export default function Footer() {
   return (
     <footer id="contact" className="bg-gray-800 flex justify-center pt-8 pb-12 px-8 sm:px-0">
-      <div className="">
+      {/* <div className="">
         <p className="text-gray-300">Memento Notes 2020</p>
 
         <p className="text-gray-300">
           Developed by Harris Uddin & Umair Ul-Haq.
         </p>
-      </div>
+      </div> */}
 
-      <div className="flex flex-col text-center items-center ml-4">
+      <div className="flex flex-col text-center items-center">
+
         <img alt="LinkedIn logo" src={LinkedIn} />
 
         <p className="text-gray-300">
-          {"Connect with "}
+          {"Developed by "}
           <a
             className="text-brandBlue-A hover:text-brandBlue-B focus:outline-none focus:text-brandBlue-B"
             target="_blank"
@@ -33,9 +34,9 @@ export default function Footer() {
             rel="noopener noreferrer"
             href="https://www.linkedin.com/in/harrisuddin/"
           >
-            {"Harris "}
+            {"Harris"}
           </a>
-          {"on LinkedIn."}
+          .
         </p>
 
         <img className="mt-4" alt="GitHub logo" src={GitHub} />
