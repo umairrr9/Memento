@@ -35,6 +35,7 @@ const Form = ({ isLogin }) => {
 
   function getErrors() {
     setResponse("");
+    setSuccessResponse("");
 
     if (!email) {
       setValue("emailError", "Please enter a email.");

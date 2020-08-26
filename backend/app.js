@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const session = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const {doesUserExist} = require('./models/user');
+const {doesUserExist, User} = require('./models/user');
+const {Note} = require('./models/note');
 var path = require("path");
 var cors = require('cors');
 require("dotenv/config");
@@ -66,7 +67,6 @@ app.get('/confirmation/:token', async (req, res) => {
   res.redirect(process.env.URL + "/login");
 
 });
-
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../client/build/index.html"));

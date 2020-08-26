@@ -7,7 +7,7 @@ async function getNodeMailer() {
 
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: "gmail", // CHANGE THIS TO SUIT YOUR EMAIL PROVIDER 
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASSWORD,
