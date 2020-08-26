@@ -122,7 +122,7 @@ function Landing() {
             />
           </div>
 
-          <Diagonal colour={"gray-100"} />
+          <Diagonal colour={"bg-gray-100"} />
         </div>
 
         {/* Why Memento Section */}
@@ -195,7 +195,7 @@ function Landing() {
             </div>
           </center>
 
-          <Diagonal colour={"white"} />
+          <Diagonal colour={"bg-white"} />
         </div>
 
         {/* Tutorial Section */}
@@ -361,7 +361,7 @@ function Landing() {
             password."
           />
 
-          <Diagonal colour={"gray-800"} />
+          <Diagonal colour={"bg-gray-800"} />
         </div>
 
         <Footer />

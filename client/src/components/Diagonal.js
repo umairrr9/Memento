@@ -16,7 +16,7 @@ export default function Diagonal({ colour }) {
         y="0"
       >
         <polygon
-          className={"text-" + colour + " fill-current"}
+          className={colour + " fill-current"}
           points="2560 0 2560 100 0 100"
         ></polygon>
       </svg>
