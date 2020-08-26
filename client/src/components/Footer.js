@@ -20,27 +20,29 @@ function Footer(){
             {/* CENTER */}
             <div className="relative">
                 <center>
-                <img alt="GitHub logo" src={LinkedIn} />
-                <p className="text-gray-300 w-full sm:w-3/5 mb-4">
-                    Connect with & contact
-                <a
-                    className="text-brandBlue-A hover:text-brandBlue-B focus:outline-none focus:text-brandBlue-B"
-                    target="_blank"
-                    href="https://www.linkedin.com/in/umair-ul-haq9/"> Umair</a> and
-                <a
-                    className="text-brandBlue-A hover:text-brandBlue-B focus:outline-none focus:text-brandBlue-B"
-                    target="_blank"
-                    href="https://www.linkedin.com/in/harrisuddin/"> Harris</a> on LinkedIn.
-                </p>
+                    <img alt="GitHub logo" src={LinkedIn} />
 
-                <img alt="GitHub logo" src={GitHub} />
-                <p className="text-gray-300 w-full sm:w-3/5 mb-4">
-                Feel free to check out our
-                <a
-                    className="text-brandBlue-A hover:text-brandBlue-B focus:outline-none focus:text-brandBlue-B"
-                    target="_blank"
-                    href="https://github.com/umairrr9/Memento/"> GitHub repository</a>. 
-                </p>
+                    <p className="text-gray-300 w-full sm:w-3/5 mb-4">
+                        Connect with & contact
+                        <a
+                            className="text-brandBlue-A hover:text-brandBlue-B focus:outline-none focus:text-brandBlue-B"
+                            target="_blank"
+                            href="https://www.linkedin.com/in/umair-ul-haq9/"> Umair</a> and
+                        <a
+                            className="text-brandBlue-A hover:text-brandBlue-B focus:outline-none focus:text-brandBlue-B"
+                            target="_blank"
+                            href="https://www.linkedin.com/in/harrisuddin/"> Harris</a> on LinkedIn.
+                    </p>
+
+                    <img alt="GitHub logo" src={GitHub} />
+
+                    <p className="text-gray-300 w-full sm:w-3/5 mb-4">
+                        Feel free to check out our
+                        <a
+                            className="text-brandBlue-A hover:text-brandBlue-B focus:outline-none focus:text-brandBlue-B"
+                            target="_blank"
+                            href="https://github.com/umairrr9/Memento/"> GitHub repository</a>. 
+                    </p>
                 </center>
             </div>
         </footer>
