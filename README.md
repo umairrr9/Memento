@@ -1,4 +1,5 @@
 # Memento
+<<<<<<< HEAD
 Memento is a simple and beautiful note taking app created by harrisuddin and umairrr9.
 
 Memento's Git repo shows that majority of the code has been committed by umairrr9 however we would like to make it clear that both of us have been working together on Visual Studio Code's LiveShare feature.
@@ -15,3 +16,6 @@ This app has been deployed at https://mementonotes.herokuapp.com.
 * COOKIE_SECRET=<"Random string">
 * URL=<"The url it is being deployed at e.g. http://localhost:5000">
 * EMAIL=<"An email used to send confirmation emails">
+=======
+Memento is a beautiful and simple note taking app.
+>>>>>>> d7a547b7f09c9b843cc94e5bd5669f33750d9407
