@@ -141,8 +141,9 @@ router.get("/user", async (req, res) => {
 });
 
 router.get("/isLoggedIn", async (req, res) => {
-  const { _id } = req.session.user;
+  const { _id, isGuest = false } = req.session.user;
   try {
+    if (isGuest) return res.status(200).json(false);
     const user = await doesUserExist(_id);
     if (user.confirmed) return res.status(200).json(true);
   } catch {
