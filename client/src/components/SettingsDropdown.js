@@ -37,7 +37,7 @@ export default function SettingsDropdown({
           />
         </svg>
       }
-      dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
+      dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-8 sm:mt-1 bg-white"
     >
       {/* Dropdown menu options */}
       <button

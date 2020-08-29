@@ -29,7 +29,7 @@ export default function PlusDropdown({
           <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
         </svg>
       }
-      dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 bg-white"
+      dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-8 sm:mt-1 bg-white"
     >
       {/* Dropdown menu options */}
       <button

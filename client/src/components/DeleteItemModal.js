@@ -18,7 +18,6 @@ export default function DeleteItemModal({
       saveOnClick={saveOnClick}
       showModal={showModal}
       modalTitle={"Delete Note or Folder"}
-      labelTitle={"Deleting a folder will remove notes/folders within."}
     >
       <div
         className="overflow-y-auto overflow-x-auto my-4"
@@ -34,7 +33,7 @@ export default function DeleteItemModal({
       </div>
       <div>
         <h2 className="text-gray-500 font-bold my-2">
-          Selected folder: {selectedFolder && selectedFolder.title}
+          Selected item: {selectedFolder && selectedFolder.title}
         </h2>
 
         <label

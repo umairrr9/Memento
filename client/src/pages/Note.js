@@ -67,6 +67,7 @@ export default function Note() {
 
   // get the note via the note id in the url params and get the notes tree for the user
   useEffect(() => {
+    let containsNote = false;
     getNoteTree()
       .then((json) => {
         if (json.error) {
@@ -74,6 +75,8 @@ export default function Note() {
         }
         let t = json.notesTree;
         setTree(t);
+        // does a note exist in tree
+        containsNote = t.find((obj) => typeof obj.noteId !== "undefined") ? true : false; 
         const noteId =
           new URLSearchParams(window.location.search).get("note") || "";
         if (noteId !== "") {
@@ -95,7 +98,11 @@ export default function Note() {
               window.location.href = "/note";
             });
         } else {
-          setEditorLoading("Select a note to start writing!");
+          if (containsNote) {
+            setEditorLoading("Select a note to start writing!");
+          } else {
+            setEditorLoading("Create a note to start writing!");
+          }
         }
       })
       .catch(() => {
@@ -313,9 +320,10 @@ export default function Note() {
               <>
                 <button
                   onClick={onSave}
-                  className="focus:outline-none hover:shadow-md rounded outline-none focus:shadow-md mx-2"
+                  className={"focus:outline-none hover:shadow-md rounded outline-none focus:shadow-md mx-2 " + (selectedNote ? "" : "hidden" )  }
                 >
                   <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     height={24}
                     viewBox="0 0 24 24"
                     width={24}
@@ -324,7 +332,7 @@ export default function Note() {
                     <path d="M0 0h24v24H0z" fill="none" />
                     <path
                       fill="currentColor"
-                      d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
+                      d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
                     />
                   </svg>
                 </button>
@@ -436,6 +444,7 @@ export default function Note() {
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
         isDeleteNote={true}
+        labelTitle={"Deleting a folder will remove notes/folders within."}
       />
 
       <RenameFolderModal

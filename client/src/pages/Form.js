@@ -123,7 +123,7 @@ const Form = ({ isLogin }) => {
   return (
     <div className="md:mt-8 mx-auto max-w-2xl bg-white py-16 sm:px-12 lg:px-24 shadow-xl mb-24">
       <Link className="flex justify-center mb-8" to="/">
-        <img alt="Memento Logo" src={logo} className="w-16 h-auto" />
+        <img alt="Memento Logo" src={logo} className="w-16 h-16" />
         <h1 className="ml-4 self-center text-brandBlue-A font-inter text-xl">
           Memento
         </h1>
