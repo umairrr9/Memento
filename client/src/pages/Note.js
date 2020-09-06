@@ -76,7 +76,9 @@ export default function Note() {
         let t = json.notesTree;
         setTree(t);
         // does a note exist in tree
-        containsNote = t.find((obj) => typeof obj.noteId !== "undefined") ? true : false; 
+        containsNote = t.find((obj) => typeof obj.noteId !== "undefined")
+          ? true
+          : false;
         const noteId =
           new URLSearchParams(window.location.search).get("note") || "";
         if (noteId !== "") {
@@ -320,7 +322,10 @@ export default function Note() {
               <>
                 <button
                   onClick={onSave}
-                  className={"focus:outline-none hover:shadow-md rounded outline-none focus:shadow-md mx-2 " + (selectedNote ? "" : "hidden" )  }
+                  className={
+                    "focus:outline-none hover:shadow-md rounded outline-none focus:shadow-md mx-2 " +
+                    (selectedNote ? "" : "hidden")
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -398,7 +403,6 @@ export default function Note() {
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
         showModal={showFolderModal}
-        setShowModal={setShowFolderModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
@@ -427,6 +431,10 @@ export default function Note() {
           setShowDeleteItemModal(false);
         }}
         saveOnClick={() => {
+          if (selectedFolder.id === tree[0].id) {
+            alert("Please select an item before deleting.");
+            return;
+          }
           newTree = tree;
           deleteNode(selectedFolder, tree);
           setTree(newTree);
@@ -437,9 +445,9 @@ export default function Note() {
             .catch((err) => console.error(err));
           setSelectedFolder(tree[0]);
           setShowDeleteItemModal(false);
+          window.location.href = "/note";
         }}
         showModal={showDeleteItemModal}
-        setShowModal={setShowDeleteItemModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
@@ -453,13 +461,16 @@ export default function Note() {
           setShowRenameFolderModal(false);
         }}
         saveOnClick={() => {
+          if (selectedFolder.id === tree[0].id) {
+            alert("Sorry, please select a folder before renaming.");
+            return;
+          }
           renameItem(selectedFolder.id, newTitle, tree);
           setSelectedFolder(tree[0]);
           setShowRenameFolderModal(false);
         }}
         onTitleChange={(e) => setTitle(e.target.value)}
         showModal={showRenameFolderModal}
-        setShowModal={setShowRenameFolderModal}
         tree={tree}
         setSelectedFolder={setSelectedFolder}
         selectedFolder={selectedFolder}
@@ -471,6 +482,10 @@ export default function Note() {
           setShowRenameNoteModal(false);
         }}
         saveOnClick={() => {
+          if (selectedFolder.id === tree[0].id) {
+            alert("Sorry, please select an note before renaming.");
+            return;
+          }
           renameItem(selectedFolder.id, newTitle, tree);
           setSelectedFolder(tree[0]);
           setShowRenameNoteModal(false);

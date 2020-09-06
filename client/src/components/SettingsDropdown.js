@@ -40,44 +40,47 @@ export default function SettingsDropdown({
       dropdownStyles="text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-8 sm:mt-1 bg-white"
     >
       {/* Dropdown menu options */}
-      <button
-        className={
-          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-        }
-        onClick={() => {
-          setShowDeleteItemModal(true);
+      {tree.length > 1 ? (
+        <>
+          <button
+            className={
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+            }
+            onClick={() => {
+              setShowDeleteItemModal(true);
 
-          setSelectedFolder(tree[0]);
-        }}
-      >
-        Delete Note/Folder
-      </button>
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Delete Note/Folder
+          </button>
 
-      <button
-        className={
-          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-        }
-        onClick={() => {
-          setShowRenameFolderModal(true);
+          <button
+            className={
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+            }
+            onClick={() => {
+              setShowRenameFolderModal(true);
 
-          setSelectedFolder(tree[0]);
-        }}
-      >
-        Rename Folder
-      </button>
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Rename Folder
+          </button>
+          <button
+            className={
+              "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
+            }
+            onClick={() => {
+              setShowRenameNoteModal(true);
 
-      <button
-        className={
-          "focus:outline-none text-left text-sm text-brandBlue-A cursor-pointer py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent hover:bg-gray-200"
-        }
-        onClick={() => {
-          setShowRenameNoteModal(true);
-
-          setSelectedFolder(tree[0]);
-        }}
-      >
-        Rename Note
-      </button>
+              setSelectedFolder(tree[0]);
+            }}
+          >
+            Rename Note
+          </button>
+        </>
+      ) : null}
 
       {selectedNote ? (
         <button
